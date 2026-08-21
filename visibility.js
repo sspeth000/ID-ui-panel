@@ -8,6 +8,9 @@
     const originalStates =
         new WeakMap();
 
+    const inspectorHidden =
+        new WeakSet();
+
     // =========================================================
     // GET SELECTED ELEMENT
     // =========================================================
@@ -26,7 +29,7 @@
     }
 
     // =========================================================
-    // SAVE ORIGINAL STATE
+    // SAVE ORIGINAL INLINE STATE
     // =========================================================
 
     function rememberState(element) {
@@ -46,14 +49,14 @@
                     display:
                         element.style.display,
 
-                    displayPriority:
-                        element.style.getPropertyPriority(
-                            "display"
-                        ),
-
                     visibilityPriority:
                         element.style.getPropertyPriority(
                             "visibility"
+                        ),
+
+                    displayPriority:
+                        element.style.getPropertyPriority(
+                            "display"
                         ),
 
                     hidden:
@@ -68,41 +71,7 @@
     }
 
     // =========================================================
-    // CHECK ONE ELEMENT
-    // =========================================================
-
-    function isElementVisible(element) {
-
-        if (!element) {
-            return false;
-        }
-
-        /*
-         * The hidden attribute always makes the element
-         * unavailable for normal rendering.
-         */
-        if (element.hidden) {
-            return false;
-        }
-
-        const computed =
-            window.getComputedStyle(
-                element
-            );
-
-        if (
-            computed.display === "none" ||
-            computed.visibility === "hidden" ||
-            computed.visibility === "collapse"
-        ) {
-            return false;
-        }
-
-        return true;
-    }
-
-    // =========================================================
-    // CHECK PARENTS
+    // CHECK ELEMENT + PARENTS
     // =========================================================
 
     function isActuallyVisible(element) {
@@ -111,10 +80,6 @@
             return false;
         }
 
-        /*
-         * Walk upward because an element can appear to have
-         * display:block while one of its parents is hidden.
-         */
         let current =
             element;
 
@@ -148,7 +113,7 @@
     }
 
     // =========================================================
-    // CHECK VISIBILITY
+    // GET VISIBILITY
     // =========================================================
 
     window.getAssetVisibility =
@@ -191,42 +156,18 @@
                 return false;
             }
 
-            const original =
-                rememberState(
+            rememberState(
+                element
+            );
+
+            // -------------------------------------------------
+            // TURN OFF
+            // -------------------------------------------------
+
+            if (!visible) {
+
+                inspectorHidden.add(
                     element
-                );
-
-            if (visible) {
-
-                /*
-                 * Restore the exact inline values that existed
-                 * before the inspector touched the element.
-                 */
-                element.style.setProperty(
-                    "visibility",
-                    original.visibility,
-                    original.visibilityPriority
-                );
-
-                element.style.setProperty(
-                    "display",
-                    original.display,
-                    original.displayPriority
-                );
-
-                element.hidden =
-                    original.hidden;
-
-            } else {
-
-                /*
-                 * Use !important so normal page CSS doesn't
-                 * immediately override the inspector.
-                 */
-                element.style.setProperty(
-                    "visibility",
-                    "hidden",
-                    "important"
                 );
 
                 element.style.setProperty(
@@ -235,17 +176,56 @@
                     "important"
                 );
 
-                /*
-                 * Do NOT use element.hidden here.
-                 *
-                 * Keeping the hidden attribute untouched makes
-                 * restoration predictable.
-                 */
+                element.style.setProperty(
+                    "visibility",
+                    "hidden",
+                    "important"
+                );
             }
 
-            /*
-             * Update the UI immediately.
-             */
+            // -------------------------------------------------
+            // TURN ON
+            // -------------------------------------------------
+
+            else {
+
+                inspectorHidden.delete(
+                    element
+                );
+
+                /*
+                 * Remove the inspector's forced styles.
+                 *
+                 * "revert" is important here because an element
+                 * may have originally been display:none due to a
+                 * stylesheet. Restoring that "none" would make
+                 * the ON switch useless.
+                 */
+
+                element.style.setProperty(
+                    "display",
+                    "revert",
+                    "important"
+                );
+
+                element.style.setProperty(
+                    "visibility",
+                    "visible",
+                    "important"
+                );
+
+                /*
+                 * If the element itself has the HTML hidden
+                 * attribute, remove it so ON actually means ON.
+                 */
+                element.hidden =
+                    false;
+            }
+
+            // -------------------------------------------------
+            // Update UI
+            // -------------------------------------------------
+
             window.notifyVisibilityChange(
                 state
             );
@@ -254,7 +234,7 @@
         };
 
     // =========================================================
-    // NOTIFY UI OF NEW SELECTION
+    // NEW SELECTION
     // =========================================================
 
     window.notifyAssetSelection =
@@ -279,7 +259,7 @@
         };
 
     // =========================================================
-    // NOTIFY UI OF VISIBILITY CHANGE
+    // VISIBILITY CHANGED
     // =========================================================
 
     window.notifyVisibilityChange =
