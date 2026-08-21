@@ -3,7 +3,6 @@
 
     window.__IDPanelStart = function () {
 
-        // Remove existing panel if one is already running.
         if (window.__IDPanelUI) {
             try {
                 window.__IDPanelUI.remove();
@@ -11,10 +10,6 @@
 
             window.__IDPanelUI = null;
         }
-
-        // =========================================================
-        // SHARED STATE
-        // =========================================================
 
         const state =
             window.__IDPanelState ||
@@ -96,12 +91,8 @@
             document.createElement("button");
 
         close.type = "button";
-
-        close.className =
-            "inspector-close";
-
-        close.textContent =
-            "×";
+        close.className = "inspector-close";
+        close.textContent = "×";
 
         header.appendChild(title);
         header.appendChild(close);
@@ -190,7 +181,7 @@
             "inspector-opacity-value";
 
         opacityValue.textContent =
-            "0";
+            String(state.opacity || 0);
 
         opacityRow.appendChild(opacityLabel);
         opacityRow.appendChild(opacityValue);
@@ -242,36 +233,6 @@
             false;
 
         // =========================================================
-        // INSPECT BUTTON
-        // =========================================================
-
-        const inspect =
-            document.createElement("button");
-
-        inspect.type = "button";
-
-        inspect.className =
-            "inspector-button";
-
-        inspect.textContent =
-            "Inspect ID";
-
-        // =========================================================
-        // PICK ASSET
-        // =========================================================
-
-        const pick =
-            document.createElement("button");
-
-        pick.type = "button";
-
-        pick.className =
-            "inspector-button inspector-pick";
-
-        pick.textContent =
-            "◉ Pick Asset";
-
-        // =========================================================
         // FILTER
         // =========================================================
 
@@ -297,6 +258,21 @@
 
         filter.spellcheck =
             false;
+
+        // =========================================================
+        // PICK ASSET
+        // =========================================================
+
+        const pick =
+            document.createElement("button");
+
+        pick.type = "button";
+
+        pick.className =
+            "inspector-button inspector-pick";
+
+        pick.textContent =
+            "◉ Pick Asset";
 
         // =========================================================
         // ID LIST
@@ -332,18 +308,27 @@
             "✓ Inspector ready";
 
         // =========================================================
-        // BUILD
+        // BUILD PANEL
         // =========================================================
 
         panel.appendChild(header);
+
         panel.appendChild(hueWrap);
+
         panel.appendChild(opacityWrap);
+
         panel.appendChild(idInput);
-        panel.appendChild(inspect);
-        panel.appendChild(pick);
+
         panel.appendChild(filter);
+
+        // Pick Asset is now directly below Filter IDs
+        // and above the script/output box.
+        panel.appendChild(pick);
+
         panel.appendChild(list);
+
         panel.appendChild(code);
+
         panel.appendChild(status);
 
         root.appendChild(cog);
@@ -574,22 +559,7 @@
         );
 
         // =========================================================
-        // INSPECT BUTTON
-        // =========================================================
-
-        inspect.addEventListener(
-            "click",
-            function (e) {
-
-                e.preventDefault();
-                e.stopPropagation();
-
-                inspectCurrentID();
-            }
-        );
-
-        // =========================================================
-        // TEXT FIELD HELPER
+        // TEXT FIELD HANDLING
         // =========================================================
 
         function makeTextFieldWork(
@@ -601,9 +571,6 @@
             input.addEventListener(
                 "keydown",
                 function (e) {
-
-                    // Stop the site's keyboard
-                    // handlers from seeing the key.
 
                     e.stopPropagation();
 
@@ -677,19 +644,11 @@
             );
         }
 
-        // =========================================================
-        // ENTER ID
-        // =========================================================
-
         makeTextFieldWork(
             idInput,
             null,
             true
         );
-
-        // =========================================================
-        // FILTER
-        // =========================================================
 
         makeTextFieldWork(
             filter,
@@ -732,7 +691,7 @@
         );
 
         // =========================================================
-        // INITIAL ID LIST
+        // INITIAL LIST
         // =========================================================
 
         renderIDList();
@@ -756,7 +715,7 @@
             opacityValue: opacityValue,
 
             idInput: idInput,
-            inspect: inspect,
+
             pick: pick,
 
             filter: filter,
@@ -773,13 +732,11 @@
                 ) {
 
                     try {
-
                         window.stopInspectorPicker(
                             state,
                             pick,
                             status
                         );
-
                     } catch (e) {}
                 }
 
@@ -789,11 +746,9 @@
                 ) {
 
                     try {
-
                         window.clearHighlight(
                             state
                         );
-
                     } catch (e) {}
                 }
 
@@ -814,7 +769,7 @@
     };
 
     // =============================================================
-    // START UI
+    // START
     // =============================================================
 
     window.__IDPanelStart();
