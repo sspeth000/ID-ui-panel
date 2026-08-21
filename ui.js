@@ -3,10 +3,6 @@
 
     window.__IDPanelStart = function () {
 
-        // =========================================================
-        // REMOVE EXISTING PANEL
-        // =========================================================
-
         if (window.__IDPanelUI) {
             try {
                 window.__IDPanelUI.remove();
@@ -15,26 +11,16 @@
             window.__IDPanelUI = null;
         }
 
-        // =========================================================
-        // STATE
-        // =========================================================
-
         const state =
             window.__IDPanelState ||
-            (
-                typeof window.createInspectorState === "function"
-                    ? window.createInspectorState()
-                    : {
-                        picking: false,
-                        highlighted: null,
-                        oldOutline: "",
-                        selectedID: "",
-                        panelOpen: false,
-                        opacity: 0,
-                        hue: 120,
-                        pickerHandler: null
-                    }
-            );
+            {
+                picking: false,
+                highlighted: null,
+                selectedID: "",
+                panelOpen: false,
+                opacity: 0,
+                hue: 120
+            };
 
         window.__IDPanelState = state;
 
@@ -151,7 +137,7 @@
             "inspector-hue-value";
 
         hueValue.textContent =
-            String(state.hue) + "°";
+            state.hue + "°";
 
         hueRow.appendChild(hueLabel);
         hueRow.appendChild(hueValue);
@@ -214,13 +200,8 @@
         opacityValue.textContent =
             String(state.opacity);
 
-        opacityRow.appendChild(
-            opacityLabel
-        );
-
-        opacityRow.appendChild(
-            opacityValue
-        );
+        opacityRow.appendChild(opacityLabel);
+        opacityRow.appendChild(opacityValue);
 
         const opacity =
             document.createElement("input");
@@ -243,16 +224,11 @@
         opacity.className =
             "inspector-opacity";
 
-        opacityWrap.appendChild(
-            opacityRow
-        );
-
-        opacityWrap.appendChild(
-            opacity
-        );
+        opacityWrap.appendChild(opacityRow);
+        opacityWrap.appendChild(opacity);
 
         // =========================================================
-        // ENTER ID
+        // ID INPUT
         // =========================================================
 
         const idInput =
@@ -280,7 +256,7 @@
             false;
 
         // =========================================================
-        // FILTER IDS
+        // FILTER
         // =========================================================
 
         const filter =
@@ -423,7 +399,7 @@
             "✓ Inspector ready";
 
         // =========================================================
-        // BUILD PANEL
+        // BUILD
         // =========================================================
 
         panel.appendChild(header);
@@ -440,12 +416,49 @@
         root.appendChild(cog);
         root.appendChild(panel);
 
-        document.documentElement.appendChild(
-            root
-        );
+        document.documentElement.appendChild(root);
 
         // =========================================================
-        // VISIBILITY UI
+        // GLOBAL VISIBILITY UI UPDATER
+        //
+        // visibility.js can call this EVERY time an object changes.
+        // =========================================================
+
+        window.updateIDPanelVisibilityUI =
+            function (visible) {
+
+                if (visible === null ||
+                    visible === undefined) {
+
+                    visibilityInput.checked =
+                        false;
+
+                    visibilityInput.disabled =
+                        true;
+
+                    visibilityText.textContent =
+                        "Toggle visibility: OFF";
+
+                    return;
+                }
+
+                const isVisible =
+                    Boolean(visible);
+
+                visibilityInput.disabled =
+                    false;
+
+                visibilityInput.checked =
+                    isVisible;
+
+                visibilityText.textContent =
+                    isVisible
+                        ? "Toggle visibility: ON"
+                        : "Toggle visibility: OFF";
+            };
+
+        // =========================================================
+        // REFRESH VISIBILITY
         // =========================================================
 
         function updateVisibilityUI() {
@@ -454,45 +467,35 @@
                 typeof window.getAssetVisibility !==
                 "function"
             ) {
-                visibilityInput.disabled =
-                    true;
-
-                visibilityText.textContent =
-                    "Toggle visibility: OFF";
-
-                return;
-            }
-
-            const visible =
-                window.getAssetVisibility(
-                    state
+                window.updateIDPanelVisibilityUI(
+                    null
                 );
 
-            if (visible === null) {
-
-                visibilityInput.checked =
-                    false;
-
-                visibilityInput.disabled =
-                    true;
-
-                visibilityText.textContent =
-                    "Toggle visibility: OFF";
-
-                return;
+                return null;
             }
 
-            visibilityInput.disabled =
-                false;
+            let visible =
+                null;
 
-            visibilityInput.checked =
-                Boolean(visible);
+            try {
+                visible =
+                    window.getAssetVisibility(
+                        state
+                    );
+            } catch (e) {
+                visible = null;
+            }
 
-            visibilityText.textContent =
+            window.updateIDPanelVisibilityUI(
                 visible
-                    ? "Toggle visibility: ON"
-                    : "Toggle visibility: OFF";
+            );
+
+            return visible;
         }
+
+        // =========================================================
+        // SWITCH
+        // =========================================================
 
         visibilityInput.addEventListener(
             "change",
@@ -504,20 +507,34 @@
                     typeof window.setAssetVisibility !==
                     "function"
                 ) {
-                    return;
-                }
-
-                if (!state.highlighted) {
                     updateVisibilityUI();
                     return;
                 }
 
-                window.setAssetVisibility(
-                    state,
-                    visibilityInput.checked
-                );
+                let success =
+                    false;
 
-                updateVisibilityUI();
+                try {
+                    success =
+                        window.setAssetVisibility(
+                            state,
+                            visibilityInput.checked
+                        );
+                } catch (e) {
+                    success = false;
+                }
+
+                if (!success) {
+                    updateVisibilityUI();
+                    return;
+                }
+
+                // Read the ACTUAL state again after changing it.
+                requestAnimationFrame(
+                    function () {
+                        updateVisibilityUI();
+                    }
+                );
             }
         );
 
@@ -567,7 +584,7 @@
                 String(value);
 
             hueValue.textContent =
-                String(value) + "°";
+                value + "°";
 
             root.style.setProperty(
                 "--id-hue",
@@ -595,21 +612,11 @@
         );
 
         hue.addEventListener(
-            "change",
-            function (e) {
-                e.stopPropagation();
-                applyHue();
-            }
-        );
-
-        hue.addEventListener(
             "pointerdown",
             function (e) {
                 e.stopPropagation();
             }
         );
-
-        applyHue();
 
         // =========================================================
         // OPACITY
@@ -646,13 +653,9 @@
                 String(value);
 
             const alpha =
-                1 -
-                (value / 100);
+                1 - (value / 100);
 
             panel.style.opacity =
-                String(alpha);
-
-            cog.style.opacity =
                 String(alpha);
         }
 
@@ -670,8 +673,6 @@
                 e.stopPropagation();
             }
         );
-
-        applyOpacity();
 
         // =========================================================
         // INSPECT ID
@@ -695,14 +696,45 @@
                 return;
             }
 
-            window.inspectID(
-                idInput.value,
-                state,
-                code,
-                status
+            try {
+
+                window.inspectID(
+                    idInput.value,
+                    state,
+                    code,
+                    status
+                );
+
+            } catch (e) {
+
+                code.style.display =
+                    "block";
+
+                code.textContent =
+                    String(e);
+
+                status.textContent =
+                    "✕ Inspection failed.";
+
+                return;
+            }
+
+            // inspectID/highlight may update the selected object
+            // synchronously or one frame later.
+            updateVisibilityUI();
+
+            requestAnimationFrame(
+                function () {
+                    updateVisibilityUI();
+                }
             );
 
-            updateVisibilityUI();
+            setTimeout(
+                function () {
+                    updateVisibilityUI();
+                },
+                50
+            );
         }
 
         // =========================================================
@@ -715,9 +747,6 @@
                 typeof window.renderIDs !==
                 "function"
             ) {
-                status.textContent =
-                    "✕ IDs module failed to load.";
-
                 return;
             }
 
@@ -735,7 +764,7 @@
         }
 
         // =========================================================
-        // CLOSE PANEL
+        // CLOSE
         // =========================================================
 
         function closePanel() {
@@ -758,7 +787,10 @@
                 } catch (e) {}
             }
 
-            updateVisibilityUI();
+            // The object is no longer selected.
+            window.updateIDPanelVisibilityUI(
+                null
+            );
         }
 
         // =========================================================
@@ -794,7 +826,7 @@
         );
 
         // =========================================================
-        // CLOSE BUTTON
+        // X BUTTON
         // =========================================================
 
         close.addEventListener(
@@ -809,7 +841,7 @@
         );
 
         // =========================================================
-        // TEXT FIELD HANDLING
+        // INPUT HELPERS
         // =========================================================
 
         function makeTextFieldWork(
@@ -829,7 +861,6 @@
                         e.key === "Enter"
                     ) {
                         e.preventDefault();
-
                         inspectCurrentID();
                     }
                 }
@@ -901,14 +932,12 @@
 
         makeTextFieldWork(
             filter,
-            function () {
-                renderIDList();
-            },
+            renderIDList,
             false
         );
 
         // =========================================================
-        // PICK ASSET
+        // PICK
         // =========================================================
 
         pick.addEventListener(
@@ -928,24 +957,38 @@
                     return;
                 }
 
-                window.togglePicker(
-                    state,
-                    pick,
-                    idInput,
-                    code,
-                    status
-                );
+                try {
 
-                updateVisibilityUI();
+                    window.togglePicker(
+                        state,
+                        pick,
+                        idInput,
+                        code,
+                        status
+                    );
+
+                } catch (e) {
+
+                    status.textContent =
+                        "✕ Picker failed.";
+
+                    return;
+                }
+
+                // Do NOT only check here. The object has not
+                // necessarily been clicked yet. visibility.js
+                // should call updateIDPanelVisibilityUI when
+                // the picker actually selects something.
             }
         );
 
         // =========================================================
-        // INITIAL LIST
+        // INITIALIZE
         // =========================================================
 
+        applyHue();
+        applyOpacity();
         renderIDList();
-
         updateVisibilityUI();
 
         // =========================================================
@@ -967,11 +1010,9 @@
             opacityValue: opacityValue,
 
             idInput: idInput,
+            filter: filter,
 
             pick: pick,
-
-            visibilityWrap:
-                visibilityWrap,
 
             visibilityInput:
                 visibilityInput,
@@ -979,40 +1020,45 @@
             visibilityText:
                 visibilityText,
 
-            filter: filter,
+            updateVisibilityUI:
+                updateVisibilityUI,
+
             list: list,
             code: code,
             status: status,
 
             remove: function () {
 
-                if (
-                    state.picking &&
-                    typeof window.stopInspectorPicker ===
-                    "function"
-                ) {
-                    try {
+                try {
+
+                    if (
+                        state.picking &&
+                        typeof window.stopInspectorPicker ===
+                        "function"
+                    ) {
                         window.stopInspectorPicker(
                             state,
                             pick,
                             status
                         );
-                    } catch (e) {}
-                }
+                    }
 
-                if (
-                    typeof window.clearHighlight ===
-                    "function"
-                ) {
-                    try {
+                } catch (e) {}
+
+                try {
+
+                    if (
+                        typeof window.clearHighlight ===
+                        "function"
+                    ) {
                         window.clearHighlight(
                             state
                         );
-                    } catch (e) {}
-                }
+                    }
+
+                } catch (e) {}
 
                 if (
-                    root &&
                     root.parentNode
                 ) {
                     root.parentNode.removeChild(
@@ -1020,15 +1066,14 @@
                     );
                 }
 
+                window.updateIDPanelVisibilityUI =
+                    null;
+
                 window.__IDPanelUI =
                     null;
             }
         };
     };
-
-    // =============================================================
-    // START UI
-    // =============================================================
 
     window.__IDPanelStart();
 
