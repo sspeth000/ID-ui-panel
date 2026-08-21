@@ -134,16 +134,42 @@
 
     async function start() {
 
+        // -----------------------------------------------------
         // CSS
-        await loadCSS("styles.css");
+        // -----------------------------------------------------
 
+        await loadCSS(
+            "styles.css"
+        );
+
+        // -----------------------------------------------------
         // Core modules
-        await loadScript("state.js");
-        await loadScript("ids.js");
-        await loadScript("code-search.js");
-        await loadScript("highlight.js");
-        await loadScript("visibility.js");
-        await loadScript("picker.js");
+        // -----------------------------------------------------
+
+        await loadScript(
+            "state.js"
+        );
+
+        await loadScript(
+            "ids.js"
+        );
+
+        await loadScript(
+            "code-search.js"
+        );
+
+        await loadScript(
+            "highlight.js"
+        );
+
+        // Visibility MUST load before UI.
+        await loadScript(
+            "visibility.js"
+        );
+
+        await loadScript(
+            "picker.js"
+        );
 
         // -----------------------------------------------------
         // State
@@ -198,7 +224,8 @@
                     "block";
 
                 code.textContent =
-                    "ID not found: " + id;
+                    "ID not found: " +
+                    id;
 
                 status.textContent =
                     "✕ ID not found.";
@@ -214,26 +241,90 @@
                     } catch (e) {}
                 }
 
+                // No selected object now.
+                if (
+                    typeof window.updateIDPanelVisibilityUI ===
+                    "function"
+                ) {
+                    window.updateIDPanelVisibilityUI(
+                        null
+                    );
+                }
+
                 return;
             }
+
+            // -------------------------------------------------
+            // Save selected ID
+            // -------------------------------------------------
 
             state.selectedID =
                 id;
 
+            // -------------------------------------------------
             // Highlight element
+            // -------------------------------------------------
+
             if (
                 typeof window.highlightElement ===
                 "function"
             ) {
                 try {
+
                     window.highlightElement(
                         el,
                         state
                     );
+
                 } catch (e) {}
             }
 
+            // -------------------------------------------------
+            // IMPORTANT:
+            // Tell visibility.js that the selected object
+            // has changed.
+            // -------------------------------------------------
+
+            if (
+                typeof window.notifyAssetSelection ===
+                "function"
+            ) {
+                try {
+
+                    window.notifyAssetSelection(
+                        state
+                    );
+
+                } catch (e) {}
+            }
+            else if (
+                typeof window.updateIDPanelVisibilityUI ===
+                "function"
+            ) {
+
+                // Fallback for visibility.js versions that
+                // don't expose notifyAssetSelection().
+                try {
+
+                    const visible =
+                        typeof window.getAssetVisibility ===
+                        "function"
+                            ? window.getAssetVisibility(
+                                state
+                            )
+                            : null;
+
+                    window.updateIDPanelVisibilityUI(
+                        visible
+                    );
+
+                } catch (e) {}
+            }
+
+            // -------------------------------------------------
             // Find JavaScript references
+            // -------------------------------------------------
+
             let matches = [];
 
             if (
@@ -241,12 +332,21 @@
                 "function"
             ) {
                 try {
+
                     matches =
-                        window.findCodeReferences(id);
+                        window.findCodeReferences(
+                            id
+                        );
+
                 } catch (e) {
+
                     matches = [];
                 }
             }
+
+            // -------------------------------------------------
+            // Computed information
+            // -------------------------------------------------
 
             const computed =
                 getComputedStyle(el);
@@ -261,6 +361,10 @@
                     ? el.className
                     : "";
 
+            // -------------------------------------------------
+            // Display code
+            // -------------------------------------------------
+
             code.textContent =
                 "ID: " +
                 id +
@@ -272,6 +376,8 @@
                 className +
                 "\nDISPLAY: " +
                 computed.display +
+                "\nVISIBILITY: " +
+                computed.visibility +
                 "\n\n" +
                 "==============================\n" +
                 "JAVASCRIPT REFERENCES\n" +
@@ -290,14 +396,42 @@
                 "block";
 
             status.textContent =
-                "✓ #" + id;
+                "✓ #" +
+                id;
+
+            // -------------------------------------------------
+            // Final visibility refresh
+            //
+            // This catches modules that update the selection
+            // on the next frame.
+            // -------------------------------------------------
+
+            if (
+                typeof window.notifyAssetSelection ===
+                "function"
+            ) {
+
+                requestAnimationFrame(
+                    function () {
+
+                        try {
+                            window.notifyAssetSelection(
+                                state
+                            );
+                        } catch (e) {}
+
+                    }
+                );
+            }
         };
 
         // -----------------------------------------------------
         // UI
         // -----------------------------------------------------
 
-        await loadScript("ui.js");
+        await loadScript(
+            "ui.js"
+        );
 
         if (
             typeof window.__IDPanelStart !==
@@ -315,17 +449,19 @@
     // Error handling
     // ---------------------------------------------------------
 
-    start().catch(function (error) {
+    start().catch(
+        function (error) {
 
-        console.error(
-            "ID-ui-panel loader error:",
-            error
-        );
+            console.error(
+                "ID-ui-panel loader error:",
+                error
+            );
 
-        alert(
-            "ID-ui-panel failed to load:\n\n" +
-            error.message
-        );
-    });
+            alert(
+                "ID-ui-panel failed to load:\n\n" +
+                error.message
+            );
+        }
+    );
 
 })();
