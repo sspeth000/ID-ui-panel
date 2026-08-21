@@ -3,10 +3,7 @@
 
     window.__IDPanelStart = function () {
 
-        // ---------------------------------------------------------
-        // Remove existing panel
-        // ---------------------------------------------------------
-
+        // Remove existing panel if one is already running.
         if (window.__IDPanelUI) {
             try {
                 window.__IDPanelUI.remove();
@@ -15,10 +12,7 @@
             window.__IDPanelUI = null;
         }
 
-        // ---------------------------------------------------------
-        // Shared state
-        // ---------------------------------------------------------
-
+        // Shared state.
         const state =
             window.__IDPanelState ||
             (
@@ -38,6 +32,7 @@
 
         window.__IDPanelState = state;
 
+        // Make sure hue exists even if state.js is older.
         if (!Number.isFinite(state.hue)) {
             state.hue = 120;
         }
@@ -71,38 +66,37 @@
 
         const panel = document.createElement("div");
 
-        panel.className =
-            "inspector-panel";
+        panel.className = "inspector-panel";
+
+        // Initial hue variable.
+        panel.style.setProperty(
+            "--id-hue",
+            String(state.hue)
+        );
+
+        root.style.setProperty(
+            "--id-hue",
+            String(state.hue)
+        );
 
         // =========================================================
         // HEADER
         // =========================================================
 
-        const header =
-            document.createElement("div");
+        const header = document.createElement("div");
 
-        header.className =
-            "inspector-header";
+        header.className = "inspector-header";
 
-        const title =
-            document.createElement("b");
+        const title = document.createElement("b");
 
-        title.className =
-            "inspector-title";
+        title.className = "inspector-title";
+        title.textContent = "ASSET ID INSPECTOR";
 
-        title.textContent =
-            "ASSET ID INSPECTOR";
-
-        const close =
-            document.createElement("button");
+        const close = document.createElement("button");
 
         close.type = "button";
-
-        close.className =
-            "inspector-close";
-
-        close.textContent =
-            "×";
+        close.className = "inspector-close";
+        close.textContent = "×";
 
         header.appendChild(title);
         header.appendChild(close);
@@ -151,14 +145,15 @@
         hue.min = "0";
         hue.max = "360";
         hue.step = "1";
-
-        hue.value =
-            Number.isFinite(state.hue)
-                ? state.hue
-                : 120;
+        hue.value = String(state.hue);
 
         hue.className =
             "inspector-hue";
+
+        hue.setAttribute(
+            "aria-label",
+            "Panel hue"
+        );
 
         hueWrap.appendChild(hueRow);
         hueWrap.appendChild(hue);
@@ -352,7 +347,7 @@
 
         panel.appendChild(header);
 
-        // Hue ABOVE opacity
+        // Hue goes ABOVE opacity.
         panel.appendChild(hueWrap);
         panel.appendChild(opacityWrap);
 
@@ -394,8 +389,10 @@
                     )
                 );
 
-            state.hue =
-                value;
+            state.hue = value;
+
+            hue.value =
+                String(value);
 
             hueValue.textContent =
                 String(value) + "°";
@@ -418,6 +415,19 @@
                 e.stopPropagation();
 
                 applyHue();
+
+            },
+            true
+        );
+
+        hue.addEventListener(
+            "change",
+            function (e) {
+
+                e.stopPropagation();
+
+                applyHue();
+
             },
             true
         );
@@ -427,6 +437,17 @@
             function (e) {
 
                 e.stopPropagation();
+
+            },
+            true
+        );
+
+        hue.addEventListener(
+            "touchstart",
+            function (e) {
+
+                e.stopPropagation();
+
             },
             true
         );
@@ -546,6 +567,7 @@
                         id;
 
                     inspectCurrentID();
+
                 }
             );
         }
@@ -569,6 +591,7 @@
                     panel.classList.contains(
                         "open"
                     );
+
             },
             true
         );
@@ -590,6 +613,7 @@
 
                 state.panelOpen =
                     false;
+
             },
             true
         );
@@ -606,6 +630,7 @@
                 e.stopPropagation();
 
                 inspectCurrentID();
+
             },
             true
         );
@@ -625,7 +650,9 @@
                     e.preventDefault();
 
                     inspectCurrentID();
+
                 }
+
             },
             true
         );
@@ -635,6 +662,7 @@
             function (e) {
 
                 e.stopPropagation();
+
             },
             true
         );
@@ -644,6 +672,7 @@
             function (e) {
 
                 e.stopPropagation();
+
             },
             true
         );
@@ -659,6 +688,7 @@
                 e.stopPropagation();
 
                 renderIDList();
+
             },
             true
         );
@@ -668,6 +698,7 @@
             function (e) {
 
                 e.stopPropagation();
+
             },
             true
         );
@@ -677,6 +708,7 @@
             function (e) {
 
                 e.stopPropagation();
+
             },
             true
         );
@@ -686,6 +718,7 @@
             function (e) {
 
                 e.stopPropagation();
+
             },
             true
         );
@@ -719,6 +752,7 @@
                     code,
                     status
                 );
+
             },
             true
         );
@@ -771,6 +805,7 @@
                         );
 
                     } catch (e) {}
+
                 }
 
                 if (
@@ -785,6 +820,7 @@
                         );
 
                     } catch (e) {}
+
                 }
 
                 if (
@@ -795,12 +831,21 @@
                     root.parentNode.removeChild(
                         root
                     );
+
                 }
 
                 window.__IDPanelUI =
                     null;
+
             }
+
         };
     };
+
+    // =============================================================
+    // START UI
+    // =============================================================
+
+    window.__IDPanelStart();
 
 })();
