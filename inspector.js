@@ -4,8 +4,6 @@
     const BASE =
         "https://raw.githubusercontent.com/sspeth000/ID-ui-panel/main/";
 
-    alert("ID-ui-panel loader v3 started");
-
     // ---------------------------------------------------------
     // Toggle existing panel
     // ---------------------------------------------------------
@@ -136,28 +134,14 @@
 
     async function start() {
 
-        alert("Loading styles.css...");
-
+        // CSS
         await loadCSS("styles.css");
 
-        alert("styles.css loaded.\nLoading state.js...");
-
+        // Core modules
         await loadScript("state.js");
-
-        alert("state.js loaded.\nLoading ids.js...");
-
         await loadScript("ids.js");
-
-        alert("ids.js loaded.\nLoading code-search.js...");
-
         await loadScript("code-search.js");
-
-        alert("code-search.js loaded.\nLoading highlight.js...");
-
         await loadScript("highlight.js");
-
-        alert("highlight.js loaded.\nLoading picker.js...");
-
         await loadScript("picker.js");
 
         // -----------------------------------------------------
@@ -177,7 +161,7 @@
             window.createInspectorState();
 
         // -----------------------------------------------------
-        // Inspector
+        // ID Inspector
         // -----------------------------------------------------
 
         window.inspectID = function (
@@ -235,6 +219,7 @@
             state.selectedID =
                 id;
 
+            // Highlight element
             if (
                 typeof window.highlightElement ===
                 "function"
@@ -247,6 +232,7 @@
                 } catch (e) {}
             }
 
+            // Find JavaScript references
             let matches = [];
 
             if (
@@ -310,8 +296,6 @@
         // UI
         // -----------------------------------------------------
 
-        alert("Core modules loaded.\nLoading ui.js...");
-
         await loadScript("ui.js");
 
         if (
@@ -322,8 +306,6 @@
                 "ui.js loaded, but __IDPanelStart() does not exist."
             );
         }
-
-        alert("ui.js loaded.\nStarting panel...");
 
         window.__IDPanelStart();
     }
