@@ -4,6 +4,8 @@
     const BASE =
         "https://raw.githubusercontent.com/sspeth000/ID-ui-panel/main/";
 
+    alert("ID-ui-panel loader v3 started");
+
     // ---------------------------------------------------------
     // Toggle existing panel
     // ---------------------------------------------------------
@@ -21,94 +23,111 @@
     // Load JavaScript
     // ---------------------------------------------------------
 
-    function loadScript(file) {
-        return new Promise(function (resolve, reject) {
+    async function loadScript(file) {
 
-            const script =
-                document.createElement("script");
+        const url =
+            BASE +
+            file +
+            "?v=" +
+            Date.now();
 
-            script.src = BASE + file;
-            script.async = false;
+        const response =
+            await fetch(url, {
+                cache: "no-store"
+            });
 
-            script.onload = function () {
-                resolve();
-            };
+        if (!response.ok) {
+            throw new Error(
+                "JS HTTP " +
+                response.status +
+                " while loading " +
+                file +
+                "\n\nURL:\n" +
+                url
+            );
+        }
 
-            script.onerror = function () {
-                reject(
-                    new Error(
-                        "Failed to load " + file
-                    )
-                );
-            };
+        const code =
+            await response.text();
 
-            (
-                document.head ||
-                document.documentElement
-            ).appendChild(script);
-        });
+        if (!code.trim()) {
+            throw new Error(
+                file +
+                " downloaded successfully, but it is empty."
+            );
+        }
+
+        try {
+            (0, eval)(code);
+        } catch (error) {
+            throw new Error(
+                file +
+                " downloaded, but execution failed:\n\n" +
+                error.message
+            );
+        }
     }
 
     // ---------------------------------------------------------
     // Load CSS
     // ---------------------------------------------------------
-    // Fetch the CSS manually instead of using <link>.
-    // This gives much better error messages.
 
-    function loadCSS(file) {
-        return new Promise(function (resolve, reject) {
+    async function loadCSS(file) {
 
-            const url = BASE + file;
+        const url =
+            BASE +
+            file +
+            "?v=" +
+            Date.now();
 
-            fetch(url, {
+        const response =
+            await fetch(url, {
                 cache: "no-store"
-            })
-                .then(function (response) {
+            });
 
-                    if (!response.ok) {
-                        throw new Error(
-                            "CSS HTTP " +
-                            response.status +
-                            " — " +
-                            url
-                        );
-                    }
+        if (!response.ok) {
+            throw new Error(
+                "CSS HTTP " +
+                response.status +
+                " while loading " +
+                file +
+                "\n\nURL:\n" +
+                url
+            );
+        }
 
-                    return response.text();
-                })
-                .then(function (css) {
+        const css =
+            await response.text();
 
-                    // Remove an older copy if one exists.
-                    const oldStyle =
-                        document.getElementById(
-                            "__IDPanelStyles"
-                        );
+        if (!css.trim()) {
+            throw new Error(
+                file +
+                " downloaded successfully, but it is empty."
+            );
+        }
 
-                    if (oldStyle) {
-                        try {
-                            oldStyle.remove();
-                        } catch (e) {}
-                    }
+        const oldStyle =
+            document.getElementById(
+                "__IDPanelStyles"
+            );
 
-                    const style =
-                        document.createElement("style");
+        if (oldStyle) {
+            oldStyle.remove();
+        }
 
-                    style.id =
-                        "__IDPanelStyles";
+        const style =
+            document.createElement("style");
 
-                    style.textContent = css;
+        style.id =
+            "__IDPanelStyles";
 
-                    (
-                        document.head ||
-                        document.documentElement
-                    ).appendChild(style);
+        style.textContent =
+            css;
 
-                    resolve();
-                })
-                .catch(function (error) {
-                    reject(error);
-                });
-        });
+        (
+            document.head ||
+            document.documentElement
+        ).appendChild(style);
     }
 
     // ---------------------------------------------------------
@@ -117,24 +136,32 @@
 
     async function start() {
 
-        // -----------------------------------------------------
-        // CSS
-        // -----------------------------------------------------
+        alert("Loading styles.css...");
 
         await loadCSS("styles.css");
 
-        // -----------------------------------------------------
-        // Core modules
-        // -----------------------------------------------------
+        alert("styles.css loaded.\nLoading state.js...");
 
         await loadScript("state.js");
+
+        alert("state.js loaded.\nLoading ids.js...");
+
         await loadScript("ids.js");
+
+        alert("ids.js loaded.\nLoading code-search.js...");
+
         await loadScript("code-search.js");
+
+        alert("code-search.js loaded.\nLoading highlight.js...");
+
         await loadScript("highlight.js");
+
+        alert("highlight.js loaded.\nLoading picker.js...");
+
         await loadScript("picker.js");
 
         // -----------------------------------------------------
-        // Verify state module
+        // State
         // -----------------------------------------------------
 
         if (
@@ -142,7 +169,7 @@
             "function"
         ) {
             throw new Error(
-                "state.js did not load correctly."
+                "state.js loaded, but createInspectorState() does not exist."
             );
         }
 
@@ -150,7 +177,7 @@
             window.createInspectorState();
 
         // -----------------------------------------------------
-        // ID inspector
+        // Inspector
         // -----------------------------------------------------
 
         window.inspectID = function (
@@ -160,11 +187,13 @@
             status
         ) {
 
-            id = String(id || "").trim();
+            id =
+                String(id || "").trim();
 
             if (!id) {
 
-                code.style.display = "block";
+                code.style.display =
+                    "block";
 
                 code.textContent =
                     "Enter an ID.";
@@ -180,7 +209,8 @@
 
             if (!el) {
 
-                code.style.display = "block";
+                code.style.display =
+                    "block";
 
                 code.textContent =
                     "ID not found: " + id;
@@ -193,18 +223,17 @@
                     "function"
                 ) {
                     try {
-                        window.clearHighlight(state);
+                        window.clearHighlight(
+                            state
+                        );
                     } catch (e) {}
                 }
 
                 return;
             }
 
-            state.selectedID = id;
-
-            // -------------------------------------------------
-            // Highlight
-            // -------------------------------------------------
+            state.selectedID =
+                id;
 
             if (
                 typeof window.highlightElement ===
@@ -217,10 +246,6 @@
                     );
                 } catch (e) {}
             }
-
-            // -------------------------------------------------
-            // JavaScript references
-            // -------------------------------------------------
 
             let matches = [];
 
@@ -236,26 +261,28 @@
                 }
             }
 
-            // -------------------------------------------------
-            // Element information
-            // -------------------------------------------------
-
             const computed =
                 getComputedStyle(el);
 
             const src =
-                el.src || "(none)";
+                el.src ||
+                "(none)";
 
             const className =
-                typeof el.className === "string"
+                typeof el.className ===
+                "string"
                     ? el.className
                     : "";
 
             code.textContent =
-                "ID: " + id +
-                "\nTAG: " + el.tagName +
-                "\nSRC: " + src +
-                "\nCLASS: " + className +
+                "ID: " +
+                id +
+                "\nTAG: " +
+                el.tagName +
+                "\nSRC: " +
+                src +
+                "\nCLASS: " +
+                className +
                 "\nDISPLAY: " +
                 computed.display +
                 "\n\n" +
@@ -272,7 +299,8 @@
                         : "No JavaScript references found."
                 );
 
-            code.style.display = "block";
+            code.style.display =
+                "block";
 
             status.textContent =
                 "✓ #" + id;
@@ -282,24 +310,20 @@
         // UI
         // -----------------------------------------------------
 
-        await loadScript("ui.js");
+        alert("Core modules loaded.\nLoading ui.js...");
 
-        // -----------------------------------------------------
-        // Verify UI
-        // -----------------------------------------------------
+        await loadScript("ui.js");
 
         if (
             typeof window.__IDPanelStart !==
             "function"
         ) {
             throw new Error(
-                "ui.js did not expose __IDPanelStart."
+                "ui.js loaded, but __IDPanelStart() does not exist."
             );
         }
 
-        // -----------------------------------------------------
-        // Start UI
-        // -----------------------------------------------------
+        alert("ui.js loaded.\nStarting panel...");
 
         window.__IDPanelStart();
     }
@@ -311,7 +335,7 @@
     start().catch(function (error) {
 
         console.error(
-            "ID-ui-panel failed:",
+            "ID-ui-panel loader error:",
             error
         );
 
