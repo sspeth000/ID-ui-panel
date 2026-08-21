@@ -1,37 +1,78 @@
-function getPageIDs(filter = "") {
-  const query = filter.trim().toLowerCase();
+(function () {
+    "use strict";
 
-  return Array.from(
-    document.querySelectorAll("[id]")
-  )
-  .map(el => el.id)
-  .filter(Boolean)
-  .filter(id => {
-    if (
-      id.startsWith("__lomandoInspector")
-    ) {
-      return false;
-    }
+    window.getPageIDs = function (filter) {
 
-    return id
-      .toLowerCase()
-      .includes(query);
-  });
-}
+        filter = String(filter || "")
+            .trim()
+            .toLowerCase();
 
-function renderIDs(filter, container, onSelect) {
-  container.innerHTML = "";
+        return Array.from(
+            document.querySelectorAll("[id]")
+        )
+        .map(function (el) {
+            return el.id;
+        })
+        .filter(Boolean)
+        .filter(function (id) {
 
-  for (const id of getPageIDs(filter)) {
-    const button = document.createElement("button");
+            // Never show the inspector's own IDs.
+            if (
+                id === "__IDPanelRoot" ||
+                id.startsWith("__IDPanel")
+            ) {
+                return false;
+            }
 
-    button.textContent = "# " + id;
-    button.className = "inspector-button";
-
-    button.onclick = () => {
-      onSelect(id);
+            return id
+                .toLowerCase()
+                .includes(filter);
+        });
     };
 
-    container.appendChild(button);
-  }
-}
+    window.renderIDs = function (
+        filter,
+        container,
+        onSelect
+    ) {
+
+        container.innerHTML = "";
+
+        const ids = window.getPageIDs(filter);
+
+        if (!ids.length) {
+            const empty = document.createElement("div");
+
+            empty.textContent = "No IDs found.";
+            empty.style.cssText =
+                "padding:5px;color:#718078;font:8px monospace;";
+
+            container.appendChild(empty);
+            return;
+        }
+
+        ids.forEach(function (id) {
+
+            const button =
+                document.createElement("button");
+
+            button.type = "button";
+            button.textContent = "# " + id;
+            button.className =
+                "inspector-button inspector-id-button";
+
+            button.addEventListener(
+                "click",
+                function (e) {
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    onSelect(id);
+                }
+            );
+
+            container.appendChild(button);
+        });
+    };
+})();
