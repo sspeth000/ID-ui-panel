@@ -3,166 +3,345 @@
 
     window.__IDPanelStart = function () {
 
-        // Prevent duplicate panels
+        // Remove existing panel if one is already running.
         if (window.__IDPanelUI) {
-            return;
+            try {
+                window.__IDPanelUI.remove();
+            } catch (e) {}
+
+            window.__IDPanelUI = null;
         }
 
-        // State should have been loaded by inspector.js
+        // Shared state.
         const state =
             window.__IDPanelState ||
-            {
-                picking: false,
-                highlighted: null,
-                oldOutline: ""
-            };
+            (
+                typeof window.createInspectorState === "function"
+                    ? window.createInspectorState()
+                    : {
+                        picking: false,
+                        highlighted: null,
+                        oldOutline: "",
+                        selectedID: "",
+                        panelOpen: false,
+                        opacity: 0,
+                        pickerHandler: null
+                    }
+            );
 
-        // Root UI container
+        window.__IDPanelState = state;
+
+        // =========================================================
+        // ROOT
+        // =========================================================
+
         const root = document.createElement("div");
-        root.className = "inspector-root";
+
         root.id = "__IDPanelRoot";
+        root.className = "inspector-root";
 
-        // Cog button
+        // =========================================================
+        // COG
+        // =========================================================
+
         const cog = document.createElement("button");
-        cog.className = "inspector-cog";
-        cog.type = "button";
-        cog.textContent = "⚙";
 
-        // Panel
+        cog.type = "button";
+        cog.className = "inspector-cog";
+        cog.textContent = "⚙";
+        cog.setAttribute("aria-label", "Open Asset ID Inspector");
+
+        // =========================================================
+        // PANEL
+        // =========================================================
+
         const panel = document.createElement("div");
+
         panel.className = "inspector-panel";
 
-        // Header
+        // =========================================================
+        // HEADER
+        // =========================================================
+
         const header = document.createElement("div");
+
         header.className = "inspector-header";
 
         const title = document.createElement("b");
-        title.textContent = "LOMANDO INSPECTOR";
+
         title.className = "inspector-title";
+        title.textContent = "ASSET ID INSPECTOR";
 
         const close = document.createElement("button");
+
         close.type = "button";
         close.className = "inspector-close";
         close.textContent = "×";
 
-        header.append(title, close);
+        header.appendChild(title);
+        header.appendChild(close);
 
-        // Enter ID
-        const idInput = document.createElement("input");
+        // =========================================================
+        // OPACITY
+        // =========================================================
+
+        const opacityWrap =
+            document.createElement("div");
+
+        opacityWrap.className =
+            "inspector-opacity-wrap";
+
+        const opacityRow =
+            document.createElement("div");
+
+        opacityRow.className =
+            "inspector-opacity-row";
+
+        const opacityLabel =
+            document.createElement("span");
+
+        opacityLabel.className =
+            "inspector-opacity-label";
+
+        opacityLabel.textContent = "Opacity";
+
+        const opacityValue =
+            document.createElement("span");
+
+        opacityValue.className =
+            "inspector-opacity-value";
+
+        opacityValue.textContent = "0";
+
+        opacityRow.appendChild(opacityLabel);
+        opacityRow.appendChild(opacityValue);
+
+        const opacity =
+            document.createElement("input");
+
+        opacity.type = "range";
+        opacity.min = "0";
+        opacity.max = "50";
+        opacity.step = "1";
+        opacity.value =
+            Number.isFinite(state.opacity)
+                ? state.opacity
+                : 0;
+
+        opacity.className =
+            "inspector-opacity";
+
+        opacityWrap.appendChild(opacityRow);
+        opacityWrap.appendChild(opacity);
+
+        // =========================================================
+        // ENTER ID
+        // =========================================================
+
+        const idInput =
+            document.createElement("input");
+
         idInput.type = "text";
-        idInput.className = "inspector-input";
-        idInput.placeholder = "Enter ID...";
+        idInput.className =
+            "inspector-input";
+
+        idInput.placeholder =
+            "Enter ID...";
+
         idInput.autocomplete = "off";
         idInput.autocorrect = "off";
         idInput.autocapitalize = "off";
         idInput.spellcheck = false;
 
-        // Inspect button
-        const inspect = document.createElement("button");
+        // =========================================================
+        // INSPECT
+        // =========================================================
+
+        const inspect =
+            document.createElement("button");
+
         inspect.type = "button";
-        inspect.className = "inspector-button";
-        inspect.textContent = "Inspect ID";
+        inspect.className =
+            "inspector-button";
 
-        // Pick button
-        const pick = document.createElement("button");
+        inspect.textContent =
+            "Inspect ID";
+
+        // =========================================================
+        // PICK ASSET
+        // =========================================================
+
+        const pick =
+            document.createElement("button");
+
         pick.type = "button";
-        pick.className = "inspector-button";
-        pick.textContent = "◉ Pick Asset";
+        pick.className =
+            "inspector-button inspector-pick";
 
-        // Filter
-        const filter = document.createElement("input");
+        pick.textContent =
+            "◉ Pick Asset";
+
+        // =========================================================
+        // FILTER
+        // =========================================================
+
+        const filter =
+            document.createElement("input");
+
         filter.type = "text";
-        filter.className = "inspector-input";
-        filter.placeholder = "Filter IDs...";
+        filter.className =
+            "inspector-input";
+
+        filter.placeholder =
+            "Filter IDs...";
+
         filter.autocomplete = "off";
         filter.autocorrect = "off";
         filter.autocapitalize = "off";
         filter.spellcheck = false;
 
-        // ID list
-        const list = document.createElement("div");
-        list.className = "inspector-list";
+        // =========================================================
+        // ID LIST
+        // =========================================================
 
-        // Code display
-        const code = document.createElement("pre");
-        code.className = "inspector-code";
+        const list =
+            document.createElement("div");
 
-        // Status
-        const status = document.createElement("div");
-        status.className = "inspector-status";
-        status.textContent = "✓ Inspector ready";
+        list.className =
+            "inspector-list";
 
-        // Build panel
-        panel.append(
-            header,
-            idInput,
-            inspect,
-            pick,
-            filter,
-            list,
-            code,
-            status
-        );
+        // =========================================================
+        // CODE DISPLAY
+        // =========================================================
 
-        root.append(cog, panel);
+        const code =
+            document.createElement("pre");
 
-        // Put UI directly into the page.
-        // No iframe and no shadow DOM.
+        code.className =
+            "inspector-code";
+
+        // =========================================================
+        // STATUS
+        // =========================================================
+
+        const status =
+            document.createElement("div");
+
+        status.className =
+            "inspector-status";
+
+        status.textContent =
+            "✓ Inspector ready";
+
+        // =========================================================
+        // BUILD
+        // =========================================================
+
+        panel.appendChild(header);
+        panel.appendChild(opacityWrap);
+        panel.appendChild(idInput);
+        panel.appendChild(inspect);
+        panel.appendChild(pick);
+        panel.appendChild(filter);
+        panel.appendChild(list);
+        panel.appendChild(code);
+        panel.appendChild(status);
+
+        root.appendChild(cog);
+        root.appendChild(panel);
+
         document.documentElement.appendChild(root);
 
-        // -----------------------------------------
-        // EVENTS
-        // -----------------------------------------
+        // =========================================================
+        // OPACITY
+        // =========================================================
 
-        cog.addEventListener("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
+        function applyOpacity() {
 
-            panel.classList.toggle("open");
-        });
+            let value =
+                parseInt(opacity.value, 10);
 
-        close.addEventListener("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            panel.classList.remove("open");
-        });
-
-        inspect.addEventListener("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            if (typeof window.inspectID === "function") {
-                window.inspectID(
-                    idInput.value,
-                    state,
-                    code,
-                    status
-                );
+            if (!Number.isFinite(value)) {
+                value = 0;
             }
-        });
 
-        idInput.addEventListener("keydown", function (e) {
-            e.stopPropagation();
+            state.opacity = value;
 
-            if (e.key === "Enter") {
-                e.preventDefault();
+            const alpha =
+                1 - (value / 100);
 
-                if (typeof window.inspectID === "function") {
-                    window.inspectID(
-                        idInput.value,
-                        state,
-                        code,
-                        status
-                    );
-                }
+            opacityValue.textContent =
+                String(value);
+
+            panel.style.opacity =
+                String(alpha);
+
+            cog.style.opacity =
+                String(alpha);
+        }
+
+        opacity.addEventListener(
+            "input",
+            function (e) {
+
+                e.stopPropagation();
+                applyOpacity();
+            },
+            true
+        );
+
+        opacity.addEventListener(
+            "pointerdown",
+            function (e) {
+                e.stopPropagation();
+            },
+            true
+        );
+
+        applyOpacity();
+
+        // =========================================================
+        // INSPECT HELPER
+        // =========================================================
+
+        function inspectCurrentID() {
+
+            if (
+                typeof window.inspectID !==
+                "function"
+            ) {
+                code.style.display = "block";
+
+                code.textContent =
+                    "Inspector module is not loaded.";
+
+                status.textContent =
+                    "✕ Inspector unavailable.";
+
+                return;
             }
-        });
 
-        filter.addEventListener("input", function (e) {
-            e.stopPropagation();
+            window.inspectID(
+                idInput.value,
+                state,
+                code,
+                status
+            );
+        }
 
-            if (typeof window.renderIDs !== "function") {
+        // =========================================================
+        // RENDER ID LIST
+        // =========================================================
+
+        function renderIDList() {
+
+            if (
+                typeof window.renderIDs !==
+                "function"
+            ) {
+                status.textContent =
+                    "✕ IDs module failed to load.";
+
                 return;
             }
 
@@ -173,25 +352,160 @@
 
                     idInput.value = id;
 
-                    window.inspectID(
-                        id,
-                        state,
-                        code,
-                        status
-                    );
+                    inspectCurrentID();
                 }
             );
-        });
+        }
 
-        filter.addEventListener("keydown", function (e) {
-            e.stopPropagation();
-        });
+        // =========================================================
+        // COG
+        // =========================================================
 
-        pick.addEventListener("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
+        cog.addEventListener(
+            "click",
+            function (e) {
 
-            if (typeof window.togglePicker === "function") {
+                e.preventDefault();
+                e.stopPropagation();
+
+                panel.classList.toggle("open");
+
+                state.panelOpen =
+                    panel.classList.contains("open");
+            },
+            true
+        );
+
+        // =========================================================
+        // CLOSE
+        // =========================================================
+
+        close.addEventListener(
+            "click",
+            function (e) {
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                panel.classList.remove("open");
+
+                state.panelOpen = false;
+            },
+            true
+        );
+
+        // =========================================================
+        // INSPECT BUTTON
+        // =========================================================
+
+        inspect.addEventListener(
+            "click",
+            function (e) {
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                inspectCurrentID();
+            },
+            true
+        );
+
+        // =========================================================
+        // ENTER ID
+        // =========================================================
+
+        idInput.addEventListener(
+            "keydown",
+            function (e) {
+
+                e.stopPropagation();
+
+                if (e.key === "Enter") {
+
+                    e.preventDefault();
+
+                    inspectCurrentID();
+                }
+            },
+            true
+        );
+
+        idInput.addEventListener(
+            "click",
+            function (e) {
+                e.stopPropagation();
+            },
+            true
+        );
+
+        idInput.addEventListener(
+            "pointerdown",
+            function (e) {
+                e.stopPropagation();
+            },
+            true
+        );
+
+        // =========================================================
+        // FILTER
+        // =========================================================
+
+        filter.addEventListener(
+            "input",
+            function (e) {
+
+                e.stopPropagation();
+
+                renderIDList();
+            },
+            true
+        );
+
+        filter.addEventListener(
+            "keydown",
+            function (e) {
+                e.stopPropagation();
+            },
+            true
+        );
+
+        filter.addEventListener(
+            "click",
+            function (e) {
+                e.stopPropagation();
+            },
+            true
+        );
+
+        filter.addEventListener(
+            "pointerdown",
+            function (e) {
+                e.stopPropagation();
+            },
+            true
+        );
+
+        // =========================================================
+        // PICK ASSET
+        // =========================================================
+
+        pick.addEventListener(
+            "click",
+            function (e) {
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (
+                    typeof window.togglePicker !==
+                    "function"
+                ) {
+                    status.textContent =
+                        "✕ Picker module failed to load.";
+
+                    return;
+                }
+
                 window.togglePicker(
                     state,
                     pick,
@@ -199,45 +513,30 @@
                     code,
                     status
                 );
-            }
-        });
+            },
+            true
+        );
 
-        // -----------------------------------------
+        // =========================================================
         // INITIAL ID LIST
-        // -----------------------------------------
+        // =========================================================
 
-        if (typeof window.renderIDs === "function") {
+        renderIDList();
 
-            window.renderIDs(
-                "",
-                list,
-                function (id) {
-
-                    idInput.value = id;
-
-                    window.inspectID(
-                        id,
-                        state,
-                        code,
-                        status
-                    );
-                }
-            );
-
-        } else {
-            status.textContent =
-                "✕ IDs module failed to load.";
-        }
-
-        // -----------------------------------------
-        // PUBLIC UI HANDLE
-        // -----------------------------------------
+        // =========================================================
+        // PUBLIC HANDLE
+        // =========================================================
 
         window.__IDPanelUI = {
+
             root: root,
             panel: panel,
             cog: cog,
             close: close,
+
+            opacity: opacity,
+            opacityValue: opacityValue,
+
             idInput: idInput,
             inspect: inspect,
             pick: pick,
@@ -248,17 +547,38 @@
 
             remove: function () {
 
-                if (window.__IDPanelUI) {
-                    window.__IDPanelUI = null;
+                if (
+                    state.picking &&
+                    typeof window.stopInspectorPicker ===
+                    "function"
+                ) {
+                    try {
+                        window.stopInspectorPicker(
+                            state,
+                            pick,
+                            status
+                        );
+                    } catch (e) {}
                 }
 
-                if (root && root.parentNode) {
+                if (
+                    typeof window.clearHighlight ===
+                    "function"
+                ) {
+                    try {
+                        window.clearHighlight(state);
+                    } catch (e) {}
+                }
+
+                if (
+                    root &&
+                    root.parentNode
+                ) {
                     root.parentNode.removeChild(root);
                 }
+
+                window.__IDPanelUI = null;
             }
         };
     };
 })();
-if (typeof window.__IDPanelStart === "function") {
-    window.__IDPanelStart();
-}
