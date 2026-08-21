@@ -2,25 +2,46 @@
     "use strict";
 
     // =========================================================
-    // VISIBILITY STATE
+    // VISIBILITY MODULE
     // =========================================================
 
     const originalVisibility =
         new WeakMap();
 
     // =========================================================
-    // GET SELECTED ELEMENT
+    // FIND SELECTED ELEMENT
     // =========================================================
 
     function getSelectedElement(state) {
-        if (
-            !state ||
-            !state.highlighted
-        ) {
+
+        if (!state) {
             return null;
         }
 
-        return state.highlighted;
+        // Primary selection used by the inspector.
+        if (
+            state.highlighted &&
+            state.highlighted.nodeType === 1
+        ) {
+            return state.highlighted;
+        }
+
+        // Other possible selection properties.
+        if (
+            state.selectedElement &&
+            state.selectedElement.nodeType === 1
+        ) {
+            return state.selectedElement;
+        }
+
+        if (
+            state.element &&
+            state.element.nodeType === 1
+        ) {
+            return state.element;
+        }
+
+        return null;
     }
 
     // =========================================================
@@ -28,14 +49,22 @@
     // =========================================================
 
     function rememberElement(element) {
+
         if (!element) {
             return;
         }
 
         if (!originalVisibility.has(element)) {
+
             originalVisibility.set(
                 element,
-                element.style.visibility || ""
+                {
+                    visibility:
+                        element.style.visibility,
+
+                    display:
+                        element.style.display
+                }
             );
         }
     }
@@ -44,105 +73,198 @@
     // GET VISIBILITY
     // =========================================================
 
-    window.getAssetVisibility = function (state) {
+    window.getAssetVisibility =
+        function (state) {
 
-        const element =
-            getSelectedElement(state);
+            const element =
+                getSelectedElement(state);
 
-        if (!element) {
-            return null;
-        }
+            if (!element) {
+                return null;
+            }
 
-        rememberElement(element);
+            rememberElement(element);
 
-        return (
-            element.style.visibility !==
-            "hidden"
-        );
-    };
+            /*
+             * Check the actual rendered visibility,
+             * not just the inline style.
+             */
+
+            const computed =
+                window.getComputedStyle(
+                    element
+                );
+
+            return (
+                computed.visibility !==
+                "hidden" &&
+                computed.display !==
+                "none"
+            );
+        };
 
     // =========================================================
     // SET VISIBILITY
     // =========================================================
 
-    window.setAssetVisibility = function (
-        state,
-        visible
-    ) {
+    window.setAssetVisibility =
+        function (
+            state,
+            visible
+        ) {
 
-        const element =
-            getSelectedElement(state);
+            const element =
+                getSelectedElement(state);
 
-        if (!element) {
-            return false;
-        }
+            if (!element) {
+                return false;
+            }
 
-        rememberElement(element);
+            rememberElement(element);
 
-        if (visible) {
+            visible =
+                Boolean(visible);
 
-            element.style.visibility =
+            const original =
                 originalVisibility.get(
                     element
-                ) || "";
+                );
 
-        } else {
+            if (visible) {
 
-            element.style.visibility =
-                "hidden";
-        }
+                /*
+                 * Restore the original
+                 * inline values.
+                 */
 
-        return true;
-    };
+                element.style.visibility =
+                    original
+                        ? original.visibility
+                        : "";
 
-    // =========================================================
-    // TOGGLE VISIBILITY
-    // =========================================================
+                element.style.display =
+                    original
+                        ? original.display
+                        : "";
 
-    window.toggleAssetVisibility = function (
-        state
-    ) {
+            } else {
 
-        const element =
-            getSelectedElement(state);
+                /*
+                 * Hide the actual asset.
+                 */
 
-        if (!element) {
-            return null;
-        }
+                element.style.visibility =
+                    "hidden";
+            }
 
-        rememberElement(element);
-
-        const visible =
-            element.style.visibility !==
-            "hidden";
-
-        const newVisibility =
-            !visible;
-
-        window.setAssetVisibility(
-            state,
-            newVisibility
-        );
-
-        return newVisibility;
-    };
+            return true;
+        };
 
     // =========================================================
-    // REMEMBER CURRENT ASSET
+    // TOGGLE
     // =========================================================
 
-    window.rememberAssetVisibility = function (
-        state
-    ) {
+    window.toggleAssetVisibility =
+        function (state) {
 
-        const element =
-            getSelectedElement(state);
+            const current =
+                window.getAssetVisibility(
+                    state
+                );
 
-        if (!element) {
-            return;
-        }
+            if (current === null) {
+                return null;
+            }
 
-        rememberElement(element);
-    };
+            const next =
+                !current;
+
+            window.setAssetVisibility(
+                state,
+                next
+            );
+
+            return next;
+        };
+
+    // =========================================================
+    // REMEMBER SELECTED ASSET
+    // =========================================================
+
+    window.rememberAssetVisibility =
+        function (state) {
+
+            const element =
+                getSelectedElement(state);
+
+            if (!element) {
+                return false;
+            }
+
+            rememberElement(element);
+
+            return true;
+        };
+
+    // =========================================================
+    // DEBUG HELPER
+    // =========================================================
+
+    window.debugAssetVisibility =
+        function (state) {
+
+            const element =
+                getSelectedElement(state);
+
+            if (!element) {
+
+                return {
+                    found: false,
+                    reason:
+                        "No selected element"
+                };
+            }
+
+            const computed =
+                window.getComputedStyle(
+                    element
+                );
+
+            return {
+                found: true,
+
+                tag:
+                    element.tagName,
+
+                id:
+                    element.id || "",
+
+                className:
+                    typeof element.className ===
+                    "string"
+                        ? element.className
+                        : "",
+
+                inlineVisibility:
+                    element.style.visibility,
+
+                inlineDisplay:
+                    element.style.display,
+
+                computedVisibility:
+                    computed.visibility,
+
+                computedDisplay:
+                    computed.display,
+
+                visible:
+                    (
+                        computed.visibility !==
+                        "hidden" &&
+                        computed.display !==
+                        "none"
+                    )
+            };
+        };
 
 })();
