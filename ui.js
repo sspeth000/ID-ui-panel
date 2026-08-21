@@ -101,63 +101,40 @@
         header.appendChild(title);
         header.appendChild(close);
 
-        // =========================================================
-        // HUE
-        // =========================================================
+       // =========================================================
+       // HUE CONTROL
+       // =========================================================
 
-        const hueWrap =
-            document.createElement("div");
+        const hueWrap = document.createElement("div");
+        hueWrap.className = "inspector-hue-wrap";
 
-        hueWrap.className =
-            "inspector-hue-wrap";
+        const hueRow = document.createElement("div");
+        hueRow.className = "inspector-hue-row";
 
-        const hueRow =
-            document.createElement("div");
+        const hueLabel = document.createElement("span");
+        hueLabel.textContent = "Hue";
 
-        hueRow.className =
-            "inspector-hue-row";
-
-        const hueLabel =
-            document.createElement("span");
-
-        hueLabel.className =
-            "inspector-hue-label";
-
-        hueLabel.textContent =
-            "Hue";
-
-        const hueValue =
-            document.createElement("span");
-
-        hueValue.className =
-            "inspector-hue-value";
-
+        const hueValue = document.createElement("span");
         hueValue.textContent =
-            String(state.hue) + "°";
+            String(state.hue ?? 120) + "°";
 
         hueRow.appendChild(hueLabel);
         hueRow.appendChild(hueValue);
 
-        const hue =
-            document.createElement("input");
+        const hue = document.createElement("input");
 
         hue.type = "range";
         hue.min = "0";
         hue.max = "360";
         hue.step = "1";
-        hue.value = String(state.hue);
+        hue.value = String(state.hue ?? 120);
 
-        hue.className =
-            "inspector-hue";
-
-        hue.setAttribute(
-            "aria-label",
-            "Panel hue"
-        );
+        hue.className = "inspector-hue";
 
         hueWrap.appendChild(hueRow);
         hueWrap.appendChild(hue);
 
+        
         // =========================================================
         // OPACITY
         // =========================================================
