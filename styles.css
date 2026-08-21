@@ -7,7 +7,6 @@
     --id-hue: 120;
 
     position: fixed !important;
-
     left: 0 !important;
     bottom: 0 !important;
 
@@ -18,14 +17,61 @@
     padding: 0 !important;
 
     z-index: 2147483647 !important;
-
     pointer-events: none !important;
 
     font-family: monospace !important;
 }
 
 /* =========================================================
-   GLOBAL UI FONT
+   SHARED COLORS
+   ========================================================= */
+
+#__IDPanelRoot {
+    --accent:
+        hsl(
+            var(--id-hue),
+            75%,
+            55%
+        );
+
+    --accent-light:
+        hsl(
+            var(--id-hue),
+            80%,
+            72%
+        );
+
+    --accent-dark:
+        hsl(
+            var(--id-hue),
+            45%,
+            30%
+        );
+
+    --accent-bg:
+        hsl(
+            var(--id-hue),
+            35%,
+            14%
+        );
+
+    --accent-bg-hover:
+        hsl(
+            var(--id-hue),
+            40%,
+            21%
+        );
+
+    --accent-border:
+        hsl(
+            var(--id-hue),
+            55%,
+            38%
+        );
+}
+
+/* =========================================================
+   FONT
    ========================================================= */
 
 #__IDPanelRoot button,
@@ -49,37 +95,25 @@
 
     padding: 0;
 
-    border: 1px solid
-        hsl(
-            var(--id-hue),
-            60%,
-            38%
-        );
-
+    border: 1px solid var(--accent-border);
     border-radius: 8px;
 
-    background:
-        hsl(
-            var(--id-hue),
-            30%,
-            7%
-        );
+    background: #0b100d;
 
-    color:
-        hsl(
-            var(--id-hue),
-            70%,
-            65%
-        );
+    color: var(--accent-light);
 
     font: 14px monospace;
 
     cursor: pointer;
-
     pointer-events: auto;
 
     box-shadow:
         0 3px 12px rgba(0, 0, 0, .65);
+}
+
+#__IDPanelRoot .inspector-cog:hover {
+    border-color: var(--accent);
+    color: var(--accent);
 }
 
 /* =========================================================
@@ -102,18 +136,12 @@
     overflow-y: auto;
     overflow-x: hidden;
 
-    border: 1px solid
-        hsl(
-            var(--id-hue),
-            45%,
-            28%
-        );
-
+    border: 1px solid var(--accent-dark);
     border-radius: 10px;
 
     background: #0b100d;
 
-    color: #dce9df;
+    color: var(--accent-light);
 
     box-shadow:
         0 8px 25px rgba(0, 0, 0, .75);
@@ -139,12 +167,7 @@
 }
 
 #__IDPanelRoot .inspector-title {
-    color:
-        hsl(
-            var(--id-hue),
-            70%,
-            65%
-        );
+    color: var(--accent-light);
 
     font-size: 8px;
 }
@@ -155,22 +178,21 @@
 
     padding: 0;
 
-    border: 1px solid
-        hsl(
-            var(--id-hue),
-            25%,
-            27%
-        );
-
+    border: 1px solid var(--accent-dark);
     border-radius: 6px;
 
-    background: #101612;
+    background: var(--accent-bg);
 
-    color: #9aaa9f;
+    color: var(--accent-light);
 
     cursor: pointer;
 
     font: 14px monospace;
+}
+
+#__IDPanelRoot .inspector-close:hover {
+    border-color: var(--accent);
+    background: var(--accent-bg-hover);
 }
 
 /* =========================================================
@@ -183,13 +205,7 @@
     margin: 3px 0 4px;
     padding: 5px 6px;
 
-    border: 1px solid
-        hsl(
-            var(--id-hue),
-            20%,
-            15%
-        );
-
+    border: 1px solid var(--accent-dark);
     border-radius: 6px;
 
     background: #080d0a;
@@ -202,24 +218,9 @@
     justify-content: space-between;
 }
 
-#__IDPanelRoot .inspector-hue-label {
-    color:
-        hsl(
-            var(--id-hue),
-            70%,
-            65%
-        );
-
-    font: 8px monospace;
-}
-
+#__IDPanelRoot .inspector-hue-label,
 #__IDPanelRoot .inspector-hue-value {
-    color:
-        hsl(
-            var(--id-hue),
-            80%,
-            75%
-        );
+    color: var(--accent-light);
 
     font: 8px monospace;
 }
@@ -235,12 +236,7 @@
 
     cursor: pointer;
 
-    accent-color:
-        hsl(
-            var(--id-hue),
-            75%,
-            55%
-        );
+    accent-color: var(--accent);
 }
 
 /* =========================================================
@@ -253,13 +249,7 @@
     margin: 3px 0 4px;
     padding: 5px 6px;
 
-    border: 1px solid
-        hsl(
-            var(--id-hue),
-            20%,
-            15%
-        );
-
+    border: 1px solid var(--accent-dark);
     border-radius: 6px;
 
     background: #080d0a;
@@ -272,24 +262,9 @@
     justify-content: space-between;
 }
 
-#__IDPanelRoot .inspector-opacity-label {
-    color:
-        hsl(
-            var(--id-hue),
-            70%,
-            65%
-        );
-
-    font: 8px monospace;
-}
-
+#__IDPanelRoot .inspector-opacity-label,
 #__IDPanelRoot .inspector-opacity-value {
-    color:
-        hsl(
-            var(--id-hue),
-            80%,
-            75%
-        );
+    color: var(--accent-light);
 
     font: 8px monospace;
 }
@@ -305,12 +280,7 @@
 
     cursor: pointer;
 
-    accent-color:
-        hsl(
-            var(--id-hue),
-            75%,
-            55%
-        );
+    accent-color: var(--accent);
 }
 
 /* =========================================================
@@ -326,18 +296,12 @@
     margin-top: 4px;
     padding: 5px 7px;
 
-    border: 1px solid
-        hsl(
-            var(--id-hue),
-            20%,
-            20%
-        );
-
+    border: 1px solid var(--accent-dark);
     border-radius: 6px;
 
     background: #050806;
 
-    color: #eaffef;
+    color: var(--accent-light);
 
     outline: none;
 
@@ -350,16 +314,24 @@
 }
 
 #__IDPanelRoot .inspector-input:focus {
-    border-color:
+    border-color: var(--accent);
+    box-shadow:
+        0 0 5px
         hsl(
             var(--id-hue),
-            65%,
-            45%
+            70%,
+            50%,
+            .25
         );
 }
 
 #__IDPanelRoot .inspector-input::placeholder {
-    color: #65736a;
+    color:
+        hsl(
+            var(--id-hue),
+            20%,
+            45%
+        );
 }
 
 /* =========================================================
@@ -372,43 +344,29 @@
 
     margin-top: 4px;
 
-    border: 1px solid
-        hsl(
-            var(--id-hue),
-            40%,
-            38%
-        );
-
+    border: 1px solid var(--accent-border);
     border-radius: 6px;
 
-    background:
-        hsl(
-            var(--id-hue),
-            35%,
-            16%
-        );
+    background: var(--accent-bg);
 
-    color:
-        hsl(
-            var(--id-hue),
-            80%,
-            78%
-        );
+    color: var(--accent-light);
 
     cursor: pointer;
 
     font: 9px monospace !important;
 
     pointer-events: auto !important;
+
+    transition:
+        background .12s,
+        border-color .12s,
+        color .12s;
 }
 
 #__IDPanelRoot .inspector-button:hover {
-    background:
-        hsl(
-            var(--id-hue),
-            40%,
-            22%
-        );
+    background: var(--accent-bg-hover);
+    border-color: var(--accent);
+    color: #fff;
 }
 
 #__IDPanelRoot .inspector-button:active {
@@ -416,7 +374,7 @@
         hsl(
             var(--id-hue),
             45%,
-            13%
+            10%
         );
 }
 
@@ -432,13 +390,7 @@
 
     overflow: auto;
 
-    border: 1px solid
-        hsl(
-            var(--id-hue),
-            20%,
-            15%
-        );
-
+    border: 1px solid var(--accent-dark);
     border-radius: 6px;
 
     padding: 2px;
@@ -450,43 +402,36 @@
     width: 100%;
 
     margin: 1px 0;
-
     padding: 4px;
 
     text-align: left;
 
-    border: 1px solid
-        hsl(
-            var(--id-hue),
-            20%,
-            15%
-        );
-
+    border: 1px solid var(--accent-dark);
     border-radius: 5px;
 
     background: #0c100e;
 
-    color: #9ba99f;
+    color:
+        hsl(
+            var(--id-hue),
+            30%,
+            65%
+        );
 
     cursor: pointer;
 
     font: 8px monospace !important;
+
+    transition:
+        background .12s,
+        color .12s,
+        border-color .12s;
 }
 
 #__IDPanelRoot .inspector-id-button:hover {
-    background:
-        hsl(
-            var(--id-hue),
-            20%,
-            8%
-        );
-
-    color:
-        hsl(
-            var(--id-hue),
-            75%,
-            78%
-        );
+    background: var(--accent-bg);
+    border-color: var(--accent-border);
+    color: var(--accent-light);
 }
 
 /* =========================================================
@@ -507,18 +452,17 @@
     white-space: pre-wrap;
     word-break: break-word;
 
-    border: 1px solid
-        hsl(
-            var(--id-hue),
-            20%,
-            15%
-        );
-
+    border: 1px solid var(--accent-dark);
     border-radius: 6px;
 
     background: #050706;
 
-    color: #b9c7bd;
+    color:
+        hsl(
+            var(--id-hue),
+            30%,
+            72%
+        );
 
     font: 7px/1.35 monospace !important;
 
@@ -533,12 +477,35 @@
 #__IDPanelRoot .inspector-status {
     margin-top: 4px;
 
-    color:
-        hsl(
-            var(--id-hue),
-            70%,
-            65%
-        );
+    color: var(--accent-light);
 
     font: 7px monospace !important;
+}
+
+/* =========================================================
+   SCROLLBARS
+   ========================================================= */
+
+#__IDPanelRoot *::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+#__IDPanelRoot *::-webkit-scrollbar-track {
+    background: #050806;
+}
+
+#__IDPanelRoot *::-webkit-scrollbar-thumb {
+    background:
+        hsl(
+            var(--id-hue),
+            45%,
+            32%
+        );
+
+    border-radius: 5px;
+}
+
+#__IDPanelRoot *::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
 }
