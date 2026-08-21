@@ -4,12 +4,16 @@
     const BASE =
         "https://raw.githubusercontent.com/sspeth000/ID-ui-panel/main/";
 
-    // Toggle an existing panel.
+    // ---------------------------------------------------------
+    // Toggle existing panel
+    // ---------------------------------------------------------
+
     if (window.__IDPanelUI) {
         try {
             window.__IDPanelUI.remove();
         } catch (e) {}
 
+        window.__IDPanelUI = null;
         return;
     }
 
@@ -48,33 +52,62 @@
     // ---------------------------------------------------------
     // Load CSS
     // ---------------------------------------------------------
+    // Fetch the CSS manually instead of using <link>.
+    // This gives much better error messages.
 
     function loadCSS(file) {
         return new Promise(function (resolve, reject) {
 
-            const link =
-                document.createElement("link");
+            const url = BASE + file;
 
-            link.rel = "stylesheet";
-            link.type = "text/css";
-            link.href = BASE + file;
+            fetch(url, {
+                cache: "no-store"
+            })
+                .then(function (response) {
 
-            link.onload = function () {
-                resolve();
-            };
+                    if (!response.ok) {
+                        throw new Error(
+                            "CSS HTTP " +
+                            response.status +
+                            " — " +
+                            url
+                        );
+                    }
 
-            link.onerror = function () {
-                reject(
-                    new Error(
-                        "Failed to load " + file
-                    )
-                );
-            };
+                    return response.text();
+                })
+                .then(function (css) {
 
-            (
-                document.head ||
-                document.documentElement
-            ).appendChild(link);
+                    // Remove an older copy if one exists.
+                    const oldStyle =
+                        document.getElementById(
+                            "__IDPanelStyles"
+                        );
+
+                    if (oldStyle) {
+                        try {
+                            oldStyle.remove();
+                        } catch (e) {}
+                    }
+
+                    const style =
+                        document.createElement("style");
+
+                    style.id =
+                        "__IDPanelStyles";
+
+                    style.textContent = css;
+
+                    (
+                        document.head ||
+                        document.documentElement
+                    ).appendChild(style);
+
+                    resolve();
+                })
+                .catch(function (error) {
+                    reject(error);
+                });
         });
     }
 
@@ -84,17 +117,26 @@
 
     async function start() {
 
-        // CSS first.
+        // -----------------------------------------------------
+        // CSS
+        // -----------------------------------------------------
+
         await loadCSS("styles.css");
 
-        // Core modules.
+        // -----------------------------------------------------
+        // Core modules
+        // -----------------------------------------------------
+
         await loadScript("state.js");
         await loadScript("ids.js");
         await loadScript("code-search.js");
         await loadScript("highlight.js");
         await loadScript("picker.js");
 
-        // Make sure state exists.
+        // -----------------------------------------------------
+        // Verify state module
+        // -----------------------------------------------------
+
         if (
             typeof window.createInspectorState !==
             "function"
@@ -123,7 +165,10 @@
             if (!id) {
 
                 code.style.display = "block";
-                code.textContent = "Enter an ID.";
+
+                code.textContent =
+                    "Enter an ID.";
+
                 status.textContent =
                     "✕ Enter an ID.";
 
@@ -157,7 +202,10 @@
 
             state.selectedID = id;
 
-            // Highlight.
+            // -------------------------------------------------
+            // Highlight
+            // -------------------------------------------------
+
             if (
                 typeof window.highlightElement ===
                 "function"
@@ -170,7 +218,10 @@
                 } catch (e) {}
             }
 
-            // JavaScript references.
+            // -------------------------------------------------
+            // JavaScript references
+            // -------------------------------------------------
+
             let matches = [];
 
             if (
@@ -184,6 +235,10 @@
                     matches = [];
                 }
             }
+
+            // -------------------------------------------------
+            // Element information
+            // -------------------------------------------------
 
             const computed =
                 getComputedStyle(el);
@@ -229,6 +284,10 @@
 
         await loadScript("ui.js");
 
+        // -----------------------------------------------------
+        // Verify UI
+        // -----------------------------------------------------
+
         if (
             typeof window.__IDPanelStart !==
             "function"
@@ -237,6 +296,10 @@
                 "ui.js did not expose __IDPanelStart."
             );
         }
+
+        // -----------------------------------------------------
+        // Start UI
+        // -----------------------------------------------------
 
         window.__IDPanelStart();
     }
