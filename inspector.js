@@ -142,6 +142,7 @@
         await loadScript("ids.js");
         await loadScript("code-search.js");
         await loadScript("highlight.js");
+        await loadScript("visibility.js");
         await loadScript("picker.js");
 
         // -----------------------------------------------------
