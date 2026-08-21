@@ -40,34 +40,56 @@
     }
 
     /*
-     * Load CSS.
+     * Load CSS by fetching the contents and
+     * injecting them into the page.
      */
     function loadCSS(file) {
-        return new Promise(function (resolve, reject) {
-            const link = document.createElement("link");
+        return fetch(BASE + file, {
+            cache: "no-store"
+        })
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error(
+                        "HTTP " +
+                        response.status +
+                        " while loading " +
+                        file
+                    );
+                }
 
-            link.rel = "stylesheet";
-            link.href = BASE + file;
+                return response.text();
+            })
+            .then(function (css) {
+                const style =
+                    document.createElement("style");
 
-            link.onload = function () {
-                resolve();
-            };
+                style.id =
+                    "__IDPanelStyles";
 
-            link.onerror = function () {
-                reject(
-                    new Error("Failed to load " + file)
+                style.textContent = css;
+
+                (
+                    document.head ||
+                    document.documentElement
+                ).appendChild(style);
+
+                return style;
+            })
+            .catch(function (error) {
+                throw new Error(
+                    "Failed to load " +
+                    file +
+                    ": " +
+                    error.message
                 );
-            };
-
-            (document.head || document.documentElement)
-                .appendChild(link);
-        });
+            });
     }
 
     /*
      * Load everything in dependency order.
      */
     async function start() {
+
         await loadCSS("styles.css");
 
         await loadScript("state.js");
@@ -114,6 +136,7 @@
 
             if (!el) {
                 code.style.display = "block";
+
                 code.textContent =
                     "ID not found: " + id;
 
@@ -212,7 +235,11 @@
         window.__IDPanelStart();
     }
 
+    /*
+     * Start everything.
+     */
     start().catch(function (error) {
+
         console.error(
             "ID-ui-panel failed:",
             error
@@ -223,4 +250,5 @@
             error.message
         );
     });
+
 })();
