@@ -2,101 +2,64 @@
     "use strict";
 
     window.findCodeReferences = function (id) {
-        id = String(id || "").trim();
+
+        id = String(id || "");
 
         if (!id) {
             return [];
         }
 
-        const results = [];
-
-        // -----------------------------------------------------
-        // INLINE SCRIPTS
-        // -----------------------------------------------------
-
-        const inlineScripts =
+        const scripts = Array.from(
             document.querySelectorAll(
                 "script:not([src])"
-            );
+            )
+        )
+        .map(function (script) {
+            return script.textContent || "";
+        })
+        .join("\n\n");
 
-        for (let i = 0; i < inlineScripts.length; i++) {
+        const patterns = [
+            "getElementById('" + id + "')",
+            'getElementById("' + id + '")'
+        ];
 
-            const source =
-                inlineScripts[i].textContent || "";
+        const matches = [];
 
-            if (source.includes(id)) {
+        patterns.forEach(function (pattern) {
 
-                results.push({
-                    type: "inline",
-                    name:
-                        "Inline script #" +
-                        (i + 1),
-                    source: source,
-                    url: null
-                });
+            let start = 0;
+
+            while (true) {
+
+                const index =
+                    scripts.indexOf(
+                        pattern,
+                        start
+                    );
+
+                if (index === -1) {
+                    break;
+                }
+
+                matches.push(
+                    scripts.substring(
+                        Math.max(
+                            0,
+                            index - 700
+                        ),
+                        Math.min(
+                            scripts.length,
+                            index + 2500
+                        )
+                    )
+                );
+
+                start =
+                    index + pattern.length;
             }
-        }
+        });
 
-        // -----------------------------------------------------
-        // EXTERNAL SCRIPTS
-        //
-        // We cannot synchronously fetch external JS here,
-        // so return the script locations for the inspector.
-        // -----------------------------------------------------
-
-        const scripts =
-            document.querySelectorAll(
-                "script[src]"
-            );
-
-        const seen =
-            new Set();
-
-        for (const script of scripts) {
-
-            try {
-
-                const url =
-                    new URL(
-                        script.src,
-                        document.baseURI
-                    ).href;
-
-                if (seen.has(url)) {
-                    continue;
-                }
-
-                seen.add(url);
-
-                const pathname =
-                    new URL(url).pathname
-                        .toLowerCase();
-
-                if (
-                    !pathname.endsWith(".js") &&
-                    !pathname.endsWith(".mjs")
-                ) {
-                    continue;
-                }
-
-                const parts =
-                    pathname.split("/");
-
-                const name =
-                    parts[parts.length - 1] ||
-                    "script.js";
-
-                results.push({
-                    type: "external",
-                    name: name,
-                    url: url,
-                    source: null
-                });
-
-            } catch (e) {}
-        }
-
-        return results;
+        return matches;
     };
-
 })();
