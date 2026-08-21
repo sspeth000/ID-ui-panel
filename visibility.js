@@ -5,12 +5,8 @@
     // VISIBILITY MODULE
     // =========================================================
 
-    const originalVisibility =
+    const savedVisibility =
         new WeakMap();
-
-    // =========================================================
-    // FIND SELECTED ELEMENT
-    // =========================================================
 
     function getSelectedElement(state) {
 
@@ -18,7 +14,7 @@
             return null;
         }
 
-        // Primary selection used by the inspector.
+        // The highlighted element is the currently selected asset.
         if (
             state.highlighted &&
             state.highlighted.nodeType === 1
@@ -26,245 +22,116 @@
             return state.highlighted;
         }
 
-        // Other possible selection properties.
-        if (
-            state.selectedElement &&
-            state.selectedElement.nodeType === 1
-        ) {
-            return state.selectedElement;
-        }
-
-        if (
-            state.element &&
-            state.element.nodeType === 1
-        ) {
-            return state.element;
-        }
-
         return null;
     }
 
-    // =========================================================
-    // REMEMBER ORIGINAL VISIBILITY
-    // =========================================================
+    function rememberOriginalState(element) {
 
-    function rememberElement(element) {
-
-        if (!element) {
+        if (
+            !element ||
+            savedVisibility.has(element)
+        ) {
             return;
         }
 
-        if (!originalVisibility.has(element)) {
+        savedVisibility.set(
+            element,
+            {
+                visibility:
+                    element.style.visibility,
 
-            originalVisibility.set(
-                element,
-                {
-                    visibility:
-                        element.style.visibility,
-
-                    display:
-                        element.style.display
-                }
-            );
-        }
+                display:
+                    element.style.display
+            }
+        );
     }
 
     // =========================================================
-    // GET VISIBILITY
+    // CHECK CURRENT VISIBILITY
     // =========================================================
 
-    window.getAssetVisibility =
-        function (state) {
+    window.getAssetVisibility = function (state) {
 
-            const element =
-                getSelectedElement(state);
+        const element =
+            getSelectedElement(state);
 
-            if (!element) {
-                return null;
-            }
+        if (!element) {
+            return null;
+        }
 
-            rememberElement(element);
+        rememberOriginalState(element);
 
-            /*
-             * Check the actual rendered visibility,
-             * not just the inline style.
-             */
+        const style =
+            window.getComputedStyle(element);
 
-            const computed =
-                window.getComputedStyle(
-                    element
-                );
-
-            return (
-                computed.visibility !==
-                "hidden" &&
-                computed.display !==
-                "none"
-            );
-        };
+        // An element is considered visible only when it is
+        // rendered and not explicitly hidden.
+        return (
+            style.visibility !== "hidden" &&
+            style.display !== "none"
+        );
+    };
 
     // =========================================================
     // SET VISIBILITY
     // =========================================================
 
-    window.setAssetVisibility =
-        function (
-            state,
-            visible
-        ) {
+    window.setAssetVisibility = function (
+        state,
+        visible
+    ) {
 
-            const element =
-                getSelectedElement(state);
+        const element =
+            getSelectedElement(state);
 
-            if (!element) {
-                return false;
-            }
+        if (!element) {
+            return false;
+        }
 
-            rememberElement(element);
+        rememberOriginalState(element);
 
-            visible =
-                Boolean(visible);
+        const original =
+            savedVisibility.get(element);
 
-            const original =
-                originalVisibility.get(
-                    element
-                );
+        if (visible) {
 
-            if (visible) {
+            element.style.visibility =
+                original.visibility || "";
 
-                /*
-                 * Restore the original
-                 * inline values.
-                 */
+            element.style.display =
+                original.display || "";
 
-                element.style.visibility =
-                    original
-                        ? original.visibility
-                        : "";
+        } else {
 
-                element.style.display =
-                    original
-                        ? original.display
-                        : "";
+            element.style.visibility =
+                "hidden";
+        }
 
-            } else {
-
-                /*
-                 * Hide the actual asset.
-                 */
-
-                element.style.visibility =
-                    "hidden";
-            }
-
-            return true;
-        };
+        return true;
+    };
 
     // =========================================================
     // TOGGLE
     // =========================================================
 
-    window.toggleAssetVisibility =
-        function (state) {
+    window.toggleAssetVisibility = function (state) {
 
-            const current =
-                window.getAssetVisibility(
-                    state
-                );
+        const current =
+            window.getAssetVisibility(state);
 
-            if (current === null) {
-                return null;
-            }
+        if (current === null) {
+            return null;
+        }
 
-            const next =
-                !current;
+        const next =
+            !current;
 
-            window.setAssetVisibility(
-                state,
-                next
-            );
+        window.setAssetVisibility(
+            state,
+            next
+        );
 
-            return next;
-        };
-
-    // =========================================================
-    // REMEMBER SELECTED ASSET
-    // =========================================================
-
-    window.rememberAssetVisibility =
-        function (state) {
-
-            const element =
-                getSelectedElement(state);
-
-            if (!element) {
-                return false;
-            }
-
-            rememberElement(element);
-
-            return true;
-        };
-
-    // =========================================================
-    // DEBUG HELPER
-    // =========================================================
-
-    window.debugAssetVisibility =
-        function (state) {
-
-            const element =
-                getSelectedElement(state);
-
-            if (!element) {
-
-                return {
-                    found: false,
-                    reason:
-                        "No selected element"
-                };
-            }
-
-            const computed =
-                window.getComputedStyle(
-                    element
-                );
-
-            return {
-                found: true,
-
-                tag:
-                    element.tagName,
-
-                id:
-                    element.id || "",
-
-                className:
-                    typeof element.className ===
-                    "string"
-                        ? element.className
-                        : "",
-
-                inlineVisibility:
-                    element.style.visibility,
-
-                inlineDisplay:
-                    element.style.display,
-
-                computedVisibility:
-                    computed.visibility,
-
-                computedDisplay:
-                    computed.display,
-
-                visible:
-                    (
-                        computed.visibility !==
-                        "hidden" &&
-                        computed.display !==
-                        "none"
-                    )
-            };
-        };
+        return next;
+    };
 
 })();
