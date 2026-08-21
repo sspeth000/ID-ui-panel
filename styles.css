@@ -1,102 +1,214 @@
-* {
-  box-sizing: border-box;
+#__IDPanelRoot,
+#__IDPanelRoot * {
+    box-sizing: border-box;
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  font-family: monospace;
+#__IDPanelRoot {
+    position: fixed !important;
+
+    left: 0 !important;
+    bottom: 0 !important;
+
+    width: 290px !important;
+    height: 560px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    z-index: 2147483647 !important;
+
+    pointer-events: none !important;
+
+    font-family: monospace !important;
 }
 
-button,
-input {
-  font-family: monospace;
+#__IDPanelRoot button,
+#__IDPanelRoot input,
+#__IDPanelRoot pre {
+    font-family: monospace !important;
 }
 
-.inspector-root {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+#__IDPanelRoot .inspector-cog {
+    position: absolute;
+
+    left: 0;
+    bottom: 0;
+
+    width: 30px;
+    height: 30px;
+
+    padding: 0;
+
+    border: 1px solid #3f8057;
+    border-radius: 8px;
+
+    background: #0d1710;
+    color: #72df91;
+
+    cursor: pointer;
+
+    pointer-events: auto;
 }
 
-.inspector-cog {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 30px;
-  height: 30px;
+#__IDPanelRoot .inspector-panel {
+    display: none;
 
-  border: 1px solid #3f8057;
-  border-radius: 8px;
+    position: absolute;
 
-  background: #0d1710;
-  color: #72df91;
+    left: 0;
+    bottom: 36px;
 
-  cursor: pointer;
-  pointer-events: auto;
+    width: 280px;
+    height: 510px;
+
+    padding: 7px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    border: 1px solid #31543d;
+    border-radius: 10px;
+
+    background: #0b100d;
+    color: #dce9df;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, .75);
+
+    pointer-events: auto;
 }
 
-.inspector-panel {
-  display: none;
-
-  position: absolute;
-  left: 0;
-  bottom: 36px;
-
-  width: 280px;
-  height: 510px;
-
-  padding: 7px;
-  overflow-y: auto;
-
-  border: 1px solid #31543d;
-  border-radius: 10px;
-
-  background: #0b100d;
-  color: #dce9df;
-
-  box-shadow: 0 8px 25px rgba(0,0,0,.75);
-
-  pointer-events: auto;
+#__IDPanelRoot .inspector-panel.open {
+    display: block;
 }
 
-.inspector-panel.open {
-  display: block;
+#__IDPanelRoot .inspector-header {
+    height: 23px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
 }
 
-.inspector-input {
-  display: block;
-
-  width: 100%;
-  height: 26px;
-
-  margin-top: 4px;
-  padding: 5px 7px;
-
-  border: 1px solid #29382e;
-  border-radius: 6px;
-
-  background: #050806;
-  color: #eaffef;
-
-  outline: none;
+#__IDPanelRoot .inspector-title {
+    color: #72df91;
+    font-size: 8px;
 }
 
-.inspector-button {
-  width: 100%;
-  height: 25px;
+#__IDPanelRoot .inspector-close {
+    width: 21px;
+    height: 21px;
 
-  margin-top: 4px;
+    padding: 0;
 
-  border: 1px solid #3f8057;
-  border-radius: 6px;
+    border: 1px solid #304638;
+    border-radius: 6px;
 
-  background: #163620;
-  color: #a5ffbd;
+    background: #101612;
+    color: #9aaa9f;
 
-  cursor: pointer;
+    cursor: pointer;
+}
+
+#__IDPanelRoot .inspector-input {
+    display: block;
+
+    width: 100%;
+    height: 26px;
+
+    margin-top: 4px;
+    padding: 5px 7px;
+
+    border: 1px solid #29382e;
+    border-radius: 6px;
+
+    background: #050806;
+    color: #eaffef;
+
+    outline: none;
+
+    pointer-events: auto;
+
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+#__IDPanelRoot .inspector-button {
+    width: 100%;
+    height: 25px;
+
+    margin-top: 4px;
+
+    border: 1px solid #3f8057;
+    border-radius: 6px;
+
+    background: #163620;
+    color: #a5ffbd;
+
+    cursor: pointer;
+
+    font: 9px monospace;
+}
+
+#__IDPanelRoot .inspector-list {
+    width: 100%;
+    height: 90px;
+
+    margin-top: 4px;
+
+    overflow: auto;
+
+    border: 1px solid #202b24;
+    border-radius: 6px;
+
+    padding: 2px;
+}
+
+#__IDPanelRoot .inspector-id-button {
+    text-align: left;
+
+    height: auto;
+
+    padding: 4px;
+
+    font-size: 8px;
+
+    background: #0c100e;
+    color: #9ba99f;
+
+    border-color: #202b24;
+}
+
+#__IDPanelRoot .inspector-code {
+    display: none;
+
+    width: 100%;
+    height: 290px;
+
+    margin: 4px 0 0;
+    padding: 7px;
+
+    overflow: auto;
+
+    white-space: pre-wrap;
+    word-break: break-word;
+
+    border: 1px solid #202b24;
+    border-radius: 6px;
+
+    background: #050706;
+    color: #b9c7bd;
+
+    font: 7px/1.35 monospace;
+
+    user-select: text;
+}
+
+#__IDPanelRoot .inspector-status {
+    margin-top: 4px;
+
+    color: #72df91;
+
+    font: 7px monospace;
 }
