@@ -1,76 +1,128 @@
-function togglePicker(
-  state,
-  button,
-  idInput,
-  code,
-  status
-) {
-  state.picking = !state.picking;
+(function () {
+    "use strict";
 
-  if (state.picking) {
-    button.textContent =
-      "✕ Stop Picking";
+    window.togglePicker = function (
+        state,
+        button,
+        idInput,
+        code,
+        status
+    ) {
 
-    status.textContent =
-      "◉ Click an asset on the page";
+        if (state.picking) {
 
-    document.addEventListener(
-      "click",
-      state.__pickerHandler = function(e) {
-        const host =
-          document.getElementById(
-            "__lomandoInspectorHost"
-          );
+            stopPicker(
+                state,
+                button,
+                status
+            );
 
-        if (host && host.contains(e.target))
-          return;
-
-        let el = e.target;
-
-        while (
-          el &&
-          el !== document.body &&
-          !el.id
-        ) {
-          el = el.parentElement;
+            return;
         }
 
-        if (!el || !el.id) {
-          status.textContent =
-            "✕ Asset has no ID.";
-          return;
-        }
+        state.picking = true;
 
-        e.preventDefault();
-        e.stopPropagation();
+        button.textContent =
+            "✕ Stop Picking";
 
-        idInput.value = el.id;
+        status.textContent =
+            "◉ Click an asset on the page";
 
-        inspectID(
-          el.id,
-          state,
-          code,
-          status
+        state.pickerHandler =
+            function (e) {
+
+                const root =
+                    document.getElementById(
+                        "__IDPanelRoot"
+                    );
+
+                // Ignore clicks on our UI.
+                if (
+                    root &&
+                    root.contains(e.target)
+                ) {
+                    return;
+                }
+
+                let el = e.target;
+
+                while (
+                    el &&
+                    el !== document.body &&
+                    !el.id
+                ) {
+                    el = el.parentElement;
+                }
+
+                if (!el || !el.id) {
+
+                    status.textContent =
+                        "✕ Asset has no ID.";
+
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (e.stopImmediatePropagation) {
+                    e.stopImmediatePropagation();
+                }
+
+                idInput.value = el.id;
+
+                if (
+                    typeof window.inspectID ===
+                    "function"
+                ) {
+                    window.inspectID(
+                        el.id,
+                        state,
+                        code,
+                        status
+                    );
+                }
+
+                stopPicker(
+                    state,
+                    button,
+                    status
+                );
+            };
+
+        document.addEventListener(
+            "click",
+            state.pickerHandler,
+            true
         );
+    };
+
+    function stopPicker(
+        state,
+        button,
+        status
+    ) {
 
         state.picking = false;
 
         button.textContent =
-          "◉ Pick Asset";
+            "◉ Pick Asset";
 
-        document.removeEventListener(
-          "click",
-          state.__pickerHandler,
-          true
-        );
-      },
-      true
-    );
-  } else {
-    button.textContent =
-      "◉ Pick Asset";
+        status.textContent =
+            "✓ Inspector ready";
 
-    status.textContent =
-      "✓ Inspector ready";
-  }
-}
+        if (state.pickerHandler) {
+
+            document.removeEventListener(
+                "click",
+                state.pickerHandler,
+                true
+            );
+
+            state.pickerHandler = null;
+        }
+    }
+
+    window.stopInspectorPicker =
+        stopPicker;
+})();
