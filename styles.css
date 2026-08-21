@@ -22,11 +22,19 @@
     font-family: monospace !important;
 }
 
+/* =========================================================
+   GLOBAL UI FONT
+   ========================================================= */
+
 #__IDPanelRoot button,
 #__IDPanelRoot input,
 #__IDPanelRoot pre {
     font-family: monospace !important;
 }
+
+/* =========================================================
+   COG
+   ========================================================= */
 
 #__IDPanelRoot .inspector-cog {
     position: absolute;
@@ -45,10 +53,19 @@
     background: #0d1710;
     color: #72df91;
 
+    font: 14px monospace;
+
     cursor: pointer;
 
     pointer-events: auto;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, .65);
 }
+
+/* =========================================================
+   PANEL
+   ========================================================= */
 
 #__IDPanelRoot .inspector-panel {
     display: none;
@@ -82,6 +99,10 @@
     display: block;
 }
 
+/* =========================================================
+   HEADER
+   ========================================================= */
+
 #__IDPanelRoot .inspector-header {
     height: 23px;
 
@@ -93,6 +114,7 @@
 
 #__IDPanelRoot .inspector-title {
     color: #72df91;
+
     font-size: 8px;
 }
 
@@ -109,7 +131,62 @@
     color: #9aaa9f;
 
     cursor: pointer;
+
+    font: 14px monospace;
 }
+
+/* =========================================================
+   OPACITY
+   ========================================================= */
+
+#__IDPanelRoot .inspector-opacity-wrap {
+    width: 100%;
+
+    margin: 3px 0 4px;
+    padding: 5px 6px;
+
+    border: 1px solid #202b24;
+    border-radius: 6px;
+
+    background: #080d0a;
+}
+
+#__IDPanelRoot .inspector-opacity-row {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+}
+
+#__IDPanelRoot .inspector-opacity-label {
+    color: #72df91;
+
+    font: 8px monospace;
+}
+
+#__IDPanelRoot .inspector-opacity-value {
+    color: #a5ffbd;
+
+    font: 8px monospace;
+}
+
+#__IDPanelRoot .inspector-opacity {
+    display: block;
+
+    width: 100%;
+    height: 18px;
+
+    margin: 2px 0 0;
+    padding: 0;
+
+    cursor: pointer;
+
+    accent-color: #52e879;
+}
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
 
 #__IDPanelRoot .inspector-input {
     display: block;
@@ -128,11 +205,21 @@
 
     outline: none;
 
-    pointer-events: auto;
+    font: 9px monospace !important;
 
-    user-select: text;
-    -webkit-user-select: text;
+    pointer-events: auto !important;
+
+    user-select: text !important;
+    -webkit-user-select: text !important;
 }
+
+#__IDPanelRoot .inspector-input::placeholder {
+    color: #65736a;
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
 
 #__IDPanelRoot .inspector-button {
     width: 100%;
@@ -148,8 +235,22 @@
 
     cursor: pointer;
 
-    font: 9px monospace;
+    font: 9px monospace !important;
+
+    pointer-events: auto !important;
 }
+
+#__IDPanelRoot .inspector-button:hover {
+    background: #193d24;
+}
+
+#__IDPanelRoot .inspector-button:active {
+    background: #102a18;
+}
+
+/* =========================================================
+   ID LIST
+   ========================================================= */
 
 #__IDPanelRoot .inspector-list {
     width: 100%;
@@ -166,19 +267,35 @@
 }
 
 #__IDPanelRoot .inspector-id-button {
-    text-align: left;
+    display: block;
 
-    height: auto;
+    width: 100%;
+
+    margin: 1px 0;
 
     padding: 4px;
 
-    font-size: 8px;
+    text-align: left;
+
+    border: 1px solid #202b24;
+    border-radius: 5px;
 
     background: #0c100e;
     color: #9ba99f;
 
-    border-color: #202b24;
+    cursor: pointer;
+
+    font: 8px monospace !important;
 }
+
+#__IDPanelRoot .inspector-id-button:hover {
+    background: #101711;
+    color: #a5ffbd;
+}
+
+/* =========================================================
+   CODE
+   ========================================================= */
 
 #__IDPanelRoot .inspector-code {
     display: none;
@@ -200,15 +317,20 @@
     background: #050706;
     color: #b9c7bd;
 
-    font: 7px/1.35 monospace;
+    font: 7px/1.35 monospace !important;
 
     user-select: text;
+    -webkit-user-select: text;
 }
+
+/* =========================================================
+   STATUS
+   ========================================================= */
 
 #__IDPanelRoot .inspector-status {
     margin-top: 4px;
 
     color: #72df91;
 
-    font: 7px monospace;
+    font: 7px monospace !important;
 }
