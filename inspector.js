@@ -4,22 +4,24 @@
     const BASE =
         "https://raw.githubusercontent.com/sspeth000/ID-ui-panel/main/";
 
-    /*
-     * Toggle existing inspector.
-     */
+    // Toggle an existing panel.
     if (window.__IDPanelUI) {
-        if (typeof window.__IDPanelUI.remove === "function") {
+        try {
             window.__IDPanelUI.remove();
-        }
+        } catch (e) {}
+
         return;
     }
 
-    /*
-     * Load a JavaScript file.
-     */
+    // ---------------------------------------------------------
+    // Load JavaScript
+    // ---------------------------------------------------------
+
     function loadScript(file) {
         return new Promise(function (resolve, reject) {
-            const script = document.createElement("script");
+
+            const script =
+                document.createElement("script");
 
             script.src = BASE + file;
             script.async = false;
@@ -30,77 +32,69 @@
 
             script.onerror = function () {
                 reject(
-                    new Error("Failed to load " + file)
+                    new Error(
+                        "Failed to load " + file
+                    )
                 );
             };
 
-            (document.head || document.documentElement)
-                .appendChild(script);
+            (
+                document.head ||
+                document.documentElement
+            ).appendChild(script);
         });
     }
 
-    /*
-     * Load CSS by fetching the contents and
-     * injecting them into the page.
-     */
+    // ---------------------------------------------------------
+    // Load CSS
+    // ---------------------------------------------------------
+
     function loadCSS(file) {
-        return fetch(BASE + file, {
-            cache: "no-store"
-        })
-            .then(function (response) {
-                if (!response.ok) {
-                    throw new Error(
-                        "HTTP " +
-                        response.status +
-                        " while loading " +
-                        file
-                    );
-                }
+        return new Promise(function (resolve, reject) {
 
-                return response.text();
-            })
-            .then(function (css) {
-                const style =
-                    document.createElement("style");
+            const link =
+                document.createElement("link");
 
-                style.id =
-                    "__IDPanelStyles";
+            link.rel = "stylesheet";
+            link.type = "text/css";
+            link.href = BASE + file;
 
-                style.textContent = css;
+            link.onload = function () {
+                resolve();
+            };
 
-                (
-                    document.head ||
-                    document.documentElement
-                ).appendChild(style);
-
-                return style;
-            })
-            .catch(function (error) {
-                throw new Error(
-                    "Failed to load " +
-                    file +
-                    ": " +
-                    error.message
+            link.onerror = function () {
+                reject(
+                    new Error(
+                        "Failed to load " + file
+                    )
                 );
-            });
+            };
+
+            (
+                document.head ||
+                document.documentElement
+            ).appendChild(link);
+        });
     }
 
-    /*
-     * Load everything in dependency order.
-     */
+    // ---------------------------------------------------------
+    // Start
+    // ---------------------------------------------------------
+
     async function start() {
 
+        // CSS first.
         await loadCSS("styles.css");
 
+        // Core modules.
         await loadScript("state.js");
         await loadScript("ids.js");
         await loadScript("code-search.js");
         await loadScript("highlight.js");
         await loadScript("picker.js");
 
-        /*
-         * Create the shared state BEFORE ui.js runs.
-         */
+        // Make sure state exists.
         if (
             typeof window.createInspectorState !==
             "function"
@@ -113,21 +107,26 @@
         window.__IDPanelState =
             window.createInspectorState();
 
-        /*
-         * Main ID inspection function.
-         */
+        // -----------------------------------------------------
+        // ID inspector
+        // -----------------------------------------------------
+
         window.inspectID = function (
             id,
             state,
             code,
             status
         ) {
+
             id = String(id || "").trim();
 
             if (!id) {
+
                 code.style.display = "block";
                 code.textContent = "Enter an ID.";
-                status.textContent = "✕ Enter an ID.";
+                status.textContent =
+                    "✕ Enter an ID.";
+
                 return;
             }
 
@@ -135,6 +134,7 @@
                 document.getElementById(id);
 
             if (!el) {
+
                 code.style.display = "block";
 
                 code.textContent =
@@ -147,7 +147,9 @@
                     typeof window.clearHighlight ===
                     "function"
                 ) {
-                    window.clearHighlight(state);
+                    try {
+                        window.clearHighlight(state);
+                    } catch (e) {}
                 }
 
                 return;
@@ -155,33 +157,35 @@
 
             state.selectedID = id;
 
-            /*
-             * Highlight selected element.
-             */
+            // Highlight.
             if (
                 typeof window.highlightElement ===
                 "function"
             ) {
-                window.highlightElement(
-                    el,
-                    state
-                );
+                try {
+                    window.highlightElement(
+                        el,
+                        state
+                    );
+                } catch (e) {}
             }
 
-            /*
-             * Search JavaScript references.
-             */
+            // JavaScript references.
             let matches = [];
 
             if (
                 typeof window.findCodeReferences ===
                 "function"
             ) {
-                matches =
-                    window.findCodeReferences(id);
+                try {
+                    matches =
+                        window.findCodeReferences(id);
+                } catch (e) {
+                    matches = [];
+                }
             }
 
-            const style =
+            const computed =
                 getComputedStyle(el);
 
             const src =
@@ -197,7 +201,8 @@
                 "\nTAG: " + el.tagName +
                 "\nSRC: " + src +
                 "\nCLASS: " + className +
-                "\nDISPLAY: " + style.display +
+                "\nDISPLAY: " +
+                computed.display +
                 "\n\n" +
                 "==============================\n" +
                 "JAVASCRIPT REFERENCES\n" +
@@ -218,9 +223,10 @@
                 "✓ #" + id;
         };
 
-        /*
-         * Finally load the UI.
-         */
+        // -----------------------------------------------------
+        // UI
+        // -----------------------------------------------------
+
         await loadScript("ui.js");
 
         if (
@@ -235,9 +241,10 @@
         window.__IDPanelStart();
     }
 
-    /*
-     * Start everything.
-     */
+    // ---------------------------------------------------------
+    // Error handling
+    // ---------------------------------------------------------
+
     start().catch(function (error) {
 
         console.error(
