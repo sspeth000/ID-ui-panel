@@ -3,10 +3,7 @@
 
     window.__IDPanelStart = function () {
 
-        // =========================================================
-        // REMOVE EXISTING PANEL
-        // =========================================================
-
+        // Remove existing panel.
         if (window.__IDPanelUI) {
             try {
                 window.__IDPanelUI.remove();
@@ -403,14 +400,16 @@
                 String(value)
             );
 
-            // Update an existing highlight immediately.
+            // Tell highlight.js that the hue changed.
             if (
                 typeof window.updateHighlightColor ===
                 "function"
             ) {
-                window.updateHighlightColor(
-                    state
-                );
+                try {
+                    window.updateHighlightColor(
+                        state
+                    );
+                } catch (e) {}
             }
         }
 
@@ -474,7 +473,8 @@
                 String(value);
 
             const alpha =
-                1 - (value / 100);
+                1 -
+                (value / 100);
 
             panel.style.opacity =
                 String(alpha);
@@ -560,7 +560,7 @@
         }
 
         // =========================================================
-        // CLEAR HIGHLIGHT WHEN CLOSING
+        // CLEAR HIGHLIGHT
         // =========================================================
 
         function clearCurrentHighlight() {
@@ -578,6 +578,22 @@
         }
 
         // =========================================================
+        // CLOSE PANEL
+        // =========================================================
+
+        function closePanel() {
+
+            panel.classList.remove(
+                "open"
+            );
+
+            state.panelOpen =
+                false;
+
+            clearCurrentHighlight();
+        }
+
+        // =========================================================
         // OPEN / CLOSE PANEL
         // =========================================================
 
@@ -588,22 +604,12 @@
                 e.preventDefault();
                 e.stopPropagation();
 
-                const isOpen =
+                if (
                     panel.classList.contains(
                         "open"
-                    );
-
-                if (isOpen) {
-
-                    panel.classList.remove(
-                        "open"
-                    );
-
-                    state.panelOpen =
-                        false;
-
-                    clearCurrentHighlight();
-
+                    )
+                ) {
+                    closePanel();
                 } else {
 
                     panel.classList.add(
@@ -623,14 +629,7 @@
                 e.preventDefault();
                 e.stopPropagation();
 
-                panel.classList.remove(
-                    "open"
-                );
-
-                state.panelOpen =
-                    false;
-
-                clearCurrentHighlight();
+                closePanel();
             }
         );
 
