@@ -13,10 +13,7 @@
 
         hue = Math.max(
             0,
-            Math.min(
-                360,
-                hue
-            )
+            Math.min(360, hue)
         );
 
         return "hsl(" + hue + ", 100%, 50%)";
@@ -45,17 +42,14 @@
 
         window.clearHighlight(state);
 
-        if (
-            !element ||
-            !state
-        ) {
+        if (!element || !state) {
             return;
         }
 
         state.highlighted = element;
 
         state.oldOutline =
-            element.style.outline || "";
+            element.style.outline;
 
         element.style.outline =
             "2px solid " +
