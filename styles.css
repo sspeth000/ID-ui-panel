@@ -1,7 +1,16 @@
+/* =========================================================
+   ID UI PANEL
+   COMPLETE STYLESHEET
+   ========================================================= */
+
 #__IDPanelRoot,
 #__IDPanelRoot * {
     box-sizing: border-box;
 }
+
+/* =========================================================
+   ROOT
+   ========================================================= */
 
 #__IDPanelRoot {
     position: fixed !important;
@@ -22,10 +31,66 @@
     font-family: monospace !important;
 
     --id-hue: 120;
+
+    /*
+     * Centralized Hue colors.
+     * Everything that should react to the Hue slider
+     * derives its color from these variables.
+     */
+
+    --id-accent:
+        hsl(
+            var(--id-hue),
+            100%,
+            55%
+        );
+
+    --id-accent-light:
+        hsl(
+            var(--id-hue),
+            80%,
+            75%
+        );
+
+    --id-accent-text:
+        hsl(
+            var(--id-hue),
+            70%,
+            68%
+        );
+
+    --id-accent-border:
+        hsl(
+            var(--id-hue),
+            45%,
+            38%
+        );
+
+    --id-accent-bg:
+        hsl(
+            var(--id-hue),
+            40%,
+            16%
+        );
+
+    --id-accent-bg-hover:
+        hsl(
+            var(--id-hue),
+            40%,
+            21%
+        );
+
+    --id-accent-glow:
+        hsla(
+            var(--id-hue),
+            100%,
+            50%,
+            .25
+        );
 }
 
 /* =========================================================
-   GLOBAL UI FONT
+   GLOBAL FONT
    ========================================================= */
 
 #__IDPanelRoot button,
@@ -49,12 +114,9 @@
 
     padding: 0;
 
-    border: 1px solid
-        hsl(
-            var(--id-hue),
-            45%,
-            38%
-        );
+    border:
+        1px solid
+        var(--id-accent-border);
 
     border-radius: 8px;
 
@@ -66,11 +128,7 @@
         );
 
     color:
-        hsl(
-            var(--id-hue),
-            70%,
-            65%
-        );
+        var(--id-accent-light);
 
     font: 14px monospace;
 
@@ -79,7 +137,29 @@
     pointer-events: auto;
 
     box-shadow:
-        0 3px 12px rgba(0, 0, 0, .65);
+        0 3px 12px
+        rgba(0, 0, 0, .65);
+
+    transition:
+        border-color .15s ease,
+        color .15s ease,
+        background .15s ease,
+        box-shadow .15s ease;
+}
+
+#__IDPanelRoot .inspector-cog:hover {
+    border-color:
+        var(--id-accent);
+
+    color:
+        var(--id-accent);
+
+    background:
+        var(--id-accent-bg);
+
+    box-shadow:
+        0 0 9px
+        var(--id-accent-glow);
 }
 
 /* =========================================================
@@ -102,26 +182,55 @@
     overflow-y: auto;
     overflow-x: hidden;
 
-    border: 1px solid
-        hsl(
-            var(--id-hue),
-            30%,
-            30%
-        );
+    border:
+        1px solid
+        var(--id-accent-border);
 
     border-radius: 10px;
 
-    background: #0b100d;
-    color: #dce9df;
+    background:
+        #0b100d;
+
+    color:
+        #dce9df;
 
     box-shadow:
-        0 8px 25px rgba(0, 0, 0, .75);
+        0 8px 25px
+        rgba(0, 0, 0, .75);
 
     pointer-events: auto;
+
+    scrollbar-color:
+        var(--id-accent-border)
+        #080c09;
 }
 
 #__IDPanelRoot .inspector-panel.open {
     display: block;
+}
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+#__IDPanelRoot .inspector-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+#__IDPanelRoot .inspector-panel::-webkit-scrollbar-track {
+    background: #070a08;
+}
+
+#__IDPanelRoot .inspector-panel::-webkit-scrollbar-thumb {
+    background:
+        var(--id-accent-border);
+
+    border-radius: 10px;
+}
+
+#__IDPanelRoot .inspector-panel::-webkit-scrollbar-thumb:hover {
+    background:
+        var(--id-accent);
 }
 
 /* =========================================================
@@ -139,13 +248,10 @@
 
 #__IDPanelRoot .inspector-title {
     color:
-        hsl(
-            var(--id-hue),
-            70%,
-            65%
-        );
+        var(--id-accent-text);
 
     font-size: 8px;
+    font-weight: bold;
 }
 
 #__IDPanelRoot .inspector-close {
@@ -154,15 +260,41 @@
 
     padding: 0;
 
-    border: 1px solid #304638;
+    border:
+        1px solid
+        var(--id-accent-border);
+
     border-radius: 6px;
 
-    background: #101612;
-    color: #9aaa9f;
+    background:
+        hsl(
+            var(--id-hue),
+            25%,
+            9%
+        );
+
+    color:
+        var(--id-accent-light);
 
     cursor: pointer;
 
     font: 14px monospace;
+
+    transition:
+        background .15s ease,
+        border-color .15s ease,
+        color .15s ease;
+}
+
+#__IDPanelRoot .inspector-close:hover {
+    background:
+        var(--id-accent-bg);
+
+    border-color:
+        var(--id-accent);
+
+    color:
+        var(--id-accent);
 }
 
 /* =========================================================
@@ -175,10 +307,18 @@
     margin: 3px 0 4px;
     padding: 5px 6px;
 
-    border: 1px solid #202b24;
+    border:
+        1px solid
+        var(--id-accent-border);
+
     border-radius: 6px;
 
-    background: #080d0a;
+    background:
+        hsl(
+            var(--id-hue),
+            25%,
+            7%
+        );
 }
 
 #__IDPanelRoot .inspector-hue-row {
@@ -190,22 +330,14 @@
 
 #__IDPanelRoot .inspector-hue-label {
     color:
-        hsl(
-            var(--id-hue),
-            70%,
-            65%
-        );
+        var(--id-accent-text);
 
     font: 8px monospace;
 }
 
 #__IDPanelRoot .inspector-hue-value {
     color:
-        hsl(
-            var(--id-hue),
-            80%,
-            75%
-        );
+        var(--id-accent-light);
 
     font: 8px monospace;
 }
@@ -222,11 +354,7 @@
     cursor: pointer;
 
     accent-color:
-        hsl(
-            var(--id-hue),
-            100%,
-            50%
-        );
+        var(--id-accent);
 }
 
 /* =========================================================
@@ -239,10 +367,18 @@
     margin: 3px 0 4px;
     padding: 5px 6px;
 
-    border: 1px solid #202b24;
+    border:
+        1px solid
+        var(--id-accent-border);
+
     border-radius: 6px;
 
-    background: #080d0a;
+    background:
+        hsl(
+            var(--id-hue),
+            25%,
+            7%
+        );
 }
 
 #__IDPanelRoot .inspector-opacity-row {
@@ -254,22 +390,14 @@
 
 #__IDPanelRoot .inspector-opacity-label {
     color:
-        hsl(
-            var(--id-hue),
-            70%,
-            65%
-        );
+        var(--id-accent-text);
 
     font: 8px monospace;
 }
 
 #__IDPanelRoot .inspector-opacity-value {
     color:
-        hsl(
-            var(--id-hue),
-            80%,
-            75%
-        );
+        var(--id-accent-light);
 
     font: 8px monospace;
 }
@@ -286,15 +414,11 @@
     cursor: pointer;
 
     accent-color:
-        hsl(
-            var(--id-hue),
-            100%,
-            50%
-        );
+        var(--id-accent);
 }
 
 /* =========================================================
-   INPUTS
+   TEXT INPUTS
    ========================================================= */
 
 #__IDPanelRoot .inspector-input {
@@ -306,13 +430,19 @@
     margin-top: 4px;
     padding: 5px 7px;
 
-    border: 1px solid #29382e;
+    border:
+        1px solid
+        var(--id-accent-border);
+
     border-radius: 6px;
 
-    background: #050806;
-    color: #eaffef;
-
     outline: none;
+
+    background:
+        #050806;
+
+    color:
+        var(--id-accent-light);
 
     font: 9px monospace !important;
 
@@ -320,10 +450,28 @@
 
     user-select: text !important;
     -webkit-user-select: text !important;
+
+    transition:
+        border-color .15s ease,
+        box-shadow .15s ease;
 }
 
 #__IDPanelRoot .inspector-input::placeholder {
-    color: #65736a;
+    color:
+        hsl(
+            var(--id-hue),
+            15%,
+            43%
+        );
+}
+
+#__IDPanelRoot .inspector-input:focus {
+    border-color:
+        var(--id-accent);
+
+    box-shadow:
+        0 0 6px
+        var(--id-accent-glow);
 }
 
 /* =========================================================
@@ -336,43 +484,44 @@
 
     margin-top: 4px;
 
-    border: 1px solid
-        hsl(
-            var(--id-hue),
-            45%,
-            38%
-        );
+    border:
+        1px solid
+        var(--id-accent-border);
 
     border-radius: 6px;
 
     background:
-        hsl(
-            var(--id-hue),
-            40%,
-            16%
-        );
+        var(--id-accent-bg);
 
     color:
-        hsl(
-            var(--id-hue),
-            90%,
-            82%
-        );
+        var(--id-accent-light);
 
     cursor: pointer;
 
     font: 9px monospace !important;
 
     pointer-events: auto !important;
+
+    transition:
+        background .15s ease,
+        border-color .15s ease,
+        color .15s ease,
+        box-shadow .15s ease;
 }
 
 #__IDPanelRoot .inspector-button:hover {
     background:
-        hsl(
-            var(--id-hue),
-            40%,
-            20%
-        );
+        var(--id-accent-bg-hover);
+
+    border-color:
+        var(--id-accent);
+
+    color:
+        #ffffff;
+
+    box-shadow:
+        0 0 6px
+        var(--id-accent-glow);
 }
 
 #__IDPanelRoot .inspector-button:active {
@@ -395,19 +544,6 @@
     margin-bottom: 4px;
 }
 
-#__IDPanelRoot .inspector-visibility-label {
-    margin-bottom: 3px;
-
-    color:
-        hsl(
-            var(--id-hue),
-            70%,
-            65%
-        );
-
-    font: 8px monospace;
-}
-
 #__IDPanelRoot .inspector-visibility-control {
     width: 100%;
     height: 30px;
@@ -419,14 +555,23 @@
 
     padding: 4px 7px;
 
-    border: 1px solid #202b24;
+    border:
+        1px solid
+        var(--id-accent-border);
+
     border-radius: 6px;
 
-    background: #080d0a;
+    background:
+        hsl(
+            var(--id-hue),
+            25%,
+            7%
+        );
 }
 
 #__IDPanelRoot .inspector-visibility-text {
-    color: #9ba99f;
+    color:
+        var(--id-accent-text);
 
     font: 8px monospace;
     font-weight: bold;
@@ -467,10 +612,18 @@
     width: 42px;
     height: 20px;
 
-    border: 1px solid #39453d;
+    border:
+        1px solid
+        var(--id-accent-border);
+
     border-radius: 20px;
 
-    background: #111713;
+    background:
+        hsl(
+            var(--id-hue),
+            15%,
+            10%
+        );
 
     cursor: pointer;
 
@@ -493,7 +646,12 @@
 
     border-radius: 50%;
 
-    background: #8c9890;
+    background:
+        hsl(
+            var(--id-hue),
+            15%,
+            55%
+        );
 
     transition:
         transform .15s ease,
@@ -508,12 +666,9 @@
 .inspector-switch
 input:checked
 + .inspector-switch-slider {
+
     border-color:
-        hsl(
-            var(--id-hue),
-            100%,
-            50%
-        );
+        var(--id-accent);
 
     background:
         hsl(
@@ -524,27 +679,41 @@ input:checked
 
     box-shadow:
         0 0 7px
-        hsla(
-            var(--id-hue),
-            100%,
-            50%,
-            .25
-        );
+        var(--id-accent-glow);
 }
 
 #__IDPanelRoot
 .inspector-switch
 input:checked
 + .inspector-switch-slider::before {
+
     transform:
         translateX(22px);
 
     background:
-        hsl(
-            var(--id-hue),
-            100%,
-            60%
-        );
+        var(--id-accent);
+}
+
+/* =========================================================
+   SWITCH HOVER
+   ========================================================= */
+
+#__IDPanelRoot
+.inspector-switch:hover
+.inspector-switch-slider {
+
+    border-color:
+        var(--id-accent);
+}
+
+#__IDPanelRoot
+.inspector-switch
+input:checked:hover
++ .inspector-switch-slider {
+
+    box-shadow:
+        0 0 10px
+        var(--id-accent-glow);
 }
 
 /* =========================================================
@@ -555,9 +724,11 @@ input:checked
 .inspector-switch
 input:disabled
 + .inspector-switch-slider {
+
     opacity: .35;
 
-    cursor: not-allowed;
+    cursor:
+        not-allowed;
 }
 
 /* =========================================================
@@ -572,10 +743,27 @@ input:disabled
 
     overflow: auto;
 
-    border: 1px solid #202b24;
+    border:
+        1px solid
+        var(--id-accent-border);
+
     border-radius: 6px;
 
     padding: 2px;
+
+    background:
+        #050806;
+}
+
+#__IDPanelRoot .inspector-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+#__IDPanelRoot .inspector-list::-webkit-scrollbar-thumb {
+    background:
+        var(--id-accent-border);
+
+    border-radius: 10px;
 }
 
 #__IDPanelRoot .inspector-id-button {
@@ -588,26 +776,45 @@ input:disabled
 
     text-align: left;
 
-    border: 1px solid #202b24;
+    border:
+        1px solid
+        var(--id-accent-border);
+
     border-radius: 5px;
 
-    background: #0c100e;
-    color: #9ba99f;
-
-    cursor: pointer;
-
-    font: 8px monospace !important;
-}
-
-#__IDPanelRoot .inspector-id-button:hover {
-    background: #101711;
+    background:
+        hsl(
+            var(--id-hue),
+            20%,
+            6%
+        );
 
     color:
         hsl(
             var(--id-hue),
-            80%,
-            75%
+            20%,
+            62%
         );
+
+    cursor: pointer;
+
+    font: 8px monospace !important;
+
+    transition:
+        background .12s ease,
+        border-color .12s ease,
+        color .12s ease;
+}
+
+#__IDPanelRoot .inspector-id-button:hover {
+    background:
+        var(--id-accent-bg);
+
+    border-color:
+        var(--id-accent);
+
+    color:
+        var(--id-accent-light);
 }
 
 /* =========================================================
@@ -628,16 +835,37 @@ input:disabled
     white-space: pre-wrap;
     word-break: break-word;
 
-    border: 1px solid #202b24;
+    border:
+        1px solid
+        var(--id-accent-border);
+
     border-radius: 6px;
 
-    background: #050706;
-    color: #b9c7bd;
+    background:
+        #050706;
+
+    color:
+        hsl(
+            var(--id-hue),
+            20%,
+            70%
+        );
 
     font: 7px/1.35 monospace !important;
 
     user-select: text;
     -webkit-user-select: text;
+}
+
+#__IDPanelRoot .inspector-code::-webkit-scrollbar {
+    width: 5px;
+}
+
+#__IDPanelRoot .inspector-code::-webkit-scrollbar-thumb {
+    background:
+        var(--id-accent-border);
+
+    border-radius: 10px;
 }
 
 /* =========================================================
@@ -648,11 +876,31 @@ input:disabled
     margin-top: 4px;
 
     color:
-        hsl(
-            var(--id-hue),
-            70%,
-            65%
-        );
+        var(--id-accent-text);
 
     font: 7px monospace !important;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    #__IDPanelRoot {
+        width: 290px !important;
+    }
+
+    #__IDPanelRoot .inspector-panel {
+        width: 280px;
+    }
+
+    #__IDPanelRoot .inspector-input {
+        font-size: 9px !important;
+    }
+
+    #__IDPanelRoot .inspector-switch {
+        width: 42px;
+        height: 20px;
+    }
 }
