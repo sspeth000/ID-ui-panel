@@ -6,27 +6,6 @@
 #__IDPanelRoot {
     --id-hue: 120;
 
-    position: fixed !important;
-    left: 0 !important;
-    bottom: 0 !important;
-
-    width: 290px !important;
-    height: 560px !important;
-
-    margin: 0 !important;
-    padding: 0 !important;
-
-    z-index: 2147483647 !important;
-    pointer-events: none !important;
-
-    font-family: monospace !important;
-}
-
-/* =========================================================
-   SHARED COLORS
-   ========================================================= */
-
-#__IDPanelRoot {
     --accent:
         hsl(
             var(--id-hue),
@@ -68,6 +47,23 @@
             55%,
             38%
         );
+
+    position: fixed !important;
+
+    left: 0 !important;
+    bottom: 0 !important;
+
+    width: 290px !important;
+    height: 560px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    z-index: 2147483647 !important;
+
+    pointer-events: none !important;
+
+    font-family: monospace !important;
 }
 
 /* =========================================================
@@ -100,20 +96,29 @@
 
     background: #0b100d;
 
-    color: var(--accent-light);
+    color: var(--accent-light) !important;
 
     font: 14px monospace;
 
     cursor: pointer;
+
     pointer-events: auto;
 
     box-shadow:
         0 3px 12px rgba(0, 0, 0, .65);
+
+    transition:
+        color .12s,
+        border-color .12s,
+        background .12s;
 }
 
 #__IDPanelRoot .inspector-cog:hover {
     border-color: var(--accent);
-    color: var(--accent);
+
+    background: var(--accent-bg);
+
+    color: #fff !important;
 }
 
 /* =========================================================
@@ -136,12 +141,13 @@
     overflow-y: auto;
     overflow-x: hidden;
 
-    border: 1px solid var(--accent-dark);
+    border: 1px solid var(--accent-border);
+
     border-radius: 10px;
 
     background: #0b100d;
 
-    color: var(--accent-light);
+    color: var(--accent-light) !important;
 
     box-shadow:
         0 8px 25px rgba(0, 0, 0, .75);
@@ -167,7 +173,7 @@
 }
 
 #__IDPanelRoot .inspector-title {
-    color: var(--accent-light);
+    color: var(--accent-light) !important;
 
     font-size: 8px;
 }
@@ -178,21 +184,30 @@
 
     padding: 0;
 
-    border: 1px solid var(--accent-dark);
+    border: 1px solid var(--accent-border);
+
     border-radius: 6px;
 
     background: var(--accent-bg);
 
-    color: var(--accent-light);
+    color: var(--accent-light) !important;
 
     cursor: pointer;
 
     font: 14px monospace;
+
+    transition:
+        color .12s,
+        border-color .12s,
+        background .12s;
 }
 
 #__IDPanelRoot .inspector-close:hover {
     border-color: var(--accent);
+
     background: var(--accent-bg-hover);
+
+    color: #fff !important;
 }
 
 /* =========================================================
@@ -203,12 +218,16 @@
     width: 100%;
 
     margin: 3px 0 4px;
+
     padding: 5px 6px;
 
-    border: 1px solid var(--accent-dark);
+    border: 1px solid var(--accent-border);
+
     border-radius: 6px;
 
     background: #080d0a;
+
+    color: var(--accent-light) !important;
 }
 
 #__IDPanelRoot .inspector-hue-row {
@@ -220,7 +239,7 @@
 
 #__IDPanelRoot .inspector-hue-label,
 #__IDPanelRoot .inspector-hue-value {
-    color: var(--accent-light);
+    color: var(--accent-light) !important;
 
     font: 8px monospace;
 }
@@ -232,6 +251,7 @@
     height: 18px;
 
     margin: 2px 0 0;
+
     padding: 0;
 
     cursor: pointer;
@@ -247,12 +267,16 @@
     width: 100%;
 
     margin: 3px 0 4px;
+
     padding: 5px 6px;
 
-    border: 1px solid var(--accent-dark);
+    border: 1px solid var(--accent-border);
+
     border-radius: 6px;
 
     background: #080d0a;
+
+    color: var(--accent-light) !important;
 }
 
 #__IDPanelRoot .inspector-opacity-row {
@@ -264,7 +288,7 @@
 
 #__IDPanelRoot .inspector-opacity-label,
 #__IDPanelRoot .inspector-opacity-value {
-    color: var(--accent-light);
+    color: var(--accent-light) !important;
 
     font: 8px monospace;
 }
@@ -276,6 +300,7 @@
     height: 18px;
 
     margin: 2px 0 0;
+
     padding: 0;
 
     cursor: pointer;
@@ -294,14 +319,16 @@
     height: 26px;
 
     margin-top: 4px;
+
     padding: 5px 7px;
 
-    border: 1px solid var(--accent-dark);
+    border: 1px solid var(--accent-border);
+
     border-radius: 6px;
 
     background: #050806;
 
-    color: var(--accent-light);
+    color: var(--accent-light) !important;
 
     outline: none;
 
@@ -311,10 +338,15 @@
 
     user-select: text !important;
     -webkit-user-select: text !important;
+
+    transition:
+        border-color .12s,
+        box-shadow .12s;
 }
 
 #__IDPanelRoot .inspector-input:focus {
     border-color: var(--accent);
+
     box-shadow:
         0 0 5px
         hsl(
@@ -329,9 +361,9 @@
     color:
         hsl(
             var(--id-hue),
-            20%,
-            45%
-        );
+            25%,
+            48%
+        ) !important;
 }
 
 /* =========================================================
@@ -345,11 +377,12 @@
     margin-top: 4px;
 
     border: 1px solid var(--accent-border);
+
     border-radius: 6px;
 
     background: var(--accent-bg);
 
-    color: var(--accent-light);
+    color: var(--accent-light) !important;
 
     cursor: pointer;
 
@@ -365,8 +398,10 @@
 
 #__IDPanelRoot .inspector-button:hover {
     background: var(--accent-bg-hover);
+
     border-color: var(--accent);
-    color: #fff;
+
+    color: #fff !important;
 }
 
 #__IDPanelRoot .inspector-button:active {
@@ -376,6 +411,8 @@
             45%,
             10%
         );
+
+    border-color: var(--accent);
 }
 
 /* =========================================================
@@ -390,10 +427,13 @@
 
     overflow: auto;
 
-    border: 1px solid var(--accent-dark);
+    border: 1px solid var(--accent-border);
+
     border-radius: 6px;
 
     padding: 2px;
+
+    background: #050806;
 }
 
 #__IDPanelRoot .inspector-id-button {
@@ -402,11 +442,13 @@
     width: 100%;
 
     margin: 1px 0;
+
     padding: 4px;
 
     text-align: left;
 
     border: 1px solid var(--accent-dark);
+
     border-radius: 5px;
 
     background: #0c100e;
@@ -414,9 +456,9 @@
     color:
         hsl(
             var(--id-hue),
-            30%,
-            65%
-        );
+            35%,
+            68%
+        ) !important;
 
     cursor: pointer;
 
@@ -430,8 +472,10 @@
 
 #__IDPanelRoot .inspector-id-button:hover {
     background: var(--accent-bg);
-    border-color: var(--accent-border);
-    color: var(--accent-light);
+
+    border-color: var(--accent);
+
+    color: var(--accent-light) !important;
 }
 
 /* =========================================================
@@ -445,14 +489,17 @@
     height: 290px;
 
     margin: 4px 0 0;
+
     padding: 7px;
 
     overflow: auto;
 
     white-space: pre-wrap;
+
     word-break: break-word;
 
-    border: 1px solid var(--accent-dark);
+    border: 1px solid var(--accent-border);
+
     border-radius: 6px;
 
     background: #050706;
@@ -462,7 +509,7 @@
             var(--id-hue),
             30%,
             72%
-        );
+        ) !important;
 
     font: 7px/1.35 monospace !important;
 
@@ -477,7 +524,7 @@
 #__IDPanelRoot .inspector-status {
     margin-top: 4px;
 
-    color: var(--accent-light);
+    color: var(--accent-light) !important;
 
     font: 7px monospace !important;
 }
