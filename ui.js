@@ -1,121 +1,261 @@
-function createUI(shadow, state) {
-  const root = document.createElement("div");
-  root.className = "inspector-root";
+(function () {
+    "use strict";
 
-  const cog = document.createElement("button");
-  cog.className = "inspector-cog";
-  cog.textContent = "⚙";
+    window.__IDPanelStart = function () {
 
-  const panel = document.createElement("div");
-  panel.className = "inspector-panel";
+        // Prevent duplicate panels
+        if (window.__IDPanelUI) {
+            return;
+        }
 
-  const title = document.createElement("b");
-  title.textContent = "LOMANDO INSPECTOR";
+        // State should have been loaded by inspector.js
+        const state =
+            window.__IDPanelState ||
+            {
+                picking: false,
+                highlighted: null,
+                oldOutline: ""
+            };
 
-  const close = document.createElement("button");
-  close.textContent = "×";
+        // Root UI container
+        const root = document.createElement("div");
+        root.className = "inspector-root";
+        root.id = "__IDPanelRoot";
 
-  const idInput = document.createElement("input");
-  idInput.className = "inspector-input";
-  idInput.placeholder = "Enter ID...";
+        // Cog button
+        const cog = document.createElement("button");
+        cog.className = "inspector-cog";
+        cog.type = "button";
+        cog.textContent = "⚙";
 
-  const inspect = document.createElement("button");
-  inspect.className = "inspector-button";
-  inspect.textContent = "Inspect ID";
+        // Panel
+        const panel = document.createElement("div");
+        panel.className = "inspector-panel";
 
-  const pick = document.createElement("button");
-  pick.className = "inspector-button";
-  pick.textContent = "◉ Pick Asset";
+        // Header
+        const header = document.createElement("div");
+        header.className = "inspector-header";
 
-  const filter = document.createElement("input");
-  filter.className = "inspector-input";
-  filter.placeholder = "Filter IDs...";
+        const title = document.createElement("b");
+        title.textContent = "LOMANDO INSPECTOR";
+        title.className = "inspector-title";
 
-  const list = document.createElement("div");
+        const close = document.createElement("button");
+        close.type = "button";
+        close.className = "inspector-close";
+        close.textContent = "×";
 
-  const code = document.createElement("pre");
+        header.append(title, close);
 
-  const status = document.createElement("div");
-  status.textContent = "✓ Inspector ready";
+        // Enter ID
+        const idInput = document.createElement("input");
+        idInput.type = "text";
+        idInput.className = "inspector-input";
+        idInput.placeholder = "Enter ID...";
+        idInput.autocomplete = "off";
+        idInput.autocorrect = "off";
+        idInput.autocapitalize = "off";
+        idInput.spellcheck = false;
 
-  panel.append(
-    title,
-    close,
-    idInput,
-    inspect,
-    pick,
-    filter,
-    list,
-    code,
-    status
-  );
+        // Inspect button
+        const inspect = document.createElement("button");
+        inspect.type = "button";
+        inspect.className = "inspector-button";
+        inspect.textContent = "Inspect ID";
 
-  root.append(cog, panel);
-  shadow.appendChild(root);
+        // Pick button
+        const pick = document.createElement("button");
+        pick.type = "button";
+        pick.className = "inspector-button";
+        pick.textContent = "◉ Pick Asset";
 
-  cog.onclick = () => {
-    panel.classList.toggle("open");
-  };
+        // Filter
+        const filter = document.createElement("input");
+        filter.type = "text";
+        filter.className = "inspector-input";
+        filter.placeholder = "Filter IDs...";
+        filter.autocomplete = "off";
+        filter.autocorrect = "off";
+        filter.autocapitalize = "off";
+        filter.spellcheck = false;
 
-  close.onclick = () => {
-    panel.classList.remove("open");
-  };
+        // ID list
+        const list = document.createElement("div");
+        list.className = "inspector-list";
 
-  inspect.onclick = () => {
-    inspectID(
-      idInput.value,
-      state,
-      code,
-      status
-    );
-  };
+        // Code display
+        const code = document.createElement("pre");
+        code.className = "inspector-code";
 
-  filter.oninput = () => {
-    renderIDs(
-      filter.value,
-      list,
-      id => {
-        idInput.value = id;
+        // Status
+        const status = document.createElement("div");
+        status.className = "inspector-status";
+        status.textContent = "✓ Inspector ready";
 
-        inspectID(
-          id,
-          state,
-          code,
-          status
+        // Build panel
+        panel.append(
+            header,
+            idInput,
+            inspect,
+            pick,
+            filter,
+            list,
+            code,
+            status
         );
-      }
-    );
-  };
 
-  idInput.onkeydown = e => {
-    if (e.key === "Enter") {
-      inspectID(
-        idInput.value,
-        state,
-        code,
-        status
-      );
-    }
-  };
+        root.append(cog, panel);
 
-  pick.onclick = () => {
-    togglePicker(
-      state,
-      pick,
-      idInput,
-      code,
-      status
-    );
-  };
+        // Put UI directly into the page.
+        // No iframe and no shadow DOM.
+        document.documentElement.appendChild(root);
 
-  renderIDs("", list, id => {
-    idInput.value = id;
+        // -----------------------------------------
+        // EVENTS
+        // -----------------------------------------
 
-    inspectID(
-      id,
-      state,
-      code,
-      status
-    );
-  });
-}
+        cog.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            panel.classList.toggle("open");
+        });
+
+        close.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            panel.classList.remove("open");
+        });
+
+        inspect.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (typeof window.inspectID === "function") {
+                window.inspectID(
+                    idInput.value,
+                    state,
+                    code,
+                    status
+                );
+            }
+        });
+
+        idInput.addEventListener("keydown", function (e) {
+            e.stopPropagation();
+
+            if (e.key === "Enter") {
+                e.preventDefault();
+
+                if (typeof window.inspectID === "function") {
+                    window.inspectID(
+                        idInput.value,
+                        state,
+                        code,
+                        status
+                    );
+                }
+            }
+        });
+
+        filter.addEventListener("input", function (e) {
+            e.stopPropagation();
+
+            if (typeof window.renderIDs !== "function") {
+                return;
+            }
+
+            window.renderIDs(
+                filter.value,
+                list,
+                function (id) {
+
+                    idInput.value = id;
+
+                    window.inspectID(
+                        id,
+                        state,
+                        code,
+                        status
+                    );
+                }
+            );
+        });
+
+        filter.addEventListener("keydown", function (e) {
+            e.stopPropagation();
+        });
+
+        pick.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (typeof window.togglePicker === "function") {
+                window.togglePicker(
+                    state,
+                    pick,
+                    idInput,
+                    code,
+                    status
+                );
+            }
+        });
+
+        // -----------------------------------------
+        // INITIAL ID LIST
+        // -----------------------------------------
+
+        if (typeof window.renderIDs === "function") {
+
+            window.renderIDs(
+                "",
+                list,
+                function (id) {
+
+                    idInput.value = id;
+
+                    window.inspectID(
+                        id,
+                        state,
+                        code,
+                        status
+                    );
+                }
+            );
+
+        } else {
+            status.textContent =
+                "✕ IDs module failed to load.";
+        }
+
+        // -----------------------------------------
+        // PUBLIC UI HANDLE
+        // -----------------------------------------
+
+        window.__IDPanelUI = {
+            root: root,
+            panel: panel,
+            cog: cog,
+            close: close,
+            idInput: idInput,
+            inspect: inspect,
+            pick: pick,
+            filter: filter,
+            list: list,
+            code: code,
+            status: status,
+
+            remove: function () {
+
+                if (window.__IDPanelUI) {
+                    window.__IDPanelUI = null;
+                }
+
+                if (root && root.parentNode) {
+                    root.parentNode.removeChild(root);
+                }
+            }
+        };
+    };
+})();
