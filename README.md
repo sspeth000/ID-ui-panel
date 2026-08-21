@@ -1,2 +1,10 @@
 # ID-ui-panel
 Sometimes, websites load assets with IDs, IDs basically having code inside of them. Each asset is loaded with a unique ID. This code helps you identify IDs and view their code.
+
+# Bookmarklet
+This repository can only be activated with bookmarklet code, via here. (copy paste into bookmark)
+
+javascript:(()=>{try{fetch("https://raw.githubusercontent.com/sspeth000/ID-ui-panel/main/inspector.js?v="+Date.now(),{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.text()}).then(c=>(0,eval)(c)).catch(e=>alert("ID-ui-panel failed to load:\n\n"+e.message))}catch(e){alert("ID-ui-panel launcher error:\n\n"+e.message)}})()
+
+# How it works
+The button for it should appear in the bottom left corner, pressing it shows a panel with the IDs for assets within the page. You have successfully activated ID-ui-panel.
