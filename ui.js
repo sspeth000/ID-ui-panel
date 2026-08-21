@@ -3,7 +3,10 @@
 
     window.__IDPanelStart = function () {
 
-        // Remove existing panel.
+        // =========================================================
+        // REMOVE EXISTING PANEL
+        // =========================================================
+
         if (window.__IDPanelUI) {
             try {
                 window.__IDPanelUI.remove();
@@ -48,40 +51,69 @@
         // =========================================================
 
         const root = document.createElement("div");
-        root.id = "__IDPanelRoot";
-        root.className = "inspector-root";
+
+        root.id =
+            "__IDPanelRoot";
+
+        root.className =
+            "inspector-root";
 
         // =========================================================
         // COG
         // =========================================================
 
-        const cog = document.createElement("button");
-        cog.type = "button";
-        cog.className = "inspector-cog";
-        cog.textContent = "⚙";
+        const cog =
+            document.createElement("button");
+
+        cog.type =
+            "button";
+
+        cog.className =
+            "inspector-cog";
+
+        cog.textContent =
+            "⚙";
 
         // =========================================================
         // PANEL
         // =========================================================
 
-        const panel = document.createElement("div");
-        panel.className = "inspector-panel";
+        const panel =
+            document.createElement("div");
+
+        panel.className =
+            "inspector-panel";
 
         // =========================================================
         // HEADER
         // =========================================================
 
-        const header = document.createElement("div");
-        header.className = "inspector-header";
+        const header =
+            document.createElement("div");
 
-        const title = document.createElement("b");
-        title.className = "inspector-title";
-        title.textContent = "ASSET ID INSPECTOR";
+        header.className =
+            "inspector-header";
 
-        const close = document.createElement("button");
-        close.type = "button";
-        close.className = "inspector-close";
-        close.textContent = "×";
+        const title =
+            document.createElement("b");
+
+        title.className =
+            "inspector-title";
+
+        title.textContent =
+            "ASSET ID INSPECTOR";
+
+        const close =
+            document.createElement("button");
+
+        close.type =
+            "button";
+
+        close.className =
+            "inspector-close";
+
+        close.textContent =
+            "×";
 
         header.appendChild(title);
         header.appendChild(close);
@@ -90,30 +122,59 @@
         // HUE
         // =========================================================
 
-        const hueWrap = document.createElement("div");
-        hueWrap.className = "inspector-hue-wrap";
+        const hueWrap =
+            document.createElement("div");
 
-        const hueRow = document.createElement("div");
-        hueRow.className = "inspector-hue-row";
+        hueWrap.className =
+            "inspector-hue-wrap";
 
-        const hueLabel = document.createElement("span");
-        hueLabel.className = "inspector-hue-label";
-        hueLabel.textContent = "Hue";
+        const hueRow =
+            document.createElement("div");
 
-        const hueValue = document.createElement("span");
-        hueValue.className = "inspector-hue-value";
-        hueValue.textContent = String(state.hue) + "°";
+        hueRow.className =
+            "inspector-hue-row";
+
+        const hueLabel =
+            document.createElement("span");
+
+        hueLabel.className =
+            "inspector-hue-label";
+
+        hueLabel.textContent =
+            "Hue";
+
+        const hueValue =
+            document.createElement("span");
+
+        hueValue.className =
+            "inspector-hue-value";
+
+        hueValue.textContent =
+            String(state.hue) + "°";
 
         hueRow.appendChild(hueLabel);
         hueRow.appendChild(hueValue);
 
-        const hue = document.createElement("input");
-        hue.type = "range";
-        hue.min = "0";
-        hue.max = "360";
-        hue.step = "1";
-        hue.value = String(state.hue);
-        hue.className = "inspector-hue";
+        const hue =
+            document.createElement("input");
+
+        hue.type =
+            "range";
+
+        hue.min =
+            "0";
+
+        hue.max =
+            "360";
+
+        hue.step =
+            "1";
+
+        hue.value =
+            String(state.hue);
+
+        hue.className =
+            "inspector-hue";
 
         hueWrap.appendChild(hueRow);
         hueWrap.appendChild(hue);
@@ -122,30 +183,59 @@
         // OPACITY
         // =========================================================
 
-        const opacityWrap = document.createElement("div");
-        opacityWrap.className = "inspector-opacity-wrap";
+        const opacityWrap =
+            document.createElement("div");
 
-        const opacityRow = document.createElement("div");
-        opacityRow.className = "inspector-opacity-row";
+        opacityWrap.className =
+            "inspector-opacity-wrap";
 
-        const opacityLabel = document.createElement("span");
-        opacityLabel.className = "inspector-opacity-label";
-        opacityLabel.textContent = "Opacity";
+        const opacityRow =
+            document.createElement("div");
 
-        const opacityValue = document.createElement("span");
-        opacityValue.className = "inspector-opacity-value";
-        opacityValue.textContent = String(state.opacity);
+        opacityRow.className =
+            "inspector-opacity-row";
+
+        const opacityLabel =
+            document.createElement("span");
+
+        opacityLabel.className =
+            "inspector-opacity-label";
+
+        opacityLabel.textContent =
+            "Opacity";
+
+        const opacityValue =
+            document.createElement("span");
+
+        opacityValue.className =
+            "inspector-opacity-value";
+
+        opacityValue.textContent =
+            String(state.opacity);
 
         opacityRow.appendChild(opacityLabel);
         opacityRow.appendChild(opacityValue);
 
-        const opacity = document.createElement("input");
-        opacity.type = "range";
-        opacity.min = "0";
-        opacity.max = "50";
-        opacity.step = "1";
-        opacity.value = String(state.opacity);
-        opacity.className = "inspector-opacity";
+        const opacity =
+            document.createElement("input");
+
+        opacity.type =
+            "range";
+
+        opacity.min =
+            "0";
+
+        opacity.max =
+            "50";
+
+        opacity.step =
+            "1";
+
+        opacity.value =
+            String(state.opacity);
+
+        opacity.className =
+            "inspector-opacity";
 
         opacityWrap.appendChild(opacityRow);
         opacityWrap.appendChild(opacity);
@@ -154,58 +244,106 @@
         // ENTER ID
         // =========================================================
 
-        const idInput = document.createElement("input");
-        idInput.type = "text";
-        idInput.className = "inspector-input";
-        idInput.placeholder = "Enter ID...";
-        idInput.autocomplete = "off";
-        idInput.autocorrect = "off";
-        idInput.autocapitalize = "off";
-        idInput.spellcheck = false;
+        const idInput =
+            document.createElement("input");
+
+        idInput.type =
+            "text";
+
+        idInput.className =
+            "inspector-input";
+
+        idInput.placeholder =
+            "Enter ID...";
+
+        idInput.autocomplete =
+            "off";
+
+        idInput.autocorrect =
+            "off";
+
+        idInput.autocapitalize =
+            "off";
+
+        idInput.spellcheck =
+            false;
 
         // =========================================================
         // FILTER IDS
         // =========================================================
 
-        const filter = document.createElement("input");
-        filter.type = "text";
-        filter.className = "inspector-input";
-        filter.placeholder = "Filter IDs...";
-        filter.autocomplete = "off";
-        filter.autocorrect = "off";
-        filter.autocapitalize = "off";
-        filter.spellcheck = false;
+        const filter =
+            document.createElement("input");
+
+        filter.type =
+            "text";
+
+        filter.className =
+            "inspector-input";
+
+        filter.placeholder =
+            "Filter IDs...";
+
+        filter.autocomplete =
+            "off";
+
+        filter.autocorrect =
+            "off";
+
+        filter.autocapitalize =
+            "off";
+
+        filter.spellcheck =
+            false;
 
         // =========================================================
         // PICK ASSET
         // =========================================================
 
-        const pick = document.createElement("button");
-        pick.type = "button";
-        pick.className = "inspector-button inspector-pick";
-        pick.textContent = "◉ Pick Asset";
+        const pick =
+            document.createElement("button");
+
+        pick.type =
+            "button";
+
+        pick.className =
+            "inspector-button inspector-pick";
+
+        pick.textContent =
+            "◉ Pick Asset";
 
         // =========================================================
         // ID LIST
         // =========================================================
 
-        const list = document.createElement("div");
-        list.className = "inspector-list";
+        const list =
+            document.createElement("div");
+
+        list.className =
+            "inspector-list";
 
         // =========================================================
         // CODE
         // =========================================================
 
-        const code = document.createElement("pre");
-        code.className = "inspector-code";
+        const code =
+            document.createElement("pre");
+
+        code.className =
+            "inspector-code";
 
         // =========================================================
         // STATUS
         // =========================================================
 
-        const status = document.createElement("div");
-        status.className = "inspector-status";
-        status.textContent = "✓ Inspector ready";
+        const status =
+            document.createElement("div");
+
+        status.className =
+            "inspector-status";
+
+        status.textContent =
+            "✓ Inspector ready";
 
         // =========================================================
         // BUILD PANEL
@@ -231,37 +369,73 @@
         // =========================================================
 
         function applyHue() {
-            let value = parseInt(hue.value, 10);
+
+            let value =
+                parseInt(
+                    hue.value,
+                    10
+                );
 
             if (!Number.isFinite(value)) {
                 value = 120;
             }
 
-            value = Math.max(0, Math.min(360, value));
+            value =
+                Math.max(
+                    0,
+                    Math.min(
+                        360,
+                        value
+                    )
+                );
 
-            state.hue = value;
-            hue.value = String(value);
-            hueValue.textContent = String(value) + "°";
+            state.hue =
+                value;
+
+            hue.value =
+                String(value);
+
+            hueValue.textContent =
+                String(value) + "°";
 
             root.style.setProperty(
                 "--id-hue",
                 String(value)
             );
+
+            // Update an existing highlight immediately.
+            if (
+                typeof window.updateHighlightColor ===
+                "function"
+            ) {
+                window.updateHighlightColor(
+                    state
+                );
+            }
         }
 
-        hue.addEventListener("input", function (e) {
-            e.stopPropagation();
-            applyHue();
-        });
+        hue.addEventListener(
+            "input",
+            function (e) {
+                e.stopPropagation();
+                applyHue();
+            }
+        );
 
-        hue.addEventListener("change", function (e) {
-            e.stopPropagation();
-            applyHue();
-        });
+        hue.addEventListener(
+            "change",
+            function (e) {
+                e.stopPropagation();
+                applyHue();
+            }
+        );
 
-        hue.addEventListener("pointerdown", function (e) {
-            e.stopPropagation();
-        });
+        hue.addEventListener(
+            "pointerdown",
+            function (e) {
+                e.stopPropagation();
+            }
+        );
 
         applyHue();
 
@@ -270,32 +444,59 @@
         // =========================================================
 
         function applyOpacity() {
-            let value = parseInt(opacity.value, 10);
+
+            let value =
+                parseInt(
+                    opacity.value,
+                    10
+                );
 
             if (!Number.isFinite(value)) {
                 value = 0;
             }
 
-            value = Math.max(0, Math.min(50, value));
+            value =
+                Math.max(
+                    0,
+                    Math.min(
+                        50,
+                        value
+                    )
+                );
 
-            state.opacity = value;
-            opacity.value = String(value);
-            opacityValue.textContent = String(value);
+            state.opacity =
+                value;
 
-            const alpha = 1 - (value / 100);
+            opacity.value =
+                String(value);
 
-            panel.style.opacity = String(alpha);
-            cog.style.opacity = String(alpha);
+            opacityValue.textContent =
+                String(value);
+
+            const alpha =
+                1 - (value / 100);
+
+            panel.style.opacity =
+                String(alpha);
+
+            cog.style.opacity =
+                String(alpha);
         }
 
-        opacity.addEventListener("input", function (e) {
-            e.stopPropagation();
-            applyOpacity();
-        });
+        opacity.addEventListener(
+            "input",
+            function (e) {
+                e.stopPropagation();
+                applyOpacity();
+            }
+        );
 
-        opacity.addEventListener("pointerdown", function (e) {
-            e.stopPropagation();
-        });
+        opacity.addEventListener(
+            "pointerdown",
+            function (e) {
+                e.stopPropagation();
+            }
+        );
 
         applyOpacity();
 
@@ -304,8 +505,14 @@
         // =========================================================
 
         function inspectCurrentID() {
-            if (typeof window.inspectID !== "function") {
-                code.style.display = "block";
+
+            if (
+                typeof window.inspectID !==
+                "function"
+            ) {
+                code.style.display =
+                    "block";
+
                 code.textContent =
                     "Inspector module is not loaded.";
 
@@ -328,7 +535,11 @@
         // =========================================================
 
         function renderIDList() {
-            if (typeof window.renderIDs !== "function") {
+
+            if (
+                typeof window.renderIDs !==
+                "function"
+            ) {
                 status.textContent =
                     "✕ IDs module failed to load.";
 
@@ -339,33 +550,89 @@
                 filter.value,
                 list,
                 function (id) {
-                    idInput.value = id;
+
+                    idInput.value =
+                        id;
+
                     inspectCurrentID();
                 }
             );
         }
 
         // =========================================================
+        // CLEAR HIGHLIGHT WHEN CLOSING
+        // =========================================================
+
+        function clearCurrentHighlight() {
+
+            if (
+                typeof window.clearHighlight ===
+                "function"
+            ) {
+                try {
+                    window.clearHighlight(
+                        state
+                    );
+                } catch (e) {}
+            }
+        }
+
+        // =========================================================
         // OPEN / CLOSE PANEL
         // =========================================================
 
-        cog.addEventListener("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
+        cog.addEventListener(
+            "click",
+            function (e) {
 
-            panel.classList.toggle("open");
+                e.preventDefault();
+                e.stopPropagation();
 
-            state.panelOpen =
-                panel.classList.contains("open");
-        });
+                const isOpen =
+                    panel.classList.contains(
+                        "open"
+                    );
 
-        close.addEventListener("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
+                if (isOpen) {
 
-            panel.classList.remove("open");
-            state.panelOpen = false;
-        });
+                    panel.classList.remove(
+                        "open"
+                    );
+
+                    state.panelOpen =
+                        false;
+
+                    clearCurrentHighlight();
+
+                } else {
+
+                    panel.classList.add(
+                        "open"
+                    );
+
+                    state.panelOpen =
+                        true;
+                }
+            }
+        );
+
+        close.addEventListener(
+            "click",
+            function (e) {
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                panel.classList.remove(
+                    "open"
+                );
+
+                state.panelOpen =
+                    false;
+
+                clearCurrentHighlight();
+            }
+        );
 
         // =========================================================
         // TEXT FIELD HANDLING
@@ -376,46 +643,80 @@
             onInput,
             allowEnter
         ) {
-            input.addEventListener("keydown", function (e) {
-                e.stopPropagation();
 
-                if (allowEnter && e.key === "Enter") {
-                    e.preventDefault();
-                    inspectCurrentID();
+            input.addEventListener(
+                "keydown",
+                function (e) {
+
+                    e.stopPropagation();
+
+                    if (
+                        allowEnter &&
+                        e.key === "Enter"
+                    ) {
+                        e.preventDefault();
+
+                        inspectCurrentID();
+                    }
                 }
-            });
+            );
 
-            input.addEventListener("keypress", function (e) {
-                e.stopPropagation();
-            });
-
-            input.addEventListener("keyup", function (e) {
-                e.stopPropagation();
-            });
-
-            input.addEventListener("beforeinput", function (e) {
-                e.stopPropagation();
-            });
-
-            input.addEventListener("input", function (e) {
-                e.stopPropagation();
-
-                if (typeof onInput === "function") {
-                    onInput();
+            input.addEventListener(
+                "keypress",
+                function (e) {
+                    e.stopPropagation();
                 }
-            });
+            );
 
-            input.addEventListener("click", function (e) {
-                e.stopPropagation();
-            });
+            input.addEventListener(
+                "keyup",
+                function (e) {
+                    e.stopPropagation();
+                }
+            );
 
-            input.addEventListener("pointerdown", function (e) {
-                e.stopPropagation();
-            });
+            input.addEventListener(
+                "beforeinput",
+                function (e) {
+                    e.stopPropagation();
+                }
+            );
 
-            input.addEventListener("focus", function (e) {
-                e.stopPropagation();
-            });
+            input.addEventListener(
+                "input",
+                function (e) {
+
+                    e.stopPropagation();
+
+                    if (
+                        typeof onInput ===
+                        "function"
+                    ) {
+                        onInput();
+                    }
+                }
+            );
+
+            input.addEventListener(
+                "click",
+                function (e) {
+                    e.stopPropagation();
+                }
+            );
+
+            input.addEventListener(
+                "pointerdown",
+                function (e) {
+                    e.stopPropagation();
+                }
+            );
+
+            input.addEventListener(
+                "focus",
+                function (e) {
+                    e.stopPropagation();
+                }
+            );
         }
 
         makeTextFieldWork(
@@ -436,25 +737,32 @@
         // PICK ASSET
         // =========================================================
 
-        pick.addEventListener("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
+        pick.addEventListener(
+            "click",
+            function (e) {
 
-            if (typeof window.togglePicker !== "function") {
-                status.textContent =
-                    "✕ Picker module failed to load.";
+                e.preventDefault();
+                e.stopPropagation();
 
-                return;
+                if (
+                    typeof window.togglePicker !==
+                    "function"
+                ) {
+                    status.textContent =
+                        "✕ Picker module failed to load.";
+
+                    return;
+                }
+
+                window.togglePicker(
+                    state,
+                    pick,
+                    idInput,
+                    code,
+                    status
+                );
             }
-
-            window.togglePicker(
-                state,
-                pick,
-                idInput,
-                code,
-                status
-            );
-        });
+        );
 
         // =========================================================
         // INITIAL LIST
@@ -467,26 +775,34 @@
         // =========================================================
 
         window.__IDPanelUI = {
+
             root: root,
             panel: panel,
+
             cog: cog,
             close: close,
+
             hue: hue,
             hueValue: hueValue,
+
             opacity: opacity,
             opacityValue: opacityValue,
+
             idInput: idInput,
+
             pick: pick,
+
             filter: filter,
             list: list,
             code: code,
             status: status,
 
             remove: function () {
+
                 if (
                     state.picking &&
                     typeof window.stopInspectorPicker ===
-                        "function"
+                    "function"
                 ) {
                     try {
                         window.stopInspectorPicker(
@@ -497,20 +813,19 @@
                     } catch (e) {}
                 }
 
+                clearCurrentHighlight();
+
                 if (
-                    typeof window.clearHighlight ===
-                        "function"
+                    root &&
+                    root.parentNode
                 ) {
-                    try {
-                        window.clearHighlight(state);
-                    } catch (e) {}
+                    root.parentNode.removeChild(
+                        root
+                    );
                 }
 
-                if (root && root.parentNode) {
-                    root.parentNode.removeChild(root);
-                }
-
-                window.__IDPanelUI = null;
+                window.__IDPanelUI =
+                    null;
             }
         };
     };
