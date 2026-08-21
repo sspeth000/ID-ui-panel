@@ -5,133 +5,167 @@
     // VISIBILITY MODULE
     // =========================================================
 
-    const savedVisibility =
+    const originalStates =
         new WeakMap();
+
+    // =========================================================
+    // GET SELECTED ELEMENT
+    // =========================================================
 
     function getSelectedElement(state) {
 
-        if (!state) {
+        if (
+            !state ||
+            !state.highlighted ||
+            state.highlighted.nodeType !== 1
+        ) {
             return null;
         }
 
-        // The highlighted element is the currently selected asset.
-        if (
-            state.highlighted &&
-            state.highlighted.nodeType === 1
-        ) {
-            return state.highlighted;
-        }
-
-        return null;
-    }
-
-    function rememberOriginalState(element) {
-
-        if (
-            !element ||
-            savedVisibility.has(element)
-        ) {
-            return;
-        }
-
-        savedVisibility.set(
-            element,
-            {
-                visibility:
-                    element.style.visibility,
-
-                display:
-                    element.style.display
-            }
-        );
+        return state.highlighted;
     }
 
     // =========================================================
-    // CHECK CURRENT VISIBILITY
+    // SAVE ORIGINAL STATE
     // =========================================================
 
-    window.getAssetVisibility = function (state) {
-
-        const element =
-            getSelectedElement(state);
+    function rememberState(element) {
 
         if (!element) {
             return null;
         }
 
-        rememberOriginalState(element);
+        if (!originalStates.has(element)) {
 
-        const style =
-            window.getComputedStyle(element);
+            originalStates.set(
+                element,
+                {
+                    visibility:
+                        element.style.visibility,
 
-        // An element is considered visible only when it is
-        // rendered and not explicitly hidden.
-        return (
-            style.visibility !== "hidden" &&
-            style.display !== "none"
-        );
-    };
+                    display:
+                        element.style.display
+                }
+            );
+        }
+
+        return originalStates.get(element);
+    }
+
+    // =========================================================
+    // CHECK VISIBILITY
+    // =========================================================
+
+    window.getAssetVisibility =
+        function (state) {
+
+            const element =
+                getSelectedElement(state);
+
+            if (!element) {
+                return null;
+            }
+
+            rememberState(element);
+
+            const computed =
+                window.getComputedStyle(element);
+
+            return (
+                computed.display !== "none" &&
+                computed.visibility !== "hidden"
+            );
+        };
 
     // =========================================================
     // SET VISIBILITY
     // =========================================================
 
-    window.setAssetVisibility = function (
-        state,
-        visible
-    ) {
-
-        const element =
-            getSelectedElement(state);
-
-        if (!element) {
-            return false;
-        }
-
-        rememberOriginalState(element);
-
-        const original =
-            savedVisibility.get(element);
-
-        if (visible) {
-
-            element.style.visibility =
-                original.visibility || "";
-
-            element.style.display =
-                original.display || "";
-
-        } else {
-
-            element.style.visibility =
-                "hidden";
-        }
-
-        return true;
-    };
-
-    // =========================================================
-    // TOGGLE
-    // =========================================================
-
-    window.toggleAssetVisibility = function (state) {
-
-        const current =
-            window.getAssetVisibility(state);
-
-        if (current === null) {
-            return null;
-        }
-
-        const next =
-            !current;
-
-        window.setAssetVisibility(
+    window.setAssetVisibility =
+        function (
             state,
-            next
-        );
+            visible
+        ) {
 
-        return next;
-    };
+            const element =
+                getSelectedElement(state);
+
+            if (!element) {
+                return false;
+            }
+
+            const original =
+                rememberState(element);
+
+            if (visible) {
+
+                element.style.visibility =
+                    original.visibility;
+
+                element.style.display =
+                    original.display;
+
+            } else {
+
+                element.style.visibility =
+                    "hidden";
+            }
+
+            // Update UI immediately.
+            window.notifyVisibilityChange(
+                state
+            );
+
+            return true;
+        };
+
+    // =========================================================
+    // NOTIFY UI OF A NEW SELECTION
+    // =========================================================
+
+    window.notifyAssetSelection =
+        function (state) {
+
+            const visible =
+                window.getAssetVisibility(
+                    state
+                );
+
+            // The UI registers this function.
+            if (
+                typeof window.updateIDPanelVisibilityUI ===
+                "function"
+            ) {
+                window.updateIDPanelVisibilityUI(
+                    visible
+                );
+            }
+
+            return visible;
+        };
+
+    // =========================================================
+    // NOTIFY UI OF VISIBILITY CHANGE
+    // =========================================================
+
+    window.notifyVisibilityChange =
+        function (state) {
+
+            const visible =
+                window.getAssetVisibility(
+                    state
+                );
+
+            if (
+                typeof window.updateIDPanelVisibilityUI ===
+                "function"
+            ) {
+                window.updateIDPanelVisibilityUI(
+                    visible
+                );
+            }
+
+            return visible;
+        };
 
 })();
