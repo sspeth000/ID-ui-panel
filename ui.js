@@ -259,3 +259,6 @@
         };
     };
 })();
+if (typeof window.__IDPanelStart === "function") {
+    window.__IDPanelStart();
+}
