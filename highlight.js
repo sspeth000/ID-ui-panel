@@ -1,34 +1,35 @@
 (function () {
     "use strict";
 
-    function getHighlightColor(state) {
-        let hue =
+    function getHue(state) {
+        const hue =
             state &&
-            Number.isFinite(state.hue)
-                ? state.hue
+            Number.isFinite(Number(state.hue))
+                ? Number(state.hue)
                 : 120;
 
-        hue = Math.max(
+        return Math.max(
             0,
-            Math.min(
-                360,
-                hue
-            )
+            Math.min(360, hue)
         );
+    }
+
+    function getHighlightStyle(state) {
+        const hue = getHue(state);
 
         return (
-            "hsl(" +
+            "3px solid hsl(" +
             hue +
-            ", 75%, 55%)"
+            ", 100%, 50%)"
         );
     }
 
     window.clearHighlight = function (state) {
-
         if (
             state &&
             state.highlighted
         ) {
+            // Restore exactly what was there before highlighting.
             state.highlighted.style.outline =
                 state.oldOutline || "";
         }
@@ -43,27 +44,27 @@
         element,
         state
     ) {
-
-        window.clearHighlight(state);
-
         if (!element || !state) {
             return;
         }
 
+        // Remove the previous object's highlight first.
+        window.clearHighlight(state);
+
         state.highlighted = element;
 
+        // Save the element's original inline outline.
         state.oldOutline =
             element.style.outline || "";
 
+        // Apply the current UI hue.
         element.style.outline =
-            "2px solid " +
-            getHighlightColor(state);
+            getHighlightStyle(state);
     };
 
     window.updateHighlightColor = function (
         state
     ) {
-
         if (
             !state ||
             !state.highlighted
@@ -71,9 +72,9 @@
             return;
         }
 
+        // Reapply the outline using the newest hue.
         state.highlighted.style.outline =
-            "2px solid " +
-            getHighlightColor(state);
+            getHighlightStyle(state);
     };
 
 })();
