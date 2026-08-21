@@ -1,21 +1,38 @@
-function clearHighlight(state) {
-  if (state.highlighted) {
-    state.highlighted.style.outline =
-      state.oldOutline;
-  }
+(function () {
+    "use strict";
 
-  state.highlighted = null;
-  state.oldOutline = "";
-}
+    window.clearHighlight = function (state) {
 
-function highlightElement(el, state) {
-  clearHighlight(state);
+        if (
+            state &&
+            state.highlighted
+        ) {
+            state.highlighted.style.outline =
+                state.oldOutline;
+        }
 
-  if (!el) return;
+        if (state) {
+            state.highlighted = null;
+            state.oldOutline = "";
+        }
+    };
 
-  state.highlighted = el;
-  state.oldOutline = el.style.outline;
+    window.highlightElement = function (
+        element,
+        state
+    ) {
 
-  el.style.outline =
-    "2px solid #52e879";
-}
+        window.clearHighlight(state);
+
+        if (!element) {
+            return;
+        }
+
+        state.highlighted = element;
+        state.oldOutline =
+            element.style.outline;
+
+        element.style.outline =
+            "2px solid #52e879";
+    };
+})();
