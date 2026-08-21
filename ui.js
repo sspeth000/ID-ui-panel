@@ -12,7 +12,10 @@
             window.__IDPanelUI = null;
         }
 
-        // Shared state.
+        // =========================================================
+        // SHARED STATE
+        // =========================================================
+
         const state =
             window.__IDPanelState ||
             (
@@ -64,7 +67,8 @@
         // PANEL
         // =========================================================
 
-        const panel = document.createElement("div");
+        const panel =
+            document.createElement("div");
 
         panel.className =
             "inspector-panel";
@@ -151,11 +155,6 @@
         hue.className =
             "inspector-hue";
 
-        hue.setAttribute(
-            "aria-label",
-            "Panel hue"
-        );
-
         hueWrap.appendChild(hueRow);
         hueWrap.appendChild(hue);
 
@@ -193,13 +192,8 @@
         opacityValue.textContent =
             "0";
 
-        opacityRow.appendChild(
-            opacityLabel
-        );
-
-        opacityRow.appendChild(
-            opacityValue
-        );
+        opacityRow.appendChild(opacityLabel);
+        opacityRow.appendChild(opacityValue);
 
         const opacity =
             document.createElement("input");
@@ -217,13 +211,8 @@
         opacity.className =
             "inspector-opacity";
 
-        opacityWrap.appendChild(
-            opacityRow
-        );
-
-        opacityWrap.appendChild(
-            opacity
-        );
+        opacityWrap.appendChild(opacityRow);
+        opacityWrap.appendChild(opacity);
 
         // =========================================================
         // ENTER ID
@@ -253,7 +242,7 @@
             false;
 
         // =========================================================
-        // INSPECT
+        // INSPECT BUTTON
         // =========================================================
 
         const inspect =
@@ -347,11 +336,8 @@
         // =========================================================
 
         panel.appendChild(header);
-
-        // Hue ABOVE opacity.
         panel.appendChild(hueWrap);
         panel.appendChild(opacityWrap);
-
         panel.appendChild(idInput);
         panel.appendChild(inspect);
         panel.appendChild(pick);
@@ -413,35 +399,24 @@
         hue.addEventListener(
             "input",
             function (e) {
-
                 e.stopPropagation();
-
                 applyHue();
-
-            },
-            true
+            }
         );
 
         hue.addEventListener(
             "change",
             function (e) {
-
                 e.stopPropagation();
-
                 applyHue();
-
-            },
-            true
+            }
         );
 
         hue.addEventListener(
             "pointerdown",
             function (e) {
-
                 e.stopPropagation();
-
-            },
-            true
+            }
         );
 
         applyHue();
@@ -481,23 +456,16 @@
         opacity.addEventListener(
             "input",
             function (e) {
-
                 e.stopPropagation();
-
                 applyOpacity();
-
-            },
-            true
+            }
         );
 
         opacity.addEventListener(
             "pointerdown",
             function (e) {
-
                 e.stopPropagation();
-
-            },
-            true
+            }
         );
 
         applyOpacity();
@@ -559,7 +527,6 @@
                         id;
 
                     inspectCurrentID();
-
                 }
             );
         }
@@ -583,9 +550,7 @@
                     panel.classList.contains(
                         "open"
                     );
-
-            },
-            true
+            }
         );
 
         // =========================================================
@@ -605,9 +570,7 @@
 
                 state.panelOpen =
                     false;
-
-            },
-            true
+            }
         );
 
         // =========================================================
@@ -622,50 +585,105 @@
                 e.stopPropagation();
 
                 inspectCurrentID();
-
-            },
-            true
+            }
         );
+
+        // =========================================================
+        // TEXT FIELD HELPER
+        // =========================================================
+
+        function makeTextFieldWork(
+            input,
+            onInput,
+            allowEnter
+        ) {
+
+            input.addEventListener(
+                "keydown",
+                function (e) {
+
+                    // Stop the site's keyboard
+                    // handlers from seeing the key.
+
+                    e.stopPropagation();
+
+                    if (
+                        allowEnter &&
+                        e.key === "Enter"
+                    ) {
+
+                        e.preventDefault();
+
+                        inspectCurrentID();
+                    }
+                }
+            );
+
+            input.addEventListener(
+                "keypress",
+                function (e) {
+                    e.stopPropagation();
+                }
+            );
+
+            input.addEventListener(
+                "keyup",
+                function (e) {
+                    e.stopPropagation();
+                }
+            );
+
+            input.addEventListener(
+                "beforeinput",
+                function (e) {
+                    e.stopPropagation();
+                }
+            );
+
+            input.addEventListener(
+                "input",
+                function (e) {
+
+                    e.stopPropagation();
+
+                    if (
+                        typeof onInput ===
+                        "function"
+                    ) {
+                        onInput();
+                    }
+                }
+            );
+
+            input.addEventListener(
+                "click",
+                function (e) {
+                    e.stopPropagation();
+                }
+            );
+
+            input.addEventListener(
+                "pointerdown",
+                function (e) {
+                    e.stopPropagation();
+                }
+            );
+
+            input.addEventListener(
+                "focus",
+                function (e) {
+                    e.stopPropagation();
+                }
+            );
+        }
 
         // =========================================================
         // ENTER ID
         // =========================================================
 
-        idInput.addEventListener(
-            "keydown",
-            function (e) {
-
-                e.stopPropagation();
-
-                if (e.key === "Enter") {
-
-                    e.preventDefault();
-
-                    inspectCurrentID();
-
-                }
-
-            },
-            true
-        );
-
-        idInput.addEventListener(
-            "click",
-            function (e) {
-
-                e.stopPropagation();
-
-            },
-            true
-        );
-
-        idInput.addEventListener(
-            "pointerdown",
-            function (e) {
-
-                e.stopPropagation();
-
-            },
+        makeTextFieldWork(
+            idInput,
+            null,
             true
         );
 
@@ -673,46 +691,12 @@
         // FILTER
         // =========================================================
 
-        filter.addEventListener(
-            "input",
-            function (e) {
-
-                e.stopPropagation();
-
+        makeTextFieldWork(
+            filter,
+            function () {
                 renderIDList();
-
             },
-            true
-        );
-
-        filter.addEventListener(
-            "keydown",
-            function (e) {
-
-                e.stopPropagation();
-
-            },
-            true
-        );
-
-        filter.addEventListener(
-            "click",
-            function (e) {
-
-                e.stopPropagation();
-
-            },
-            true
-        );
-
-        filter.addEventListener(
-            "pointerdown",
-            function (e) {
-
-                e.stopPropagation();
-
-            },
-            true
+            false
         );
 
         // =========================================================
@@ -744,9 +728,7 @@
                     code,
                     status
                 );
-
-            },
-            true
+            }
         );
 
         // =========================================================
@@ -763,6 +745,7 @@
 
             root: root,
             panel: panel,
+
             cog: cog,
             close: close,
 
@@ -775,6 +758,7 @@
             idInput: idInput,
             inspect: inspect,
             pick: pick,
+
             filter: filter,
             list: list,
             code: code,
@@ -797,7 +781,6 @@
                         );
 
                     } catch (e) {}
-
                 }
 
                 if (
@@ -812,7 +795,6 @@
                         );
 
                     } catch (e) {}
-
                 }
 
                 if (
@@ -823,14 +805,11 @@
                     root.parentNode.removeChild(
                         root
                     );
-
                 }
 
                 window.__IDPanelUI =
                     null;
-
             }
-
         };
     };
 
