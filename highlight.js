@@ -1,35 +1,47 @@
 (function () {
     "use strict";
 
-    function getHue(state) {
-        const hue =
+    function getHighlightColor(state) {
+        let hue = 120;
+
+        if (
             state &&
             Number.isFinite(Number(state.hue))
-                ? Number(state.hue)
-                : 120;
+        ) {
+            hue = Number(state.hue);
+        }
 
-        return Math.max(
+        hue = Math.max(
             0,
             Math.min(360, hue)
         );
-    }
-
-    function getHighlightStyle(state) {
-        const hue = getHue(state);
 
         return (
-            "3px solid hsl(" +
+            "hsl(" +
             hue +
             ", 100%, 50%)"
         );
     }
 
+    function applyHighlightColor(state) {
+        if (
+            !state ||
+            !state.highlighted
+        ) {
+            return;
+        }
+
+        state.highlighted.style.outline =
+            "2px solid " +
+            getHighlightColor(state);
+    }
+
     window.clearHighlight = function (state) {
+
         if (
             state &&
             state.highlighted
         ) {
-            // Restore exactly what was there before highlighting.
             state.highlighted.style.outline =
                 state.oldOutline || "";
         }
@@ -44,37 +56,25 @@
         element,
         state
     ) {
+
+        window.clearHighlight(state);
+
         if (!element || !state) {
             return;
         }
 
-        // Remove the previous object's highlight first.
-        window.clearHighlight(state);
-
         state.highlighted = element;
 
-        // Save the element's original inline outline.
         state.oldOutline =
             element.style.outline || "";
 
-        // Apply the current UI hue.
-        element.style.outline =
-            getHighlightStyle(state);
+        applyHighlightColor(state);
     };
 
     window.updateHighlightColor = function (
         state
     ) {
-        if (
-            !state ||
-            !state.highlighted
-        ) {
-            return;
-        }
-
-        // Reapply the outline using the newest hue.
-        state.highlighted.style.outline =
-            getHighlightStyle(state);
+        applyHighlightColor(state);
     };
 
 })();
