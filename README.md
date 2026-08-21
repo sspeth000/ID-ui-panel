@@ -8,3 +8,6 @@ javascript:(()=>{try{fetch("https://raw.githubusercontent.com/sspeth000/ID-ui-pa
 
 # How it works
 The button for it should appear in the bottom left corner, pressing it shows a panel with the IDs for assets within the page. You have successfully activated ID-ui-panel.
+
+# Testing it out
+If you don’t exactly know what this panel helps with, load the panel via a https://www.lomando.com page. Then, it should show IDs and what they do.
