@@ -1,7 +1,7 @@
 (function () {
     "use strict";
 
-    function getColor(state) {
+    function getHighlightColor(state) {
         let hue = 120;
 
         if (
@@ -13,7 +13,10 @@
 
         hue = Math.max(
             0,
-            Math.min(360, hue)
+            Math.min(
+                360,
+                hue
+            )
         );
 
         return "hsl(" + hue + ", 100%, 50%)";
@@ -42,7 +45,10 @@
 
         window.clearHighlight(state);
 
-        if (!element || !state) {
+        if (
+            !element ||
+            !state
+        ) {
             return;
         }
 
@@ -53,7 +59,7 @@
 
         element.style.outline =
             "2px solid " +
-            getColor(state);
+            getHighlightColor(state);
     };
 
     window.updateHighlightColor = function (
@@ -69,7 +75,7 @@
 
         state.highlighted.style.outline =
             "2px solid " +
-            getColor(state);
+            getHighlightColor(state);
     };
 
 })();
