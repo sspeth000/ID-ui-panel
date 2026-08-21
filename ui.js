@@ -3,7 +3,10 @@
 
     window.__IDPanelStart = function () {
 
-        // Remove existing panel.
+        // =========================================================
+        // REMOVE EXISTING PANEL
+        // =========================================================
+
         if (window.__IDPanelUI) {
             try {
                 window.__IDPanelUI.remove();
@@ -330,15 +333,6 @@
         visibilityWrap.className =
             "inspector-visibility-wrap";
 
-        const visibilityLabel =
-            document.createElement("div");
-
-        visibilityLabel.className =
-            "inspector-visibility-label";
-
-        visibilityLabel.textContent =
-            "Toggle visibility";
-
         const visibilityControl =
             document.createElement("div");
 
@@ -350,6 +344,9 @@
 
         visibilityText.className =
             "inspector-visibility-text";
+
+        visibilityText.textContent =
+            "Toggle visibility: OFF";
 
         const visibilitySwitch =
             document.createElement("label");
@@ -386,10 +383,6 @@
 
         visibilityControl.appendChild(
             visibilitySwitch
-        );
-
-        visibilityWrap.appendChild(
-            visibilityLabel
         );
 
         visibilityWrap.appendChild(
@@ -465,7 +458,7 @@
                     true;
 
                 visibilityText.textContent =
-                    "Unavailable";
+                    "Toggle visibility: OFF";
 
                 return;
             }
@@ -484,7 +477,7 @@
                     true;
 
                 visibilityText.textContent =
-                    "No asset selected";
+                    "Toggle visibility: OFF";
 
                 return;
             }
@@ -497,8 +490,8 @@
 
             visibilityText.textContent =
                 visible
-                    ? "ON"
-                    : "OFF";
+                    ? "Toggle visibility: ON"
+                    : "Toggle visibility: OFF";
         }
 
         visibilityInput.addEventListener(
@@ -514,9 +507,7 @@
                     return;
                 }
 
-                if (
-                    !state.highlighted
-                ) {
+                if (!state.highlighted) {
                     updateVisibilityUI();
                     return;
                 }
@@ -711,7 +702,6 @@
                 status
             );
 
-            // Sync visibility after selection.
             updateVisibilityUI();
         }
 
@@ -745,7 +735,34 @@
         }
 
         // =========================================================
-        // OPEN / CLOSE PANEL
+        // CLOSE PANEL
+        // =========================================================
+
+        function closePanel() {
+
+            panel.classList.remove(
+                "open"
+            );
+
+            state.panelOpen =
+                false;
+
+            if (
+                typeof window.clearHighlight ===
+                "function"
+            ) {
+                try {
+                    window.clearHighlight(
+                        state
+                    );
+                } catch (e) {}
+            }
+
+            updateVisibilityUI();
+        }
+
+        // =========================================================
+        // COG
         // =========================================================
 
         cog.addEventListener(
@@ -755,32 +772,12 @@
                 e.preventDefault();
                 e.stopPropagation();
 
-                const isOpen =
+                if (
                     panel.classList.contains(
                         "open"
-                    );
-
-                if (isOpen) {
-
-                    panel.classList.remove(
-                        "open"
-                    );
-
-                    state.panelOpen =
-                        false;
-
-                    if (
-                        typeof window.clearHighlight ===
-                        "function"
-                    ) {
-                        try {
-                            window.clearHighlight(
-                                state
-                            );
-                        } catch (e) {}
-                    }
-
-                    updateVisibilityUI();
+                    )
+                ) {
+                    closePanel();
 
                 } else {
 
@@ -796,6 +793,10 @@
             }
         );
 
+        // =========================================================
+        // CLOSE BUTTON
+        // =========================================================
+
         close.addEventListener(
             "click",
             function (e) {
@@ -803,25 +804,7 @@
                 e.preventDefault();
                 e.stopPropagation();
 
-                panel.classList.remove(
-                    "open"
-                );
-
-                state.panelOpen =
-                    false;
-
-                if (
-                    typeof window.clearHighlight ===
-                    "function"
-                ) {
-                    try {
-                        window.clearHighlight(
-                            state
-                        );
-                    } catch (e) {}
-                }
-
-                updateVisibilityUI();
+                closePanel();
             }
         );
 
