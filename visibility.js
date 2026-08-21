@@ -44,12 +44,107 @@
                         element.style.visibility,
 
                     display:
-                        element.style.display
+                        element.style.display,
+
+                    displayPriority:
+                        element.style.getPropertyPriority(
+                            "display"
+                        ),
+
+                    visibilityPriority:
+                        element.style.getPropertyPriority(
+                            "visibility"
+                        ),
+
+                    hidden:
+                        element.hidden
                 }
             );
         }
 
-        return originalStates.get(element);
+        return originalStates.get(
+            element
+        );
+    }
+
+    // =========================================================
+    // CHECK ONE ELEMENT
+    // =========================================================
+
+    function isElementVisible(element) {
+
+        if (!element) {
+            return false;
+        }
+
+        /*
+         * The hidden attribute always makes the element
+         * unavailable for normal rendering.
+         */
+        if (element.hidden) {
+            return false;
+        }
+
+        const computed =
+            window.getComputedStyle(
+                element
+            );
+
+        if (
+            computed.display === "none" ||
+            computed.visibility === "hidden" ||
+            computed.visibility === "collapse"
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    // =========================================================
+    // CHECK PARENTS
+    // =========================================================
+
+    function isActuallyVisible(element) {
+
+        if (!element) {
+            return false;
+        }
+
+        /*
+         * Walk upward because an element can appear to have
+         * display:block while one of its parents is hidden.
+         */
+        let current =
+            element;
+
+        while (
+            current &&
+            current.nodeType === 1
+        ) {
+
+            if (current.hidden) {
+                return false;
+            }
+
+            const computed =
+                window.getComputedStyle(
+                    current
+                );
+
+            if (
+                computed.display === "none" ||
+                computed.visibility === "hidden" ||
+                computed.visibility === "collapse"
+            ) {
+                return false;
+            }
+
+            current =
+                current.parentElement;
+        }
+
+        return true;
     }
 
     // =========================================================
@@ -60,20 +155,20 @@
         function (state) {
 
             const element =
-                getSelectedElement(state);
+                getSelectedElement(
+                    state
+                );
 
             if (!element) {
                 return null;
             }
 
-            rememberState(element);
+            rememberState(
+                element
+            );
 
-            const computed =
-                window.getComputedStyle(element);
-
-            return (
-                computed.display !== "none" &&
-                computed.visibility !== "hidden"
+            return isActuallyVisible(
+                element
             );
         };
 
@@ -88,30 +183,69 @@
         ) {
 
             const element =
-                getSelectedElement(state);
+                getSelectedElement(
+                    state
+                );
 
             if (!element) {
                 return false;
             }
 
             const original =
-                rememberState(element);
+                rememberState(
+                    element
+                );
 
             if (visible) {
 
-                element.style.visibility =
-                    original.visibility;
+                /*
+                 * Restore the exact inline values that existed
+                 * before the inspector touched the element.
+                 */
+                element.style.setProperty(
+                    "visibility",
+                    original.visibility,
+                    original.visibilityPriority
+                );
 
-                element.style.display =
-                    original.display;
+                element.style.setProperty(
+                    "display",
+                    original.display,
+                    original.displayPriority
+                );
+
+                element.hidden =
+                    original.hidden;
 
             } else {
 
-                element.style.visibility =
-                    "hidden";
+                /*
+                 * Use !important so normal page CSS doesn't
+                 * immediately override the inspector.
+                 */
+                element.style.setProperty(
+                    "visibility",
+                    "hidden",
+                    "important"
+                );
+
+                element.style.setProperty(
+                    "display",
+                    "none",
+                    "important"
+                );
+
+                /*
+                 * Do NOT use element.hidden here.
+                 *
+                 * Keeping the hidden attribute untouched makes
+                 * restoration predictable.
+                 */
             }
 
-            // Update UI immediately.
+            /*
+             * Update the UI immediately.
+             */
             window.notifyVisibilityChange(
                 state
             );
@@ -120,7 +254,7 @@
         };
 
     // =========================================================
-    // NOTIFY UI OF A NEW SELECTION
+    // NOTIFY UI OF NEW SELECTION
     // =========================================================
 
     window.notifyAssetSelection =
@@ -131,11 +265,11 @@
                     state
                 );
 
-            // The UI registers this function.
             if (
                 typeof window.updateIDPanelVisibilityUI ===
                 "function"
             ) {
+
                 window.updateIDPanelVisibilityUI(
                     visible
                 );
@@ -160,6 +294,7 @@
                 typeof window.updateIDPanelVisibilityUI ===
                 "function"
             ) {
+
                 window.updateIDPanelVisibilityUI(
                     visible
                 );
