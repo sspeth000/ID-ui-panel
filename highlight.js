@@ -1,6 +1,28 @@
 (function () {
     "use strict";
 
+    function getHighlightColor(state) {
+        let hue =
+            state &&
+            Number.isFinite(state.hue)
+                ? state.hue
+                : 120;
+
+        hue = Math.max(
+            0,
+            Math.min(
+                360,
+                hue
+            )
+        );
+
+        return (
+            "hsl(" +
+            hue +
+            ", 75%, 55%)"
+        );
+    }
+
     window.clearHighlight = function (state) {
 
         if (
@@ -8,7 +30,7 @@
             state.highlighted
         ) {
             state.highlighted.style.outline =
-                state.oldOutline;
+                state.oldOutline || "";
         }
 
         if (state) {
@@ -24,15 +46,34 @@
 
         window.clearHighlight(state);
 
-        if (!element) {
+        if (!element || !state) {
             return;
         }
 
         state.highlighted = element;
+
         state.oldOutline =
-            element.style.outline;
+            element.style.outline || "";
 
         element.style.outline =
-            "2px solid #52e879";
+            "2px solid " +
+            getHighlightColor(state);
     };
+
+    window.updateHighlightColor = function (
+        state
+    ) {
+
+        if (
+            !state ||
+            !state.highlighted
+        ) {
+            return;
+        }
+
+        state.highlighted.style.outline =
+            "2px solid " +
+            getHighlightColor(state);
+    };
+
 })();
