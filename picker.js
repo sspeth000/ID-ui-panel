@@ -28,15 +28,32 @@
         status.textContent =
             "◉ Click an asset on the page";
 
+        /*
+         * Make sure an old handler
+         * cannot remain attached.
+         */
+        if (state.pickerHandler) {
+            document.removeEventListener(
+                "click",
+                state.pickerHandler,
+                true
+            );
+
+            state.pickerHandler =
+                null;
+        }
+
         state.pickerHandler =
             function (e) {
 
+                /*
+                 * Ignore the inspector itself.
+                 */
                 const root =
                     document.getElementById(
                         "__IDPanelRoot"
                     );
 
-                // Ignore clicks on our UI.
                 if (
                     root &&
                     root.contains(e.target)
@@ -46,15 +63,27 @@
 
                 let el = e.target;
 
+                /*
+                 * Walk upward until we find
+                 * an element with an ID.
+                 */
                 while (
                     el &&
-                    el !== document.body &&
+                    el !== document.documentElement &&
                     !el.id
                 ) {
                     el = el.parentElement;
                 }
 
-                if (!el || !el.id) {
+                /*
+                 * Don't accidentally select
+                 * the HTML element.
+                 */
+                if (
+                    !el ||
+                    !el.id ||
+                    el === document.documentElement
+                ) {
 
                     status.textContent =
                         "✕ Asset has no ID.";
@@ -65,11 +94,15 @@
                 e.preventDefault();
                 e.stopPropagation();
 
-                if (e.stopImmediatePropagation) {
+                if (
+                    typeof e.stopImmediatePropagation ===
+                    "function"
+                ) {
                     e.stopImmediatePropagation();
                 }
 
-                idInput.value = el.id;
+                idInput.value =
+                    el.id;
 
                 if (
                     typeof window.inspectID ===
@@ -105,11 +138,15 @@
 
         state.picking = false;
 
-        button.textContent =
-            "◉ Pick Asset";
+        if (button) {
+            button.textContent =
+                "◉ Pick Asset";
+        }
 
-        status.textContent =
-            "✓ Inspector ready";
+        if (status) {
+            status.textContent =
+                "✓ Inspector ready";
+        }
 
         if (state.pickerHandler) {
 
@@ -119,7 +156,8 @@
                 true
             );
 
-            state.pickerHandler = null;
+            state.pickerHandler =
+                null;
         }
     }
 
