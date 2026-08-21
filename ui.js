@@ -47,7 +47,8 @@
         // ROOT
         // =========================================================
 
-        const root = document.createElement("div");
+        const root =
+            document.createElement("div");
 
         root.id =
             "__IDPanelRoot";
@@ -210,8 +211,13 @@
         opacityValue.textContent =
             String(state.opacity);
 
-        opacityRow.appendChild(opacityLabel);
-        opacityRow.appendChild(opacityValue);
+        opacityRow.appendChild(
+            opacityLabel
+        );
+
+        opacityRow.appendChild(
+            opacityValue
+        );
 
         const opacity =
             document.createElement("input");
@@ -234,8 +240,13 @@
         opacity.className =
             "inspector-opacity";
 
-        opacityWrap.appendChild(opacityRow);
-        opacityWrap.appendChild(opacity);
+        opacityWrap.appendChild(
+            opacityRow
+        );
+
+        opacityWrap.appendChild(
+            opacity
+        );
 
         // =========================================================
         // ENTER ID
@@ -310,6 +321,82 @@
             "◉ Pick Asset";
 
         // =========================================================
+        // VISIBILITY
+        // =========================================================
+
+        const visibilityWrap =
+            document.createElement("div");
+
+        visibilityWrap.className =
+            "inspector-visibility-wrap";
+
+        const visibilityLabel =
+            document.createElement("div");
+
+        visibilityLabel.className =
+            "inspector-visibility-label";
+
+        visibilityLabel.textContent =
+            "Toggle visibility";
+
+        const visibilityControl =
+            document.createElement("div");
+
+        visibilityControl.className =
+            "inspector-visibility-control";
+
+        const visibilityText =
+            document.createElement("span");
+
+        visibilityText.className =
+            "inspector-visibility-text";
+
+        const visibilitySwitch =
+            document.createElement("label");
+
+        visibilitySwitch.className =
+            "inspector-switch";
+
+        const visibilityInput =
+            document.createElement("input");
+
+        visibilityInput.type =
+            "checkbox";
+
+        visibilityInput.checked =
+            false;
+
+        const visibilitySlider =
+            document.createElement("span");
+
+        visibilitySlider.className =
+            "inspector-switch-slider";
+
+        visibilitySwitch.appendChild(
+            visibilityInput
+        );
+
+        visibilitySwitch.appendChild(
+            visibilitySlider
+        );
+
+        visibilityControl.appendChild(
+            visibilityText
+        );
+
+        visibilityControl.appendChild(
+            visibilitySwitch
+        );
+
+        visibilityWrap.appendChild(
+            visibilityLabel
+        );
+
+        visibilityWrap.appendChild(
+            visibilityControl
+        );
+
+        // =========================================================
         // ID LIST
         // =========================================================
 
@@ -352,6 +439,7 @@
         panel.appendChild(idInput);
         panel.appendChild(filter);
         panel.appendChild(pick);
+        panel.appendChild(visibilityWrap);
         panel.appendChild(list);
         panel.appendChild(code);
         panel.appendChild(status);
@@ -359,7 +447,102 @@
         root.appendChild(cog);
         root.appendChild(panel);
 
-        document.documentElement.appendChild(root);
+        document.documentElement.appendChild(
+            root
+        );
+
+        // =========================================================
+        // VISIBILITY UI
+        // =========================================================
+
+        function updateVisibilityUI() {
+
+            if (
+                typeof window.getAssetVisibility !==
+                "function"
+            ) {
+                visibilityInput.disabled =
+                    true;
+
+                visibilityText.textContent =
+                    "Unavailable";
+
+                return;
+            }
+
+            const visible =
+                window.getAssetVisibility(
+                    state
+                );
+
+            if (visible === null) {
+
+                visibilityInput.checked =
+                    false;
+
+                visibilityInput.disabled =
+                    true;
+
+                visibilityText.textContent =
+                    "No asset selected";
+
+                return;
+            }
+
+            visibilityInput.disabled =
+                false;
+
+            visibilityInput.checked =
+                Boolean(visible);
+
+            visibilityText.textContent =
+                visible
+                    ? "ON"
+                    : "OFF";
+        }
+
+        visibilityInput.addEventListener(
+            "change",
+            function (e) {
+
+                e.stopPropagation();
+
+                if (
+                    typeof window.setAssetVisibility !==
+                    "function"
+                ) {
+                    return;
+                }
+
+                if (
+                    !state.highlighted
+                ) {
+                    updateVisibilityUI();
+                    return;
+                }
+
+                window.setAssetVisibility(
+                    state,
+                    visibilityInput.checked
+                );
+
+                updateVisibilityUI();
+            }
+        );
+
+        visibilityInput.addEventListener(
+            "click",
+            function (e) {
+                e.stopPropagation();
+            }
+        );
+
+        visibilityInput.addEventListener(
+            "pointerdown",
+            function (e) {
+                e.stopPropagation();
+            }
+        );
 
         // =========================================================
         // HUE
@@ -400,7 +583,6 @@
                 String(value)
             );
 
-            // Tell highlight.js that the hue changed.
             if (
                 typeof window.updateHighlightColor ===
                 "function"
@@ -528,6 +710,9 @@
                 code,
                 status
             );
+
+            // Sync visibility after selection.
+            updateVisibilityUI();
         }
 
         // =========================================================
@@ -560,40 +745,6 @@
         }
 
         // =========================================================
-        // CLEAR HIGHLIGHT
-        // =========================================================
-
-        function clearCurrentHighlight() {
-
-            if (
-                typeof window.clearHighlight ===
-                "function"
-            ) {
-                try {
-                    window.clearHighlight(
-                        state
-                    );
-                } catch (e) {}
-            }
-        }
-
-        // =========================================================
-        // CLOSE PANEL
-        // =========================================================
-
-        function closePanel() {
-
-            panel.classList.remove(
-                "open"
-            );
-
-            state.panelOpen =
-                false;
-
-            clearCurrentHighlight();
-        }
-
-        // =========================================================
         // OPEN / CLOSE PANEL
         // =========================================================
 
@@ -604,12 +755,33 @@
                 e.preventDefault();
                 e.stopPropagation();
 
-                if (
+                const isOpen =
                     panel.classList.contains(
                         "open"
-                    )
-                ) {
-                    closePanel();
+                    );
+
+                if (isOpen) {
+
+                    panel.classList.remove(
+                        "open"
+                    );
+
+                    state.panelOpen =
+                        false;
+
+                    if (
+                        typeof window.clearHighlight ===
+                        "function"
+                    ) {
+                        try {
+                            window.clearHighlight(
+                                state
+                            );
+                        } catch (e) {}
+                    }
+
+                    updateVisibilityUI();
+
                 } else {
 
                     panel.classList.add(
@@ -618,6 +790,8 @@
 
                     state.panelOpen =
                         true;
+
+                    updateVisibilityUI();
                 }
             }
         );
@@ -629,7 +803,25 @@
                 e.preventDefault();
                 e.stopPropagation();
 
-                closePanel();
+                panel.classList.remove(
+                    "open"
+                );
+
+                state.panelOpen =
+                    false;
+
+                if (
+                    typeof window.clearHighlight ===
+                    "function"
+                ) {
+                    try {
+                        window.clearHighlight(
+                            state
+                        );
+                    } catch (e) {}
+                }
+
+                updateVisibilityUI();
             }
         );
 
@@ -760,6 +952,8 @@
                     code,
                     status
                 );
+
+                updateVisibilityUI();
             }
         );
 
@@ -768,6 +962,8 @@
         // =========================================================
 
         renderIDList();
+
+        updateVisibilityUI();
 
         // =========================================================
         // PUBLIC HANDLE
@@ -791,6 +987,15 @@
 
             pick: pick,
 
+            visibilityWrap:
+                visibilityWrap,
+
+            visibilityInput:
+                visibilityInput,
+
+            visibilityText:
+                visibilityText,
+
             filter: filter,
             list: list,
             code: code,
@@ -812,7 +1017,16 @@
                     } catch (e) {}
                 }
 
-                clearCurrentHighlight();
+                if (
+                    typeof window.clearHighlight ===
+                    "function"
+                ) {
+                    try {
+                        window.clearHighlight(
+                            state
+                        );
+                    } catch (e) {}
+                }
 
                 if (
                     root &&
