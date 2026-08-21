@@ -1,24 +1,20 @@
 (function () {
     "use strict";
 
-    function getHighlightColor() {
-        const root =
-            document.getElementById(
-                "__IDPanelRoot"
-            );
+    function getColor(state) {
+        let hue = 120;
 
-        if (!root) {
-            return "#52e879";
+        if (
+            state &&
+            Number.isFinite(Number(state.hue))
+        ) {
+            hue = Number(state.hue);
         }
 
-        const hue =
-            getComputedStyle(root)
-                .getPropertyValue("--id-hue")
-                .trim();
-
-        if (!hue) {
-            return "#52e879";
-        }
+        hue = Math.max(
+            0,
+            Math.min(360, hue)
+        );
 
         return "hsl(" + hue + ", 100%, 50%)";
     }
@@ -57,7 +53,7 @@
 
         element.style.outline =
             "2px solid " +
-            getHighlightColor();
+            getColor(state);
     };
 
     window.updateHighlightColor = function (
@@ -73,7 +69,7 @@
 
         state.highlighted.style.outline =
             "2px solid " +
-            getHighlightColor();
+            getColor(state);
     };
 
 })();
