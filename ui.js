@@ -49,7 +49,10 @@
         cog.type = "button";
         cog.className = "inspector-cog";
         cog.textContent = "⚙";
-        cog.setAttribute("aria-label", "Open Asset ID Inspector");
+        cog.setAttribute(
+            "aria-label",
+            "Open Asset ID Inspector"
+        );
 
         // =========================================================
         // PANEL
@@ -123,6 +126,7 @@
         opacity.min = "0";
         opacity.max = "50";
         opacity.step = "1";
+
         opacity.value =
             Number.isFinite(state.opacity)
                 ? state.opacity
@@ -142,6 +146,7 @@
             document.createElement("input");
 
         idInput.type = "text";
+
         idInput.className =
             "inspector-input";
 
@@ -161,6 +166,7 @@
             document.createElement("button");
 
         inspect.type = "button";
+
         inspect.className =
             "inspector-button";
 
@@ -175,6 +181,7 @@
             document.createElement("button");
 
         pick.type = "button";
+
         pick.className =
             "inspector-button inspector-pick";
 
@@ -189,6 +196,7 @@
             document.createElement("input");
 
         filter.type = "text";
+
         filter.className =
             "inspector-input";
 
@@ -285,7 +293,9 @@
             function (e) {
 
                 e.stopPropagation();
+
                 applyOpacity();
+
             },
             true
         );
@@ -293,7 +303,9 @@
         opacity.addEventListener(
             "pointerdown",
             function (e) {
+
                 e.stopPropagation();
+
             },
             true
         );
@@ -310,7 +322,9 @@
                 typeof window.inspectID !==
                 "function"
             ) {
-                code.style.display = "block";
+
+                code.style.display =
+                    "block";
 
                 code.textContent =
                     "Inspector module is not loaded.";
@@ -339,6 +353,7 @@
                 typeof window.renderIDs !==
                 "function"
             ) {
+
                 status.textContent =
                     "✕ IDs module failed to load.";
 
@@ -353,6 +368,7 @@
                     idInput.value = id;
 
                     inspectCurrentID();
+
                 }
             );
         }
@@ -372,6 +388,7 @@
 
                 state.panelOpen =
                     panel.classList.contains("open");
+
             },
             true
         );
@@ -390,6 +407,7 @@
                 panel.classList.remove("open");
 
                 state.panelOpen = false;
+
             },
             true
         );
@@ -406,6 +424,7 @@
                 e.stopPropagation();
 
                 inspectCurrentID();
+
             },
             true
         );
@@ -425,7 +444,9 @@
                     e.preventDefault();
 
                     inspectCurrentID();
+
                 }
+
             },
             true
         );
@@ -433,7 +454,9 @@
         idInput.addEventListener(
             "click",
             function (e) {
+
                 e.stopPropagation();
+
             },
             true
         );
@@ -441,7 +464,9 @@
         idInput.addEventListener(
             "pointerdown",
             function (e) {
+
                 e.stopPropagation();
+
             },
             true
         );
@@ -457,6 +482,7 @@
                 e.stopPropagation();
 
                 renderIDList();
+
             },
             true
         );
@@ -464,7 +490,9 @@
         filter.addEventListener(
             "keydown",
             function (e) {
+
                 e.stopPropagation();
+
             },
             true
         );
@@ -472,7 +500,9 @@
         filter.addEventListener(
             "click",
             function (e) {
+
                 e.stopPropagation();
+
             },
             true
         );
@@ -480,7 +510,9 @@
         filter.addEventListener(
             "pointerdown",
             function (e) {
+
                 e.stopPropagation();
+
             },
             true
         );
@@ -500,6 +532,7 @@
                     typeof window.togglePicker !==
                     "function"
                 ) {
+
                     status.textContent =
                         "✕ Picker module failed to load.";
 
@@ -513,6 +546,7 @@
                     code,
                     status
                 );
+
             },
             true
         );
@@ -552,33 +586,56 @@
                     typeof window.stopInspectorPicker ===
                     "function"
                 ) {
+
                     try {
+
                         window.stopInspectorPicker(
                             state,
                             pick,
                             status
                         );
+
                     } catch (e) {}
+
                 }
 
                 if (
                     typeof window.clearHighlight ===
                     "function"
                 ) {
+
                     try {
-                        window.clearHighlight(state);
+
+                        window.clearHighlight(
+                            state
+                        );
+
                     } catch (e) {}
+
                 }
 
                 if (
                     root &&
                     root.parentNode
                 ) {
-                    root.parentNode.removeChild(root);
+
+                    root.parentNode.removeChild(
+                        root
+                    );
+
                 }
 
                 window.__IDPanelUI = null;
+
             }
+
         };
     };
+
+    // =============================================================
+    // START UI
+    // =============================================================
+
+    window.__IDPanelStart();
+
 })();
