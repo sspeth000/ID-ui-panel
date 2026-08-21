@@ -32,7 +32,6 @@
 
         window.__IDPanelState = state;
 
-        // Make sure hue exists even if state.js is older.
         if (!Number.isFinite(state.hue)) {
             state.hue = 120;
         }
@@ -55,6 +54,7 @@
         cog.type = "button";
         cog.className = "inspector-cog";
         cog.textContent = "⚙";
+
         cog.setAttribute(
             "aria-label",
             "Open Asset ID Inspector"
@@ -66,75 +66,99 @@
 
         const panel = document.createElement("div");
 
-        panel.className = "inspector-panel";
-
-        // Initial hue variable.
-        panel.style.setProperty(
-            "--id-hue",
-            String(state.hue)
-        );
-
-        root.style.setProperty(
-            "--id-hue",
-            String(state.hue)
-        );
+        panel.className =
+            "inspector-panel";
 
         // =========================================================
         // HEADER
         // =========================================================
 
-        const header = document.createElement("div");
+        const header =
+            document.createElement("div");
 
-        header.className = "inspector-header";
+        header.className =
+            "inspector-header";
 
-        const title = document.createElement("b");
+        const title =
+            document.createElement("b");
 
-        title.className = "inspector-title";
-        title.textContent = "ASSET ID INSPECTOR";
+        title.className =
+            "inspector-title";
 
-        const close = document.createElement("button");
+        title.textContent =
+            "ASSET ID INSPECTOR";
+
+        const close =
+            document.createElement("button");
 
         close.type = "button";
-        close.className = "inspector-close";
-        close.textContent = "×";
+
+        close.className =
+            "inspector-close";
+
+        close.textContent =
+            "×";
 
         header.appendChild(title);
         header.appendChild(close);
 
-       // =========================================================
-       // HUE CONTROL
-       // =========================================================
+        // =========================================================
+        // HUE
+        // =========================================================
 
-        const hueWrap = document.createElement("div");
-        hueWrap.className = "inspector-hue-wrap";
+        const hueWrap =
+            document.createElement("div");
 
-        const hueRow = document.createElement("div");
-        hueRow.className = "inspector-hue-row";
+        hueWrap.className =
+            "inspector-hue-wrap";
 
-        const hueLabel = document.createElement("span");
-        hueLabel.textContent = "Hue";
+        const hueRow =
+            document.createElement("div");
 
-        const hueValue = document.createElement("span");
+        hueRow.className =
+            "inspector-hue-row";
+
+        const hueLabel =
+            document.createElement("span");
+
+        hueLabel.className =
+            "inspector-hue-label";
+
+        hueLabel.textContent =
+            "Hue";
+
+        const hueValue =
+            document.createElement("span");
+
+        hueValue.className =
+            "inspector-hue-value";
+
         hueValue.textContent =
-            String(state.hue ?? 120) + "°";
+            String(state.hue) + "°";
 
         hueRow.appendChild(hueLabel);
         hueRow.appendChild(hueValue);
 
-        const hue = document.createElement("input");
+        const hue =
+            document.createElement("input");
 
         hue.type = "range";
         hue.min = "0";
         hue.max = "360";
         hue.step = "1";
-        hue.value = String(state.hue ?? 120);
+        hue.value = String(state.hue);
 
-        hue.className = "inspector-hue";
+        hue.className =
+            "inspector-hue";
+
+        hue.setAttribute(
+            "aria-label",
+            "Panel hue"
+        );
 
         hueWrap.appendChild(hueRow);
         hueWrap.appendChild(hue);
 
-        
         // =========================================================
         // OPACITY
         // =========================================================
@@ -324,7 +348,7 @@
 
         panel.appendChild(header);
 
-        // Hue goes ABOVE opacity.
+        // Hue ABOVE opacity.
         panel.appendChild(hueWrap);
         panel.appendChild(opacityWrap);
 
@@ -366,7 +390,8 @@
                     )
                 );
 
-            state.hue = value;
+            state.hue =
+                value;
 
             hue.value =
                 String(value);
@@ -374,12 +399,12 @@
             hueValue.textContent =
                 String(value) + "°";
 
-            panel.style.setProperty(
+            root.style.setProperty(
                 "--id-hue",
                 String(value)
             );
 
-            root.style.setProperty(
+            panel.style.setProperty(
                 "--id-hue",
                 String(value)
             );
@@ -411,16 +436,6 @@
 
         hue.addEventListener(
             "pointerdown",
-            function (e) {
-
-                e.stopPropagation();
-
-            },
-            true
-        );
-
-        hue.addEventListener(
-            "touchstart",
             function (e) {
 
                 e.stopPropagation();
