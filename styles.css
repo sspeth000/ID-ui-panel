@@ -556,3 +556,240 @@
 #__IDPanelRoot *::-webkit-scrollbar-thumb:hover {
     background: var(--accent);
 }
+
+/* =========================================================
+   VISIBILITY CONTROL
+   ========================================================= */
+
+.inspector-visibility-wrap {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.inspector-visibility-label {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    opacity: 0.8;
+}
+
+.inspector-visibility-control {
+    width: 100%;
+    min-height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    box-sizing: border-box;
+    padding: 7px 10px;
+
+    border-radius: 8px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.05
+        );
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.08
+        );
+}
+
+.inspector-visibility-text {
+    font-size: 12px;
+    font-weight: 700;
+
+    min-width: 42px;
+
+    text-align: left;
+}
+
+/* =========================================================
+   SWITCH
+   ========================================================= */
+
+.inspector-switch {
+    position: relative;
+
+    display: inline-block;
+
+    width: 44px;
+    height: 24px;
+
+    flex-shrink: 0;
+}
+
+.inspector-switch input {
+    width: 0;
+    height: 0;
+
+    opacity: 0;
+}
+
+.inspector-switch-slider {
+    position: absolute;
+
+    inset: 0;
+
+    cursor: pointer;
+
+    border-radius: 999px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.15
+        );
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.12
+        );
+
+    transition:
+        background 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.inspector-switch-slider::before {
+    content: "";
+
+    position: absolute;
+
+    width: 18px;
+    height: 18px;
+
+    left: 2px;
+    top: 2px;
+
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 1px 4px
+        rgba(
+            0,
+            0,
+            0,
+            0.35
+        );
+
+    transition:
+        transform 0.18s ease;
+}
+
+/* =========================================================
+   ON
+   ========================================================= */
+
+.inspector-switch input:checked
++ .inspector-switch-slider {
+    background:
+        hsl(
+            var(--id-hue, 120),
+            100%,
+            50%
+        );
+
+    border-color:
+        hsl(
+            var(--id-hue, 120),
+            100%,
+            50%
+        );
+
+    box-shadow:
+        0 0 8px
+        hsla(
+            var(--id-hue, 120),
+            100%,
+            50%,
+            0.25
+        );
+}
+
+.inspector-switch input:checked
++ .inspector-switch-slider::before {
+    transform:
+        translateX(20px);
+}
+
+/* =========================================================
+   DISABLED
+   ========================================================= */
+
+.inspector-switch input:disabled
++ .inspector-switch-slider {
+    opacity: 0.35;
+
+    cursor:
+        not-allowed;
+}
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.inspector-switch:hover
+.inspector-switch-slider {
+    border-color:
+        rgba(
+            255,
+            255,
+            255,
+            0.25
+        );
+}
+
+.inspector-switch input:checked:hover
++ .inspector-switch-slider {
+    filter:
+        brightness(1.08);
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .inspector-visibility-control {
+        min-height: 40px;
+        padding: 8px 10px;
+    }
+
+    .inspector-switch {
+        width: 46px;
+        height: 25px;
+    }
+
+    .inspector-switch-slider::before {
+        width: 19px;
+        height: 19px;
+    }
+
+    .inspector-switch input:checked
+    + .inspector-switch-slider::before {
+        transform:
+            translateX(21px);
+    }
+}
