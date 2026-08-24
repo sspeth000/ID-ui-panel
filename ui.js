@@ -255,6 +255,15 @@
         idInput.spellcheck =
             false;
 
+        idInput.readOnly =
+            false;
+
+        idInput.disabled =
+            false;
+
+        idInput.tabIndex =
+            0;
+
         // =========================================================
         // FILTER
         // =========================================================
@@ -282,6 +291,15 @@
 
         filter.spellcheck =
             false;
+
+        filter.readOnly =
+            false;
+
+        filter.disabled =
+            false;
+
+        filter.tabIndex =
+            0;
 
         // =========================================================
         // PICK ASSET
@@ -850,8 +868,18 @@
                 e.stopPropagation();
             }
 
-            // Capture keyboard events before the host page
-            // can intercept them.
+            // Ensure the field is editable.
+            input.readOnly =
+                false;
+
+            input.disabled =
+                false;
+
+            input.tabIndex =
+                0;
+
+            // Capture keyboard events before the host
+            // page/game gets them.
             input.addEventListener(
                 "keydown",
                 function (e) {
@@ -905,13 +933,20 @@
 
             input.addEventListener(
                 "click",
-                stop,
+                function (e) {
+
+                    e.stopPropagation();
+
+                    input.focus();
+                },
                 true
             );
 
             input.addEventListener(
                 "mousedown",
-                stop,
+                function (e) {
+                    e.stopPropagation();
+                },
                 true
             );
 
@@ -923,7 +958,9 @@
 
             input.addEventListener(
                 "pointerdown",
-                stop,
+                function (e) {
+                    e.stopPropagation();
+                },
                 true
             );
 
@@ -964,14 +1001,16 @@
             );
         }
 
-        // ID field
+        // =========================================================
+        // ENABLE TEXT INPUTS
+        // =========================================================
+
         makeTextFieldWork(
             idInput,
             null,
             true
         );
 
-        // Filter field
         makeTextFieldWork(
             filter,
             renderIDList,
