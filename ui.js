@@ -420,15 +420,15 @@
 
         // =========================================================
         // GLOBAL VISIBILITY UI UPDATER
-        //
-        // visibility.js can call this EVERY time an object changes.
         // =========================================================
 
         window.updateIDPanelVisibilityUI =
             function (visible) {
 
-                if (visible === null ||
-                    visible === undefined) {
+                if (
+                    visible === null ||
+                    visible === undefined
+                ) {
 
                     visibilityInput.checked =
                         false;
@@ -529,7 +529,6 @@
                     return;
                 }
 
-                // Read the ACTUAL state again after changing it.
                 requestAnimationFrame(
                     function () {
                         updateVisibilityUI();
@@ -719,8 +718,6 @@
                 return;
             }
 
-            // inspectID/highlight may update the selected object
-            // synchronously or one frame later.
             updateVisibilityUI();
 
             requestAnimationFrame(
@@ -787,7 +784,6 @@
                 } catch (e) {}
             }
 
-            // The object is no longer selected.
             window.updateIDPanelVisibilityUI(
                 null
             );
@@ -850,11 +846,17 @@
             allowEnter
         ) {
 
+            function stop(e) {
+                e.stopPropagation();
+            }
+
+            // Capture keyboard events before the host page
+            // can intercept them.
             input.addEventListener(
                 "keydown",
                 function (e) {
 
-                    e.stopPropagation();
+                    e.stopImmediatePropagation();
 
                     if (
                         allowEnter &&
@@ -863,28 +865,26 @@
                         e.preventDefault();
                         inspectCurrentID();
                     }
-                }
+                },
+                true
             );
 
             input.addEventListener(
                 "keypress",
-                function (e) {
-                    e.stopPropagation();
-                }
+                stop,
+                true
             );
 
             input.addEventListener(
                 "keyup",
-                function (e) {
-                    e.stopPropagation();
-                }
+                stop,
+                true
             );
 
             input.addEventListener(
                 "beforeinput",
-                function (e) {
-                    e.stopPropagation();
-                }
+                stop,
+                true
             );
 
             input.addEventListener(
@@ -899,37 +899,79 @@
                     ) {
                         onInput();
                     }
-                }
+                },
+                true
             );
 
             input.addEventListener(
                 "click",
-                function (e) {
-                    e.stopPropagation();
-                }
+                stop,
+                true
+            );
+
+            input.addEventListener(
+                "mousedown",
+                stop,
+                true
+            );
+
+            input.addEventListener(
+                "mouseup",
+                stop,
+                true
             );
 
             input.addEventListener(
                 "pointerdown",
-                function (e) {
-                    e.stopPropagation();
-                }
+                stop,
+                true
+            );
+
+            input.addEventListener(
+                "pointerup",
+                stop,
+                true
             );
 
             input.addEventListener(
                 "focus",
-                function (e) {
-                    e.stopPropagation();
-                }
+                stop,
+                true
+            );
+
+            input.addEventListener(
+                "blur",
+                stop,
+                true
+            );
+
+            input.addEventListener(
+                "paste",
+                stop,
+                true
+            );
+
+            input.addEventListener(
+                "copy",
+                stop,
+                true
+            );
+
+            input.addEventListener(
+                "cut",
+                stop,
+                true
             );
         }
 
+        // ID field
         makeTextFieldWork(
             idInput,
             null,
             true
         );
 
+        // Filter field
         makeTextFieldWork(
             filter,
             renderIDList,
@@ -974,11 +1016,6 @@
 
                     return;
                 }
-
-                // Do NOT only check here. The object has not
-                // necessarily been clicked yet. visibility.js
-                // should call updateIDPanelVisibilityUI when
-                // the picker actually selects something.
             }
         );
 
