@@ -510,8 +510,6 @@
                         className +
                         "\nDISPLAY: " +
                         computed.display +
-                        "\nVISIBILITY: " +
-                        computed.visibility +
                         "\n\n" +
                         "==============================\n" +
                         "JAVASCRIPT REFERENCES\n" +
