@@ -16,20 +16,26 @@ ID-ui-panel helps you discover elements, inspect their basic DOM details, locate
 - Temporarily toggle the selected element's visibility
 - Adjustable accent hue and panel opacity
 
-## Bookmarklet
+## Bookmarklet loader
 
-Create a bookmark and use the following as its URL:
+Create a new bookmark, name it **ID-ui-panel**, and paste this entire line into the bookmark's URL field:
 
 ```javascript
-javascript:(()=>{const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/gh/sspeth000/ID-ui-panel@main/inspector.js?v="+Date.now();s.onload=()=>s.remove();s.onerror=()=>{s.remove();alert("ID-ui-panel could not load inspector.js from jsDelivr. Check your connection or try again.")};document.documentElement.appendChild(s)})();
+javascript:(()=>{const urls=["https://cdn.jsdelivr.net/gh/sspeth000/ID-ui-panel@main/inspector.js","https://raw.githubusercontent.com/sspeth000/ID-ui-panel/main/inspector.js"];let index=0;const load=()=>{const script=document.createElement("script");script.src=urls[index++]+"?v="+Date.now();script.onload=()=>script.remove();script.onerror=()=>{script.remove();if(index<urls.length)load();else alert("ID-ui-panel could not load from either CDN. Check your connection, then try again.")};(document.head||document.documentElement).appendChild(script)};load()})();
 ```
 
-The bookmarklet loads the inspector through jsDelivr from this repository's `main` branch.
+The loader tries jsDelivr first and automatically falls back to GitHub's raw content host if the first source fails. It adds a cache-busting query so the browser requests the latest `main` version.
+
+## Console loader
+
+If bookmarklets are blocked or you prefer DevTools, open the page's developer console and paste the contents of [`console-loader.js`](./console-loader.js).
+
+The console loader uses the same primary and fallback sources and prints its progress in the console. Only paste code you understand and trust into a developer console.
 
 ## Usage
 
-1. Open a page you want to inspect.
-2. Activate the bookmarklet.
+1. Open the page you want to inspect.
+2. Activate the bookmarklet or run the console loader.
 3. Open the panel using the floating gear button.
 4. Search for an ID, select one from the live list, or choose **Pick Asset** and click an element on the page.
 5. Review its details and inline-script references.
@@ -45,7 +51,8 @@ The bookmarklet loads the inspector through jsDelivr from this repository's `mai
 
 | File | Purpose |
 | --- | --- |
-| `inspector.js` | Complete standalone inspector. No separate JavaScript or CSS files are required. |
+| `inspector.js` | Complete standalone inspector. No separate JavaScript or CSS modules are required. |
+| `console-loader.js` | Pasteable DevTools console loader |
 | `README.md` | Setup and usage instructions |
 
 ## License
