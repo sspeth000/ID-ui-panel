@@ -24,7 +24,7 @@ Create a bookmark and use the following as its URL:
 javascript:(()=>{const s=document.createElement("script");s.src="https://raw.githubusercontent.com/sspeth000/ID-ui-panel/main/inspector.js?v="+Date.now();s.onload=()=>s.remove();s.onerror=()=>{s.remove();alert("ID-ui-panel could not be loaded.")};document.documentElement.appendChild(s)})();
 ```
 
-The bookmarklet loads the inspector directly from this repository's `main` branch.
+The bookmarklet loads the inspector through jsDelivr from this repository's `main` branch.
 
 ## Usage
 
