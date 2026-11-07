@@ -2,7 +2,7 @@
     "use strict";
 
     const BASE =
-        "https://raw.githubusercontent.com/sspeth000/ID-ui-panel/main/";
+        "https://cdn.jsdelivr.net/gh/sspeth000/ID-ui-panel@main/";
 
     // =========================================================
     // Toggle existing panel
