@@ -904,3 +904,95 @@ input:disabled
         height: 20px;
     }
 }
+
+
+/* =========================================================
+   2.0 POLISH: RESULT COUNT, ELEMENT TYPES & CODE ACTIONS
+   ========================================================= */
+
+#__IDPanelRoot .inspector-list-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 8px 1px 4px;
+    color: var(--id-accent-text);
+    font: 9px/1.4 monospace;
+    letter-spacing: .08em;
+}
+
+#__IDPanelRoot .inspector-list-count {
+    min-width: 22px;
+    padding: 2px 6px;
+    border: 1px solid var(--id-accent-border);
+    border-radius: 999px;
+    color: var(--id-accent-light);
+    text-align: center;
+    letter-spacing: 0;
+}
+
+#__IDPanelRoot .inspector-list {
+    height: 145px;
+    padding: 4px;
+    overscroll-behavior: contain;
+}
+
+#__IDPanelRoot .inspector-id-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 27px;
+    margin: 2px 0;
+    padding: 5px 7px;
+    overflow: hidden;
+}
+
+#__IDPanelRoot .inspector-id-tag {
+    flex: 0 0 auto;
+    min-width: 42px;
+    padding: 2px 4px;
+    border-radius: 4px;
+    background: var(--id-accent-bg);
+    color: var(--id-accent);
+    font-size: 8px;
+    text-align: center;
+}
+
+#__IDPanelRoot .inspector-id-name {
+    overflow: hidden;
+    color: inherit;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#__IDPanelRoot .inspector-empty {
+    padding: 12px 7px;
+    color: #819087;
+    font: 10px/1.5 monospace;
+    text-align: center;
+}
+
+#__IDPanelRoot .inspector-code-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 6px;
+}
+
+#__IDPanelRoot .inspector-copy-code {
+    padding: 5px 9px;
+    border: 1px solid var(--id-accent-border);
+    border-radius: 6px;
+    background: var(--id-accent-bg);
+    color: var(--id-accent-light);
+    cursor: pointer;
+    font: 9px monospace;
+}
+
+#__IDPanelRoot .inspector-copy-code:hover {
+    border-color: var(--id-accent);
+    color: #fff;
+}
+
+#__IDPanelRoot .inspector-code {
+    height: 250px;
+    font-size: 9px !important;
+}
