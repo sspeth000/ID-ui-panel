@@ -21,7 +21,7 @@ ID-ui-panel helps you discover elements, inspect their basic DOM details, locate
 Create a bookmark and use the following as its URL:
 
 ```javascript
-javascript:(()=>{const s=document.createElement("script");s.src="https://raw.githubusercontent.com/sspeth000/ID-ui-panel/main/inspector.js?v="+Date.now();s.onload=()=>s.remove();s.onerror=()=>{s.remove();alert("ID-ui-panel could not be loaded.")};document.documentElement.appendChild(s)})();
+javascript:(()=>{const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/gh/sspeth000/ID-ui-panel@main/inspector.js?v="+Date.now();s.onload=()=>s.remove();s.onerror=()=>{s.remove();alert("ID-ui-panel could not load inspector.js from jsDelivr. Check your connection or try again.")};document.documentElement.appendChild(s)})();
 ```
 
 The bookmarklet loads the inspector through jsDelivr from this repository's `main` branch.
@@ -45,15 +45,8 @@ The bookmarklet loads the inspector through jsDelivr from this repository's `mai
 
 | File | Purpose |
 | --- | --- |
-| `inspector.js` | Loads modules and coordinates inspection |
-| `ui.js` | Builds and manages the floating panel |
-| `ids.js` | Finds and renders page element IDs |
-| `code-search.js` | Searches inline scripts for ID references |
-| `highlight.js` | Highlights the selected element |
-| `picker.js` | Lets you select an element directly from the page |
-| `visibility.js` | Temporarily changes selected-element visibility |
-| `state.js` | Shared inspector state |
-| `styles.css` | Panel styling |
+| `inspector.js` | Complete standalone inspector. No separate JavaScript or CSS files are required. |
+| `README.md` | Setup and usage instructions |
 
 ## License
 
