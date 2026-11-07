@@ -1,14 +1,60 @@
 # ID-ui-panel
-Sometimes, websites load assets with IDs, IDs basically having code inside of them. Each asset is loaded with a unique ID. This code helps you identify IDs and view their code.
-(this repository is mainly used for older websites)
 
-# Bookmarklet
-This repository can only be activated with bookmarklet code, via here. (copy paste into bookmark)
+A lightweight in-page inspector for exploring DOM element IDs on older and modern websites.
 
-javascript:(()=>{try{fetch("https://raw.githubusercontent.com/sspeth000/ID-ui-panel/main/inspector.js?v="+Date.now(),{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.text()}).then(c=>(0,eval)(c)).catch(e=>alert("ID-ui-panel failed to load:\n\n"+e.message))}catch(e){alert("ID-ui-panel launcher error:\n\n"+e.message)}})();
+ID-ui-panel helps you discover elements, inspect their basic DOM details, locate references in inline scripts, highlight selected elements, and temporarily change an element's visibility.
 
-# How it works
-The button for it should appear in the bottom left corner, pressing it shows a panel with the IDs for assets within the page. You have successfully activated ID-ui-panel. Because the panel is so small (and new), there isn’t any needed instructions, from here on out it’s self-explanatory.
+## Features
 
-# Testing it out
-If you don’t exactly know what this panel helps with, load the panel via a https://www.lomando.com page. Then, it should show IDs and what they do.
+- Live ID scanning, including elements added after the panel opens
+- Search and filter element IDs
+- Element-type labels (for example: `div`, `img`, and `canvas`)
+- Select an element by ID or use the page picker
+- Highlight the selected element
+- Inspect source-related details and inline JavaScript references
+- Copy inspection output
+- Temporarily toggle the selected element's visibility
+- Adjustable accent hue and panel opacity
+
+## Bookmarklet
+
+Create a bookmark and use the following as its URL:
+
+```javascript
+javascript:(()=>{const s=document.createElement("script");s.src="https://raw.githubusercontent.com/sspeth000/ID-ui-panel/modernize/id-ui-panel-2/inspector.js?v="+Date.now();s.onload=()=>s.remove();s.onerror=()=>{s.remove();alert("ID-ui-panel could not be loaded.")};document.documentElement.appendChild(s)})();
+```
+
+The bookmarklet loads the inspector from this repository's modernization branch. Once the changes are ready, the branch can be merged into `main` and the bookmarklet URL updated.
+
+## Usage
+
+1. Open a page you want to inspect.
+2. Activate the bookmarklet.
+3. Open the panel using the floating gear button.
+4. Search for an ID, select one from the live list, or choose **Pick Asset** and click an element on the page.
+5. Review its details and inline-script references.
+
+## Notes and limitations
+
+- The inspector examines the current page's DOM. It does not retrieve a website's private source files or bypass browser origin restrictions.
+- Inline script references are searchable. External scripts are not fetched automatically because cross-origin access may be restricted.
+- Visibility changes are temporary and affect the current page session.
+- Some sites isolate their content in cross-origin frames or shadow roots. Those areas may not be visible to the inspector.
+
+## Project structure
+
+| File | Purpose |
+| --- | --- |
+| `inspector.js` | Loads modules and coordinates inspection |
+| `ui.js` | Builds and manages the floating panel |
+| `ids.js` | Finds and renders page element IDs |
+| `code-search.js` | Searches inline scripts for ID references |
+| `highlight.js` | Highlights the selected element |
+| `picker.js` | Lets you select an element directly from the page |
+| `visibility.js` | Temporarily changes selected-element visibility |
+| `state.js` | Shared inspector state |
+| `styles.css` | Panel styling |
+
+## License
+
+See the repository's license file, if present.
