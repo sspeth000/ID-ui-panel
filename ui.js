@@ -387,6 +387,16 @@
         // ID LIST
         // =========================================================
 
+        const listMeta = document.createElement("div");
+        listMeta.className = "inspector-list-meta";
+        listMeta.textContent = "PAGE ELEMENT IDS";
+
+        const listCount = document.createElement("span");
+        listCount.className = "inspector-list-count";
+        listCount.textContent = "0";
+
+        listMeta.appendChild(listCount);
+
         const list =
             document.createElement("div");
 
@@ -396,6 +406,14 @@
         // =========================================================
         // CODE
         // =========================================================
+
+        const codeActions = document.createElement("div");
+        codeActions.className = "inspector-code-actions";
+
+        const copyCode = document.createElement("button");
+        copyCode.type = "button";
+        copyCode.className = "inspector-copy-code";
+        copyCode.textContent = "Copy details";
 
         const code =
             document.createElement("pre");
@@ -427,7 +445,10 @@
         panel.appendChild(filter);
         panel.appendChild(pick);
         panel.appendChild(visibilityWrap);
+        panel.appendChild(listMeta);
         panel.appendChild(list);
+        codeActions.appendChild(copyCode);
+        panel.appendChild(codeActions);
         panel.appendChild(code);
         panel.appendChild(status);
 
@@ -765,18 +786,74 @@
                 return;
             }
 
-            window.renderIDs(
+            const elements = window.renderIDs(
                 filter.value,
                 list,
                 function (id) {
-
-                    idInput.value =
-                        id;
-
+                    idInput.value = id;
                     inspectCurrentID();
                 }
-            );
+            ) || [];
+
+            listCount.textContent = String(elements.length);
         }
+
+        // =========================================================
+        // COPY INSPECTION DETAILS
+        // =========================================================
+
+        copyCode.addEventListener("click", async function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const value = code.textContent || "";
+            if (!value) {
+                status.textContent = "Nothing to copy.";
+                return;
+            }
+
+            try {
+                await navigator.clipboard.writeText(value);
+                status.textContent = "✓ Details copied.";
+            } catch (error) {
+                status.textContent = "Clipboard unavailable. Select and copy the text manually.";
+            }
+        });
+
+        // =========================================================
+        // LIVE PAGE SCANNING
+        // =========================================================
+
+        let scanQueued = false;
+        const pageObserver = new MutationObserver(function (records) {
+            const hasPageChanges = records.some(function (record) {
+                if (record.type === "attributes") {
+                    return record.target.id !== "__IDPanelRoot" &&
+                        !(record.target.closest && record.target.closest("#__IDPanelRoot"));
+                }
+
+                return Array.from(record.addedNodes).some(function (node) {
+                    return node.nodeType === 1 &&
+                        node.id !== "__IDPanelRoot" &&
+                        !(node.closest && node.closest("#__IDPanelRoot"));
+                });
+            });
+
+            if (!hasPageChanges || scanQueued) return;
+            scanQueued = true;
+
+            requestAnimationFrame(function () {
+                scanQueued = false;
+                renderIDList();
+            });
+        });
+
+        pageObserver.observe(document.documentElement, {
+            subtree: true,
+            childList: true,
+            attributes: true,
+            attributeFilter: ["id"]
+        });
 
         // =========================================================
         // CLOSE
@@ -1101,6 +1178,7 @@
 
             list: list,
             code: code,
+            copyCode: copyCode,
             status: status,
 
             remove: function () {
@@ -1133,6 +1211,8 @@
                     }
 
                 } catch (e) {}
+
+                pageObserver.disconnect();
 
                 if (
                     root.parentNode
