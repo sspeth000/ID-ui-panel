@@ -2,7 +2,7 @@
     "use strict";
 
     const BASE =
-        "https://raw.githubusercontent.com/sspeth000/ID-ui-panel/main/";
+        "https://raw.githubusercontent.com/sspeth000/ID-ui-panel/modernize/id-ui-panel-2/";
 
     // =========================================================
     // Toggle existing panel
@@ -489,40 +489,59 @@
                             el
                         );
 
-                    const src =
+                    const assetURL =
+                        el.currentSrc ||
                         el.src ||
+                        el.href ||
+                        el.poster ||
+                        el.getAttribute("data-src") ||
                         "(none)";
 
                     const className =
-                        typeof el.className ===
-                        "string"
+                        typeof el.className === "string"
                             ? el.className
                             : "";
 
-                    code.textContent =
-                        "ID: " +
-                        id +
-                        "\nTAG: " +
-                        el.tagName +
-                        "\nSRC: " +
-                        src +
-                        "\nCLASS: " +
-                        className +
-                        "\nDISPLAY: " +
-                        computed.display +
-                        "\n\n" +
-                        "==============================\n" +
-                        "JAVASCRIPT REFERENCES\n" +
-                        "==============================\n\n" +
-                        (
-                            matches.length
-                                ? matches.join(
-                                    "\n\n" +
-                                    "/* ===== MATCH ===== */" +
-                                    "\n\n"
-                                )
-                                : "No JavaScript references found."
-                        );
+                    const dimensions =
+                        el.getBoundingClientRect();
+
+                    const attributes =
+                        Array.from(el.attributes || [])
+                            .filter(function (attribute) {
+                                return attribute.name !== "style";
+                            })
+                            .map(function (attribute) {
+                                return attribute.name + '="' + attribute.value + '"';
+                            });
+
+                    const detailLines = [
+                        "ELEMENT",
+                        "------------------------------",
+                        "ID: " + id,
+                        "TAG: " + el.tagName.toLowerCase(),
+                        "TYPE: " + (el.getAttribute("type") || "(none)"),
+                        "CLASS: " + (className || "(none)"),
+                        "ASSET URL: " + assetURL,
+                        "DISPLAY: " + computed.display,
+                        "VISIBILITY: " + computed.visibility,
+                        "SIZE: " + Math.round(dimensions.width) + " × " + Math.round(dimensions.height),
+                        "NATURAL SIZE: " + (el.naturalWidth && el.naturalHeight
+                            ? el.naturalWidth + " × " + el.naturalHeight
+                            : "(not available)"),
+                        "ALT: " + (el.getAttribute("alt") || "(none)"),
+                        "",
+                        "ATTRIBUTES",
+                        "------------------------------",
+                        attributes.length ? attributes.join("\n") : "No attributes.",
+                        "",
+                        "INLINE JAVASCRIPT REFERENCES",
+                        "------------------------------",
+                        matches.length
+                            ? matches.join("\n\n/* ===== MATCH ===== */\n\n")
+                            : "No JavaScript references found."
+                    ];
+
+                    code.textContent = detailLines.join("\n");
 
                     code.style.display =
                         "block";
