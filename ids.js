@@ -1,118 +1,80 @@
 (function () {
     "use strict";
 
-    function isInspectorID(id) {
+    const PANEL_PREFIX = "__IDPanel";
 
-        if (!id) {
-            return false;
-        }
-
-        return (
-            id === "__IDPanelRoot" ||
-            id.indexOf("__IDPanel") === 0
+    function isInspectorElement(element) {
+        return Boolean(
+            element &&
+            element.id &&
+            (element.id === "__IDPanelRoot" ||
+             element.id.indexOf(PANEL_PREFIX) === 0)
         );
     }
 
-    window.getPageIDs = function (filter) {
+    function collectIDElements() {
+        return Array.from(document.querySelectorAll("[id]"))
+            .filter(function (element) {
+                return !isInspectorElement(element);
+            });
+    }
 
-        filter =
-            String(filter || "")
-                .trim()
-                .toLowerCase();
+    window.getPageIDElements = function (filter) {
+        const query = String(filter || "").trim().toLowerCase();
 
-        return Array.from(
-            document.querySelectorAll(
-                "[id]"
-            )
-        )
-        .map(function (el) {
-            return el.id;
-        })
-        .filter(Boolean)
-        .filter(function (id) {
-
-            /*
-             * Never display the inspector's
-             * own IDs.
-             */
-            if (
-                isInspectorID(id)
-            ) {
-                return false;
-            }
-
-            return id
-                .toLowerCase()
-                .includes(filter);
+        return collectIDElements().filter(function (element) {
+            return !query || element.id.toLowerCase().includes(query);
         });
     };
 
-    window.renderIDs = function (
-        filter,
-        container,
-        onSelect
-    ) {
+    window.getPageIDs = function (filter) {
+        return window.getPageIDElements(filter).map(function (element) {
+            return element.id;
+        });
+    };
 
-        container.innerHTML = "";
+    window.renderIDs = function (filter, container, onSelect) {
+        if (!container) return [];
 
-        const ids =
-            window.getPageIDs(
-                filter
-            );
+        const elements = window.getPageIDElements(filter);
+        const fragment = document.createDocumentFragment();
 
-        if (!ids.length) {
-
-            const empty =
-                document.createElement(
-                    "div"
-                );
-
-            empty.textContent =
-                "No IDs found.";
-
-            empty.style.cssText =
-                "padding:5px;color:#718078;font:8px monospace;";
-
-            container.appendChild(
-                empty
-            );
-
-            return;
+        if (!elements.length) {
+            const empty = document.createElement("div");
+            empty.className = "inspector-empty";
+            empty.textContent = "No matching IDs found.";
+            fragment.appendChild(empty);
         }
 
-        ids.forEach(
-            function (id) {
+        elements.forEach(function (element) {
+            const button = document.createElement("button");
+            const tag = document.createElement("span");
+            const name = document.createElement("span");
 
-                const button =
-                    document.createElement(
-                        "button"
-                    );
+            button.type = "button";
+            button.className = "inspector-id-button";
+            button.title = element.tagName.toLowerCase() + " · " + element.id;
+            button.setAttribute("data-id", element.id);
 
-                button.type =
-                    "button";
+            tag.className = "inspector-id-tag";
+            tag.textContent = element.tagName.toLowerCase();
 
-                button.textContent =
-                    "# " + id;
+            name.className = "inspector-id-name";
+            name.textContent = element.id;
 
-                button.className =
-                    "inspector-button inspector-id-button";
+            button.appendChild(tag);
+            button.appendChild(name);
 
-                button.addEventListener(
-                    "click",
-                    function (e) {
+            button.addEventListener("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                if (typeof onSelect === "function") onSelect(element.id);
+            });
 
-                        e.preventDefault();
-                        e.stopPropagation();
+            fragment.appendChild(button);
+        });
 
-                        onSelect(id);
-                    },
-                    true
-                );
-
-                container.appendChild(
-                    button
-                );
-            }
-        );
+        container.replaceChildren(fragment);
+        return elements;
     };
 })();
