@@ -790,7 +790,36 @@
 })();
 
 
-                window.inspectID =
+                const state = window.createInspectorState();
+        window.__IDPanelState = state;
+
+        function syncVisibility(activeState) {
+            if (!activeState) return false;
+
+            if (typeof window.notifyAssetSelection === "function") {
+                try {
+                    window.notifyAssetSelection(activeState);
+                    return true;
+                } catch (error) {
+                    console.warn("ID Panel: visibility sync failed:", error);
+                }
+            }
+
+            if (typeof window.getAssetVisibility === "function" &&
+                typeof window.updateIDPanelVisibilityUI === "function") {
+                try {
+                    const visible = window.getAssetVisibility(activeState);
+                    window.updateIDPanelVisibilityUI(visible);
+                    return true;
+                } catch (error) {
+                    console.warn("ID Panel: visibility fallback failed:", error);
+                }
+            }
+
+            return false;
+        }
+
+        window.inspectID =
             async function (
                 id,
                 inspectState,
