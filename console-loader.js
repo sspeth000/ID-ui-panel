@@ -1,7 +1,9 @@
-(() => {
-  const urls = [
-    "https://cdn.jsdelivr.net/gh/sspeth000/ID-ui-panel@main/inspector.js",
-    "https://raw.githubusercontent.com/sspeth000/ID-ui-panel/main/inspector.js"
+(function () {
+  "use strict";
+
+  var urls = [
+    "https://raw.githubusercontent.com/sspeth000/ID-ui-panel/main/inspector.js",
+    "https://cdn.jsdelivr.net/gh/sspeth000/ID-ui-panel@main/inspector.js"
   ];
 
   if (window.__IDPanelLoaderPending) {
@@ -10,23 +12,23 @@
   }
 
   window.__IDPanelLoaderPending = true;
-  let index = 0;
+  var index = 0;
 
-  const loadNext = () => {
-    const script = document.createElement("script");
+  function loadNext() {
+    var script = document.createElement("script");
     script.src = urls[index++] + "?v=" + Date.now();
 
-    script.onload = () => {
+    script.onload = function () {
       script.remove();
       window.__IDPanelLoaderPending = false;
-      console.info("[ID-ui-panel] Inspector script loaded.");
+      console.info("[ID-ui-panel] Script file loaded.");
     };
 
-    script.onerror = () => {
+    script.onerror = function () {
       script.remove();
 
       if (index < urls.length) {
-        console.warn("[ID-ui-panel] Primary CDN failed. Trying fallback...");
+        console.warn("[ID-ui-panel] Primary source failed. Trying fallback...");
         loadNext();
         return;
       }
@@ -36,7 +38,7 @@
     };
 
     (document.head || document.documentElement).appendChild(script);
-  };
+  }
 
   loadNext();
 })();
