@@ -21,10 +21,10 @@ ID-ui-panel helps you discover elements, inspect their basic DOM details, locate
 Create a new bookmark, name it **ID-ui-panel**, and paste this entire line into the bookmark's URL field:
 
 ```javascript
-javascript:(()=>{const urls=["https://cdn.jsdelivr.net/gh/sspeth000/ID-ui-panel@main/inspector.js","https://raw.githubusercontent.com/sspeth000/ID-ui-panel/main/inspector.js"];let index=0;const load=()=>{const script=document.createElement("script");script.src=urls[index++]+"?v="+Date.now();script.onload=()=>script.remove();script.onerror=()=>{script.remove();if(index<urls.length)load();else alert("ID-ui-panel could not load from either CDN. Check your connection, then try again.")};(document.head||document.documentElement).appendChild(script)};load()})();
+javascript:(function(){var urls=["https://raw.githubusercontent.com/sspeth000/ID-ui-panel/main/inspector.js","https://cdn.jsdelivr.net/gh/sspeth000/ID-ui-panel@main/inspector.js"];var index=0;function loadNext(){var script=document.createElement("script");script.src=urls[index++]+"?v="+Date.now();script.onload=function(){script.remove();};script.onerror=function(){script.remove();if(index<urls.length){loadNext();}else{alert("ID-ui-panel could not load. Both script sources failed. Check the page console and your connection.");}};(document.head||document.documentElement).appendChild(script);}loadNext();})();
 ```
 
-The loader tries jsDelivr first and automatically falls back to GitHub's raw content host if the first source fails. It adds a cache-busting query so the browser requests the latest `main` version.
+The loader tries GitHub's raw content host first, then falls back to jsDelivr. It adds a cache-busting query to avoid stale browser responses.
 
 ## Console loader
 
