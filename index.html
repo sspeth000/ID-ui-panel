@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Frutiger Aero Archive</title>
+    <meta
+      name="description"
+      content="A website dedicated to the Frutiger Aero design aesthetic, featuring 4000+ downloadable wallpapers, videos, icons, history, and much more!"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="darkreader-lock" content="" />
+    <link rel="human-json" href="/data/human.json" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="images/favicon/apple-touch-icon.png?v=1.1"
+      sizes="96x96"
+    />
+    <link rel="shortcut icon" href="images/favicon/favicon.ico?v=1.1" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="images/favicon/apple-touch-icon.png?v=1.1"
+    />
+    <meta name="apple-mobile-web-app-title" content="FA Archive" />
+    <link rel="manifest" href="images/favicon/site.webmanifest" />
+    <link rel="canonical" href="https://frutigeraeroarchive.org/" />
+    <link rel="stylesheet" href="/css/global.min.css?v=6.7" />
+    <style>
+      .styled-containers-spaced p,
+      .styled-containers-headers p {
+        margin: 8px 5px 0px 5px;
+      }
+      .gallery-articles h2 {
+        margin-bottom: 5px;
+      }
+      .gallery-containers a {
+        min-height: 0 !important;
+      }
+      .gallery-containers a:hover {
+        transform: scale(1.02);
+        transition-duration: 0.3s;
+      }
+      .gallery-containers img {
+        background: #121313;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        object-fit: contain;
+        object-position: center;
+        overflow: hidden;
+        aspect-ratio: 4 / 3;
+        transition-duration: 0.3s;
+      }
+      .ad-div {
+        margin-bottom: -3px;
+        width: 99.8%;
+      }
+      .ad-div img {
+        width: 100%;
+        transition-duration: 0.3s;
+      }
+      .ad-div img:hover {
+        filter: brightness(0.9);
+        transition-duration: 0.3s;
+      }
+      .sources-container ul {
+        margin: 10px 0px 0px 40px;
+        list-style: disc;
+      }
+      .sources-container li {
+        margin: 5px 0px;
+      }
+      .sources-container a {
+        font-size: 1.08em;
+      }
+      /* IE10+ CSS styles */
+      @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+        .gallery-images-containers > * {
+          margin: 0px 5px 15px 5px;
+        }
+      }
+      /* Responsiveness */
+      @media (max-width: 641px) {
+        #sources ul {
+          margin: 10px 0px 0px 25px;
+        }
+      }
+      @media (min-width: 0px) {
+        .gallery-images-containers {
+          grid-template-columns: repeat(1, 1fr);
+        }
+      }
+      @media (min-width: 700px) {
+        .gallery-images-containers {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="background"></div>
+    <div id="websiteContainer">
+      <!-- Spacer -->
+      <div class="website-spacers"></div>
+      <!-- Header -->
+      <header id="mainHeader">
+        <div class="header-logo-text">
+          <a href="https://frutigeraeroarchive.org/" title="Back to Home"
+            ><img
+              src="images/themes/default/logo.png"
+              id="logo"
+              alt="Green-tinted Windows Logo"
+          /></a>
+          <div class="header-text">
+            <span class="header-title">The Frutiger Aero Archive</span>
+            <span class="header-motto">
+              Enjoy 2000s wallpapers, music, games, and much more!
+            </span>
+          </div>
+        </div>
+        <div class="toggle-buttons-divs">
+          <span id="hideNavbarButtonText">Menu ></span>
+          <img
+            src="images/navbar_button.png"
+            alt="Toggle Menu Button"
+            id="navbarToggleButton"
+          />
+        </div>
+      </header>
+      <div id="navAndContentContainer">
+        <!-- Left Side -->
+        <aside>
+          <div id="navigationMenu">
+            <!-- Main Content -->
+            <nav
+              class="nav-categories"
+              aria-label="Navigation Category: Main Content"
+            >
+              <span class="navbar-titles">Main Content</span>
+              <a href="index" class="nav-active">
+                <img
+                  src="images/introduction.png"
+                  class="nav-icons"
+                  alt="Windows Vista Box Icon"
+                />Introduction</a
+              >
+              <a href="wallpapers" class="nav-inactive">
+                <img
+                  src="images/wallpapers.png"
+                  class="nav-icons"
+                  alt="Windows Vista Gallery Icon"
+                />Wallpapers</a
+              >
+              <a href="resources" class="nav-inactive">
+                <img
+                  src="images/resources.png"
+                  class="nav-icons"
+                  alt="Windows Vista Marketplace Icon"
+                />Resources</a
+              >
+              <a href="forum_directory/home" class="nav-inactive">
+                <img
+                  src="images/forum_directory.png"
+                  class="nav-icons"
+                  alt="Folder Icon"
+                />Forum List</a
+              >
+              <a href="history" class="nav-inactive">
+                <img
+                  src="images/history.png"
+                  class="nav-icons"
+                  alt="Windows Vista Presentation Icon"
+                />History</a
+              >
+              <a href="icons" class="nav-inactive">
+                <img
+                  src="images/icons.png"
+                  class="nav-icons"
+                  alt="Windows Personalization Icon"
+                />Icons</a
+              >
+              <a href="blog/home" class="nav-inactive">
+                <img
+                  src="images/blog.png"
+                  class="nav-icons"
+                  alt="Notepad Logo"
+                />Blog</a
+              >
+            </nav>
+            <!-- Entertainment -->
+            <nav
+              class="nav-categories"
+              aria-label="Navigation Category: Entertainment"
+            >
+              <span class="navbar-titles">Entertainment</span>
+              <a href="music" class="nav-inactive">
+                <img
+                  src="images/music.png"
+                  class="nav-icons"
+                  alt="Windows Vista Media Player Icon"
+                />Music Player</a
+              >
+              <a href="flash_media" class="nav-inactive">
+                <img
+                  src="images/flash_media.png"
+                  class="nav-icons"
+                  alt="Macromedia Flash Logo"
+                />Flash Media</a
+              >
+              <a href="indie_games" class="nav-inactive">
+                <img
+                  src="images/indie_games.png"
+                  class="nav-icons"
+                  alt="Games Icon"
+                />Indie Games</a
+              >
+              <a href="televisions" class="nav-inactive">
+                <img
+                  src="images/televisions.png"
+                  class="nav-icons"
+                  alt="CRT TV"
+                />Televisions</a
+              >
+              <a href="videos" class="nav-inactive">
+                <img
+                  src="images/videos.png"
+                  class="nav-icons"
+                  alt="Movie Reel Icon"
+                />Videos</a
+              >
+            </nav>
+            <!-- Community -->
+            <nav
+              class="nav-categories"
+              aria-label="Navigation Category: Community"
+            >
+              <span class="navbar-titles">Community</span>
+              <a
+                href="https://forum.frutigeraeroarchive.org/"
+                class="nav-inactive"
+              >
+                <img
+                  src="images/forum.png"
+                  class="nav-icons"
+                  alt="MSN Buddy"
+                />Site Forum</a
+              >
+              <a href="minecraft" class="nav-inactive">
+                <img
+                  src="images/minecraft.png"
+                  class="nav-icons"
+                  alt="Minecraft Logo"
+                />FAA Minecraft</a
+              >
+              <a href="aero_webring" class="nav-inactive">
+                <img
+                  src="images/aero_webring.png"
+                  class="nav-icons"
+                  alt="Globe Icon"
+                />Aero Webring</a
+              >
+              <a href="sketchbook" class="nav-inactive">
+                <img
+                  src="images/sketchbook.png"
+                  class="nav-icons"
+                  alt="MS Paint Icon"
+                />Sketchbook</a
+              >
+              <a href="other_links" class="nav-inactive">
+                <img
+                  src="images/other_links.png"
+                  class="nav-icons"
+                  alt="Globe next to a monitor"
+                />Other Links</a
+              >
+              <a href="guestbook" class="nav-inactive">
+                <img
+                  src="images/guestbook.png"
+                  class="nav-icons"
+                  alt="Journal with a pen"
+                />Guestbook</a
+              >
+            </nav>
+            <!-- Information -->
+            <nav
+              class="nav-categories"
+              aria-label="Navigation Category: Information"
+            >
+              <span class="navbar-titles">Information</span>
+              <a href="site_mascot" class="nav-inactive">
+                <img
+                  src="images/site_mascot.png"
+                  class="nav-icons"
+                  alt="Archive-Tan"
+                />Mascot</a
+              >
+              <a href="site_info" class="nav-inactive">
+                <img
+                  src="images/site_info.png"
+                  class="nav-icons"
+                  alt="Blue i logo"
+                />Site Info</a
+              >
+              <a
+                href="https://ko-fi.com/frutigeraeroarchive"
+                class="nav-inactive external-links"
+              >
+                <img
+                  src="images/donate.png?v=1.1"
+                  class="nav-icons"
+                  alt="Ko-fi Icon"
+                />Donate</a
+              >
+            </nav>
+            <!-- Options -->
+            <div class="nav-categories nav-sound-fx-container">
+              <button id="navSoundToggle" aria-label="Sound FX Toggle">
+                Sounds Off
+              </button>
+              <button id="navThemeChanger" aria-label="Theme Changer">
+                Themes
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Middle Content -->
+        <main id="mainContent" aria-label="Main Content">
+          <section>
+            <header>
+              <h1>Introduction Page</h1>
+              <div class="glass-borders">
+                <div class="section-banners aero-borders">
+                  <img
+                    src="images/themes/default/introduction_banner.jpg?v=1.1"
+                    alt="Header Image"
+                    title="Thousands of Wallpapers, music, videos, and more!"
+                    id="introBanner"
+                  />
+                </div>
+              </div>
+            </header>
+
+            <div class="glass-borders">
+              <article
+                class="styled-containers styled-containers-spaced aero-borders"
+              >
+                <p>
+                  Welcome to the Frutiger Aero Archive, a digital museum and
+                  tribute to old 2000s aesthetics, notably Frutiger Aero which
+                  it is named after and is primarily representing, but also
+                  other styles such as Y2K, Vectordelia (also called Frutiger
+                  Metro), and others. On this site you will find large
+                  collections of
+                  <a href="wallpapers">wallpapers</a>,
+                  <a href="music">music</a> from a variety of styles popular
+                  during the era, <a href="videos">old videos</a>,
+                  <a href="flash_media">flash games</a>,
+                  <a
+                    href="https://frutigeraeroarchive.org/resources/foregrounds#tableOfContents"
+                    >PNG images</a
+                  >
+                  to make your own collages, a
+                  <a href="resources">huge list of customization software</a>,
+                  and many more goodies. We have active community spaces in our
+                  IRC chatroom at #frutiger-aero-archive on
+                  <a href="https://libera.chat/">Libera.Chat</a>, as well as our
+                  <a href="https://forum.frutigeraeroarchive.org/">Web Forum</a>
+                  and a
+                  <a href="minecraft">1.6.4 Minecraft Server</a>, come say hi
+                  and make new friends!
+                </p>
+
+                <p>
+                  For those not familiar with it, Frutiger Aero is an aesthetic
+                  widely used in technology and graphic design in the mid 2000s
+                  up to its demise in around 2013. The term was coined
+                  retrospectively in 2017 by
+                  <a href="https://sofi.pics/about">Sofi Xian</a> of the
+                  <a href="https://cari.institute/"
+                    >Consumer Aesthetics Research Institute</a
+                  >. During the era of its prime, the style didn't have a
+                  specific name, but its web counterpart was often referred to
+                  as
+                  <a
+                    href="https://snap2objects.com/2007/11/20/how-to-destroy-the-web-20-look/"
+                    >"The Web 2.0 style"</a
+                  >
+                  by critics, as it was the main visual style of the new
+                  <a
+                    href="https://psu.pb.unizin.org/ist110/chapter/1-6-the-www-and-web-2-0/"
+                    >social web</a
+                  >, in contrast to the static websites of Web 1.0. This look,
+                  and by extension Frutiger Aero were mainly popularized by
+                  Apple's
+                  <a href="https://en.wikipedia.org/wiki/Aqua_(user_interface)"
+                    >Aqua</a
+                  >
+                  style, who first used skeuomorphism (the mimicking of real
+                  life objects) in the user interface of
+                  <a href="https://en.wikipedia.org/wiki/Mac_OS_X_10.0"
+                    >Mac OS X</a
+                  >
+                  and the
+                  <a href="https://www.webdesignmuseum.org/gallery/apple-2000"
+                    >Apple website</a
+                  >
+                  as far back as the year 2000.
+                </p>
+
+                <p>
+                  "Frutiger Aero" derives its name from the
+                  <a
+                    href="https://en.wikipedia.org/wiki/Adrian_Frutiger#Frutiger"
+                    >Frutiger</a
+                  >
+                  font designed by
+                  <a href="https://en.wikipedia.org/wiki/Adrian_Frutiger"
+                    >Adrian Frutiger</a
+                  >, which came to inspire many humanist sans-serif typefaces
+                  such as Microsoft's
+                  <a href="https://en.wikipedia.org/wiki/Segoe#Segoe_UI"
+                    >Segoe UI</a
+                  >
+                  and many other fonts used in computers in the early 2000s, and
+                  <a href="https://en.wikipedia.org/wiki/Windows_Aero">Aero</a>
+                  the visual design and user experience guidelines of Windows
+                  Vista. The acronym "Aero" stands for "Authentic, Energetic,
+                  Reflective, and Open."
+                </p>
+
+                <p>
+                  You probably have seen this style before in the glossy UI of
+                  Windows Vista and 7, the PS Vita, the Wii and Wii U, the
+                  PlayStation 3, or even on advertisements, stock images, and
+                  certain toys such as the
+                  <a href="https://en.wikipedia.org/wiki/IDog">iDog</a> by
+                  Hasbro. Its main characteristics are bright and vibrant
+                  colors, glossy textures, glass/transparent materials, aurora
+                  borealis,
+                  <a href="https://aesthetics.fandom.com/wiki/Skeuomorphism"
+                    >skeuomorphism</a
+                  >, bubbles, bokeh, macro photographs of grass, futurism, and
+                  humanism. It succeeded the Y2K style, which was named after
+                  the
+                  <a href="https://en.wikipedia.org/wiki/Year_2000_problem"
+                    >Year 2000 problem</a
+                  >.
+                </p>
+
+                <p>
+                  For a more in depth look into the historical context and
+                  meaning of the aesthetic, go take a look at the
+                  <a href="history">History</a> section. You can also scroll
+                  down for some visual examples.
+                </p>
+
+                <p>
+                  For more information about the site, and to receive the latest
+                  updates via the <b>RSS feed</b>, head to the
+                  <a href="site_info">Site Info</a> page. You can also check my
+                  <a href="https://frutigeraeroarchive.org/blog/home">blog</a>
+                  for writings on Frutiger Aero and old web related things, also
+                  available with RSS.
+                </p>
+              </article>
+            </div>
+
+            <div class="glass-borders">
+              <article
+                class="gallery-articles styled-containers styled-containers-spaced aero-borders"
+                aria-label="Gallery with examples of Frutiger Aero"
+              >
+                <header>
+                  <h2>Examples of Frutiger Aero</h2>
+                  <p style="margin-bottom: 5px">
+                    Here are different examples of the style, you can click on
+                    the images to watch them in full size. Also check out the
+                    <a href="https://cari.institute/aesthetics/frutiger-aero"
+                      >Consumer Aesthetic Research Institute</a
+                    >
+                    (CARI) who coined the term for even more visual examples.
+                  </p>
+                </header>
+
+                <div class="gallery-containers">
+                  <div class="gallery-images-containers">
+                    <a
+                      href="images/introduction/asadal.jpg"
+                      title="Stock photos from Asadal.com, a Korean Stock
+                        Photography website (2000s-2010s)"
+                      class="spotlight"
+                      ><img
+                        src="images/introduction/thumbnails/asadal.jpg"
+                        alt="Green hill with bubbles in the sky and skyscrapers in the background"
+                        loading="lazy"
+                      />
+                      <span
+                        >Stock photos from Asadal.com, a Korean Stock
+                        Photography website (2000s-2010s)
+                      </span></a
+                    >
+
+                    <a
+                      href="images/introduction/sozaijiten.jpg"
+                      title="Sozaijiten Vol. 206: Eco Images - Environment & The
+                        Future (2008)"
+                      class="spotlight"
+                    >
+                      <img
+                        src="images/introduction/thumbnails/sozaijiten.jpg"
+                        alt="Family walking on a green hill with a rainbow and bubbles flying"
+                        loading="lazy"
+                      />
+                      <span
+                        >Sozaijiten Vol. 206: Eco Images - Environment & The
+                        Future (2008)</span
+                      ></a
+                    >
+
+                    <a
+                      href="images/introduction/windows_vista.jpg"
+                      title="Windows Vista (2007)"
+                      class="spotlight"
+                      ><img
+                        src="images/introduction/thumbnails/windows_vista.jpg"
+                        alt="Windows Vista desktop with the Aero Theme"
+                        loading="lazy"
+                      />
+                      <span>Windows Vista (2007)</span></a
+                    >
+
+                    <a
+                      href="images/introduction/windows_7.jpg"
+                      title="Windows 7 (2009)"
+                      class="spotlight"
+                      ><img
+                        src="images/introduction/thumbnails/windows_7.jpg"
+                        alt="Windows 7 desktop with the start menu open"
+                        loading="lazy"
+                      />
+                      <span>Windows 7 (2009)</span></a
+                    >
+
+                    <a
+                      href="images/introduction/mac_os_x_leopard.jpg"
+                      title="Mac OS X Leopard build 9A466 (2007)"
+                      class="spotlight"
+                      ><img
+                        src="images/introduction/thumbnails/mac_os_x_leopard.jpg"
+                        alt="Mac OS X Leopard desktop featuring the sharp blades grass wallpaper"
+                        loading="lazy"
+                      />
+                      <span>Mac OS X Leopard build 9A466 (2007)</span></a
+                    >
+
+                    <a
+                      href="images/introduction/red_star_os.jpg"
+                      title="Red Star OS 3.0 (2012)"
+                      class="spotlight"
+                      ><img
+                        src="images/introduction/thumbnails/red_star_os.jpg"
+                        alt="Interface similar to Mac OS"
+                        loading="lazy"
+                      />
+                      <span>Red Star OS 3.0 (2012)</span></a
+                    >
+
+                    <a
+                      href="images/introduction/idog.jpg"
+                      title="iDog (2005-2009)"
+                      class="spotlight"
+                      ><img
+                        src="images/introduction/idog.jpg"
+                        alt="Promotional image of differently colored plastic dogs"
+                        loading="lazy"
+                      />
+                      <span>iDog (2005-2009)</span></a
+                    >
+
+                    <a
+                      href="images/introduction/ps3.jpg"
+                      title="PlayStation 3 (2006)"
+                      class="spotlight"
+                      ><img
+                        src="images/introduction/thumbnails/ps3.jpg"
+                        alt="PlayStation 3 User Interface"
+                        loading="lazy"
+                      />
+                      <span>PlayStation 3 (2006)</span></a
+                    >
+
+                    <a
+                      href="images/introduction/xbox_360_blades.jpg"
+                      title="Xbox 360 Blades Dashboard (2005)"
+                      class="spotlight"
+                      ><img
+                        src="images/introduction/thumbnails/xbox_360_blades.jpg"
+                        alt="Xbox 360 First UI"
+                        loading="lazy"
+                      />
+                      <span>Xbox 360 Blades Dashboard (2005)</span></a
+                    >
+
+                    <a
+                      href="images/introduction/wii.jpg"
+                      title="Wii (2006)"
+                      class="spotlight"
+                      ><img
+                        src="images/introduction/thumbnails/wii.jpg"
+                        alt="Nintendo Wii UI"
+                        loading="lazy"
+                      />
+                      <span>Wii (2006)</span></a
+                    >
+
+                    <a
+                      href="images/introduction/wii_u.jpg"
+                      title="Wii U (2012)"
+                      class="spotlight"
+                      ><img
+                        src="images/introduction/thumbnails/wii_u.jpg"
+                        alt="Nintendo's Wii U"
+                        loading="lazy"
+                      />
+                      <span>Wii U (2012)</span></a
+                    >
+
+                    <a
+                      href="images/introduction/wondershare_video_editor.jpg"
+                      title="Wondershare Video Editor 3.5.0 (2013)"
+                      class="spotlight"
+                      ><img
+                        src="images/introduction/thumbnails/wondershare_video_editor.jpg"
+                        alt="Video Editor Interface"
+                        loading="lazy"
+                      />
+                      <span>Wondershare Video Editor 3.5.0 (2013)</span></a
+                    >
+
+                    <a
+                      href="images/introduction/oceanscrapers.jpg"
+                      title="Oceanscrapers concept by Vincent Callebaut"
+                      class="spotlight"
+                      ><img
+                        src="images/introduction/thumbnails/oceanscrapers.jpg"
+                        alt="Structures floating on water"
+                        loading="lazy"
+                      />
+                      <span>Oceanscrapers concept by Vincent Callebaut</span></a
+                    >
+
+                    <a
+                      href="images/introduction/windows_vista_website.jpg"
+                      title="Windows Vista Website in 2008"
+                      class="spotlight"
+                      ><img
+                        src="images/introduction/thumbnails/windows_vista_website.jpg"
+                        alt="Windows Vista Website"
+                        loading="lazy"
+                      />
+                      <span>Windows Vista Website (2008)</span></a
+                    >
+
+                    <a
+                      href="images/introduction/samsung_galaxy_pop_plus_s5570i.jpg"
+                      title="Samsung Galaxy Pop Plus S5570i (2012)"
+                      class="spotlight"
+                      ><img
+                        src="images/introduction/thumbnails/samsung_galaxy_pop_plus_s5570i.jpg"
+                        alt="Glossy black phone with a grassy wallpaper"
+                        loading="lazy"
+                      />
+                      <span>Samsung Galaxy Pop Plus S5570i (2012)</span></a
+                    >
+
+                    <a
+                      href="images/introduction/samsung_blue_earth.jpg"
+                      title="Samsung S7550 Blue Earth (2009)"
+                      class="spotlight"
+                      ><img
+                        src="images/introduction/thumbnails/samsung_blue_earth.jpg"
+                        alt="Blue phone with solar pannel on the back"
+                        loading="lazy"
+                      />
+                      <span>Samsung S7550 Blue Earth (2009)</span></a
+                    >
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+        </main>
+      </div>
+      <!-- Spacer -->
+      <div class="website-spacers"></div>
+    </div>
+    <span id="themeSongCaption" class="hidden"></span>
+    <!-- Javascript -->
+    <script src="/javascript/navbar.min.js?v=2.8" async></script>
+    <script src="/javascript/jquery.min.js"></script>
+    <script src="/javascript/magnific-popup.min.js"></script>
+  </body>
+</html>
